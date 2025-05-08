@@ -1,0 +1,209 @@
+<main class="container py-5">
+  <div class="row gy-5">
+    <!-- General Details Form Section -->
+    <section class="col-md-6">
+      <form
+        [formGroup]="form"
+        (ngSubmit)="onSubmit()"
+        class="px-4 py-5 border rounded-3 shadow-sm"
+      >
+        <h2 class="fs-4 fw-bold mb-4">General Details</h2>
+
+        <!-- First Name -->
+        <div class="mb-4">
+          <label class="form-label" for="firstName">First Name</label>
+          <input
+            id="firstName"
+            type="text"
+            class="form-control"
+            formControlName="firstName"
+            required
+          />
+          <p
+            class="text-danger"
+            *ngIf="
+              form.get('firstName')?.invalid && form.get('firstName')?.touched
+            "
+          >
+            First Name is required
+          </p>
+        </div>
+
+        <!-- Last Name -->
+        <div class="mb-4">
+          <label class="form-label" for="lastName">Last Name</label>
+          <input
+            id="lastName"
+            type="text"
+            class="form-control"
+            formControlName="lastName"
+            required
+          />
+          <p
+            class="text-danger"
+            *ngIf="
+              form.get('lastName')?.invalid && form.get('lastName')?.touched
+            "
+          >
+            Last Name is required
+          </p>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-4">
+          <label class="form-label" for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            class="form-control"
+            formControlName="email"
+            required
+          />
+          <p
+            class="text-danger"
+            *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
+          >
+            A valid Email is required
+          </p>
+        </div>
+
+        <!-- Category -->
+        <div class="mb-4">
+          <label class="form-label" for="category">Favorite Category</label>
+          <select
+            id="category"
+            class="form-select"
+            formControlName="favouriteCategory"
+          >
+            <option selected disabled>Choose a category</option>
+            <option>IT</option>
+            <option>MEDICAL</option>
+            <option>SCIENCE</option>
+            <option>LANGUAGES</option>
+          </select>
+          <p
+            class="text-danger"
+            *ngIf="
+              form.get('category')?.invalid && form.get('category')?.touched
+            "
+          >
+            Category is required
+          </p>
+        </div>
+
+        <!-- New Password -->
+        <div class="mb-4">
+          <label class="form-label" for="password">New Password</label>
+          <input
+            id="password"
+            type="password"
+            class="form-control"
+            formControlName="password"
+            required
+          />
+        </div>
+
+        <!-- Confirm New Password -->
+        <div class="mb-4">
+          <label class="form-label" for="confirmPassword"
+            >Confirm New Password</label
+          >
+          <input
+            id="confirmPassword"
+            type="password"
+            class="form-control"
+            formControlName="confirmPassword"
+            required
+          />
+          <p
+            class="text-danger"
+            *ngIf="
+              form.get('confirmPassword')?.value !==
+                form.get('password')?.value &&
+              form.get('confirmPassword')?.touched
+            "
+          >
+            Passwords do not match
+          </p>
+        </div>
+      </form>
+    </section>
+
+    <!-- Bio Details Form Section -->
+    <section class="col-md-6">
+      <form
+        [formGroup]="form"
+        (ngSubmit)="onSubmit()"
+        class="px-4 py-5 border rounded-3 shadow-sm"
+      >
+        <h2 class="fs-4 fw-bold mb-4">Bio Details</h2>
+
+        <!-- Academic Details -->
+        <div class="mb-4">
+          <label class="form-label" for="academic">Academic Details</label>
+          <input
+            id="academic"
+            type="text"
+            class="form-control"
+            formControlName="universityInfo"
+            placeholder="University, Major..."
+            required
+          />
+        </div>
+
+        <!-- About Section -->
+        <div class="mb-4">
+          <label class="form-label" for="about">About</label>
+          <textarea
+            id="about"
+            class="form-control"
+            formControlName="bio"
+            placeholder="Describe yourself..."
+            rows="5"
+            required
+          ></textarea>
+        </div>
+
+        <!-- Session Price -->
+        <div class="mb-4">
+          <label class="form-label" for="price">Session Price</label>
+          <input
+            id="price"
+            type="text"
+            class="form-control"
+            formControlName="avgPrice"
+            placeholder="How much do you charge per session?"
+            required
+          />
+          <div
+            *ngIf="
+              form.get('avgPrice')?.touched && form.get('avgPrice')?.invalid
+            "
+            class="error"
+          >
+            <p
+              class="text-danger"
+              *ngIf="form.get('avgPrice')?.errors?.['required']"
+            >
+              Average price is required.
+            </p>
+            <p
+              class="text-danger"
+              *ngIf="form.get('avgPrice')?.errors?.['min']"
+            >
+              Average price must be greater than 0.
+            </p>
+          </div>
+        </div>
+
+        <!-- Save Changes Button -->
+        <button
+          type="submit"
+          class="btn btn-dark w-50 py-2 rounded-pill mt-4 mx-auto d-block"
+        >
+          Save Changes
+        </button>
+      </form>
+    </section>
+  </div>
+</main>

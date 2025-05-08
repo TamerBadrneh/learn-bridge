@@ -1,0 +1,117 @@
+/* styles.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #edecec5a;
+  padding: 110px;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+}
+.page.active {
+  background-color: #00d2c8;
+  color: white;
+  border: none;
+}
+.container {
+  max-width: 850px;
+  margin: auto;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin-bottom: 30px;
+}
+
+.post-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 40px;
+  gap: 20px;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 20px;
+  width: 85%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+}
+
+.post-id, .category, .subject {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.post-id span {
+  color: #00d2c8;
+}
+
+.math {
+  color: #00d2c8;
+}
+
+.soft {
+  color: #00d2c8;
+}
+
+.subject .link {
+  color: #000000;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.desc {
+  font-size: 13px;
+  color: #333;
+  margin: 10px 0 15px;
+  line-height: 1.5;
+}
+
+.price {
+  background-color: #e0f7f6;
+  color: #009090;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  display: inline-block;
+} 
+
+.actions-outer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+button {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  min-width: 90px;
+}
+
+.accept {
+  background-color: #00d2c8;
+  color: white;
+}
+
+.reject {
+  background-color: #f08a8a;
+  color: white;
+}

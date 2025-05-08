@@ -1,0 +1,73 @@
+#filter-button {
+  background-color: #d9d9d9;
+  outline: none;
+}
+
+#filter-button:hover {
+  background-color: #00d2c8;
+}
+
+#edit-button {
+  background-color: #00d2c8;
+}
+
+#edit-button:hover {
+  background-color: #d9d9d9;
+}
+
+#nav-container,
+#post {
+  background-color: #f7f7f7;
+}
+
+#sessions-container {
+  height: 65vh;
+  overflow-y: scroll;
+  direction: rtl;
+}
+
+#session {
+  direction: ltr !important;
+  background-color: #f7f7f7;
+}
+
+.text-cyan {
+  color: #00d2c8;
+}
+
+#price-background {
+  background-color: #d9d9d9;
+}
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* centers vertically */
+}
+
+.pagination {
+  display: flex;
+  gap: 10px;
+  list-style: none;
+  padding: 10px;
+  font-family: Arial, sans-serif;
+}
+
+.pagination li {
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pagination li.active {
+  background-color: #00d2c8;
+  color: white;
+  font-weight: bold;
+  border-color: #00d2c8;
+}
+
+.pagination li:hover {
+  background-color: #ddd;
+}

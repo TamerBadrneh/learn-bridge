@@ -1,0 +1,161 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f4f4f4;
+  padding: 30px;
+}
+
+.login-container {
+  max-width: 400px;
+  width: 100%;
+  background-color: #ffffff;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+  font-weight: 600;
+}
+
+.input-box {
+  width: 100%;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+/* Label styles */
+.input-box label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+.input-box input {
+  width: 100%;
+  height: 45px;
+  padding: 0 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  background-color: #fff;
+  font-size: 14px;
+  outline: none;
+  color: #333;
+}
+
+.input-box input:focus {
+  border-color: #00d2c8;
+  box-shadow: 0 0 0 2px rgba(0, 209, 193, 0.1);
+}
+
+.validation-error {
+  color: #721c24;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.forgot-password {
+  text-align: right;
+  margin-bottom: 15px;
+}
+
+.forgot-password a {
+  color: #00d2c8;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+.button-box {
+  margin-top: 20px;
+}
+
+.login-btn {
+  width: 100%;
+  height: 45px;
+  background-color: #00d2c8;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-btn:hover {
+  background-color: #00d2c8;
+}
+
+.login-btn:disabled {
+  background-color: #a0a0a0;
+  cursor: not-allowed;
+}
+
+.signup-text {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.signup-text a {
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.signup-text a:hover {
+  text-decoration: underline;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+.alert-danger div {
+  margin-bottom: 4px;
+}
+
+.alert-danger div:last-child {
+  margin-bottom: 0;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+button[disabled] {
+  position: relative;
+  color: transparent;
+}

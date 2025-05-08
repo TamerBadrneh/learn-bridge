@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chats</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div class="chat-wrapper">
+    <h2>Chats</h2>
+    <div class="chat-container">
+      <!-- Sidebar -->
+      <div class="chat-sidebar">
+        <div class="chat-tabs">
+          <span class="active">Active chats</span>
+          <span>Archived</span>
+        </div>
+        <input type="text" class="search" placeholder="Search" />
+        <div class="chat-list">
+          <div class="chat-item">
+            <img src="../../../assets/images/jamil.jpg" class="avatar"/>
+            <div class="chat-info">
+              <h4>Jamil Muhanna</h4>
+              <p>Got it, thanks! Let’s...</p>
+            </div>
+            <div class="meta">
+              <span class="timestamp">Just now</span>
+              <span class="unread">1</span>
+            </div>
+          </div>
+          <div class="chat-item">
+            <img src="../../../assets/images/rashed.jpg" class="avatar"/>
+            <div class="chat-info">
+              <h4>Rashed Maaitah</h4>
+              <p>what abt tomorrow at 6 pm?</p>
+            </div>
+            <div class="meta">
+              <span class="timestamp">Yesterday</span>
+              <span class="unread">3</span>
+            </div>
+          </div>
+          <div class="chat-item">
+            <img src="../../../assets/images/iq.jpg" class="avatar"/>
+            <div class="chat-info">
+              <h4>Ismail Qawasmi</h4>
+              <p>Sent a file.</p>
+            </div>
+            <div class="meta">
+              <span class="timestamp">SAT 8 AM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat main area -->
+      <div class="chat-main">
+        <div class="chat-header">
+          <div class="user">
+            <img src="../../../assets/images/jamil.jpg" class="avatar" />
+            <h4>Jamil Muhanna</h4>
+          </div>
+          <div class="session-buttons">
+            <button class="cancel">Cancel session</button>
+            <button class="end">End Session</button>
+          </div>
+        </div>
+
+        <div class="chat-messages">
+          <div class="message left">
+            Send me the slides for pointers, please.
+            <div class="msg-time">Today, 11:17 AM</div>
+          </div>
+          <div class="message right">
+            Just a sec, uploading now.
+            <div class="msg-time">Today, 11:19 AM</div>
+            <div class="file-msg">📎 Ch2_cpp pointers.ppt</div>
+          </div>
+          <div class="message left">
+            Got it, thanks! Let’s continue.
+            <div class="msg-time">Today, 11:20 AM</div>
+          </div>
+        </div>
+
+        <div class="chat-input">
+          <input type="text" placeholder="Type your message and press enter..."/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

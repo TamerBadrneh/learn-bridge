@@ -1,0 +1,72 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f3f0f098;
+    font-family: Arial, sans-serif;
+  }
+  
+  .review-container {
+    background-color: #d6d6d6;
+    padding: 40px 50px;
+    border-radius: 12px;
+    width: 800px; /* Increased width */
+    text-align: left;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  }
+  
+  .stars {
+    font-size: 48px;
+    color: black;
+    margin-bottom: 20px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 22px;
+    color: #000000;
+  }
+  
+  textarea {
+    width: 100%;
+    height: 200px;
+    padding: 20px;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    resize: none;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+  }
+  
+  .skip, .submit {
+    font-size: 20px;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
+  .skip {
+    background-color: #f2706c;
+    color: white;
+  }
+  
+  .submit {
+    background-color: #000000;
+    color: white;
+  }
+  

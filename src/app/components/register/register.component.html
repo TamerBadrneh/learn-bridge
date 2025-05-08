@@ -1,0 +1,128 @@
+<div class="container">
+  <div class="signup-container">
+    <h2 class="form-title">Create an Account</h2>
+    <form [formGroup]="signupForm" (ngSubmit)="onSignupSubmit()">
+      <!-- Name Fields -->
+      <div class="form-row">
+        <div class="input-box half">
+          <label for="firstName">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            formControlName="firstName"
+            required
+          />
+          <div *ngIf="isFieldInvalid('firstName')" class="validation-error">
+            {{ getErrorMessage("firstName") }}
+          </div>
+        </div>
+        <div class="input-box half">
+          <label for="lastName">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            formControlName="lastName"
+            required
+          />
+          <div *ngIf="isFieldInvalid('lastName')" class="validation-error">
+            {{ getErrorMessage("lastName") }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Email Field -->
+      <div class="input-box">
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email" required />
+        <div *ngIf="isFieldInvalid('email')" class="validation-error">
+          {{ getErrorMessage("email") }}
+        </div>
+      </div>
+
+      <!-- Role Selection -->
+      <div class="input-box">
+        <label for="role">Role</label>
+        <select id="role" formControlName="role" required>
+          <option value="" disabled selected>Select your role</option>
+          <option value="LEARNER">LEARNER</option>
+          <option value="INSTRUCTOR">INSTRUCTOR</option>
+        </select>
+        <div class="dropdown-icon">
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div *ngIf="isFieldInvalid('role')" class="validation-error">
+          {{ getErrorMessage("role") }}
+        </div>
+      </div>
+
+      <!-- Categories Selection -->
+      <div class="input-box">
+        <label for="favoriteCategories">Favorite Categories</label>
+        <select
+          id="favoriteCategories"
+          formControlName="favoriteCategories"
+          required
+        >
+          <option value="" disabled selected>Select a category</option>
+          <option value="IT">IT</option>
+          <option value="MEDICAL">MEDICAL</option>
+          <option value="SCIENCE">SCIENCE</option>
+          <option value="LANGUAGES">LANGUAGES</option>
+        </select>
+        <div class="dropdown-icon">
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div
+          *ngIf="isFieldInvalid('favoriteCategories')"
+          class="validation-error"
+        >
+          {{ getErrorMessage("favoriteCategories") }}
+        </div>
+      </div>
+
+      <!-- Password Fields -->
+      <div class="input-box">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          required
+        />
+        <div *ngIf="isFieldInvalid('password')" class="validation-error">
+          {{ getErrorMessage("password") }}
+        </div>
+      </div>
+
+      <div class="input-box">
+        <label for="confirmPassword">Confirm Password</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          required
+        />
+        <div *ngIf="isFieldInvalid('confirmPassword')" class="validation-error">
+          {{ getErrorMessage("confirmPassword") }}
+        </div>
+      </div>
+
+      <!-- API Error Alert -->
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Submit Button -->
+      <div class="button-box">
+        <button type="submit" class="signup-btn" [disabled]="isLoading">
+          <span *ngIf="!isLoading">Sign up</span>
+          <div *ngIf="isLoading" class="spinner"></div>
+        </button>
+      </div>
+
+      <div class="login-text">
+        Already have an account? <a [routerLink]="['/login']">Login</a>
+      </div>
+    </form>
+  </div>
+</div>

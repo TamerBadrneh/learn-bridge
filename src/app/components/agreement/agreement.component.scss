@@ -1,0 +1,19 @@
+main {
+  width: 75%;
+  margin-inline: auto;
+}
+
+#learner-agreement,
+#learner-post {
+  border: black 3px solid !important;
+}
+
+#accept-btn {
+  background-color: #00d2c8;
+  border: none;
+  color: white;
+}
+
+#accept-btn:hover {
+  background-color: #0069609c;
+}

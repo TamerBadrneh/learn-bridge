@@ -1,0 +1,94 @@
+<form
+  class="container-background m-auto rounded-5 p-5 d-flex flex-column gap-4 shadow-lg"
+  (ngSubmit)="onSubmit()"
+  #postForm="ngForm"
+  novalidate
+>
+  <h1>What's on your mind?</h1>
+
+  <!-- Subject + Category -->
+  <div class="d-flex flex-column flex-md-row gap-4">
+    <!-- Subject -->
+    <div class="bigger-size">
+      <label class="form-label">Subject</label>
+      <input
+        type="text"
+        class="form-control"
+        name="subject"
+        [(ngModel)]="formData.subject"
+        #subject="ngModel"
+        required
+      />
+      <p class="text-danger" *ngIf="subject.invalid && subject.touched">
+        Subject is required.
+      </p>
+    </div>
+
+    <!-- Category -->
+    <div style="width: 100%" class="w-md-40">
+      <label class="form-label">Category</label>
+      <select
+        class="form-select"
+        name="category"
+        [(ngModel)]="formData.category"
+        #category="ngModel"
+        required
+      >
+        <option value="" disabled>Select Category</option>
+        <option *ngFor="let option of categories" [value]="option">
+          {{ option }}
+        </option>
+      </select>
+      <p class="text-danger" *ngIf="category.invalid && category.touched">
+        Category is required.
+      </p>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <div>
+    <label class="form-label">Description</label>
+    <textarea
+      class="p-2"
+      name="description"
+      [(ngModel)]="formData.content"
+      #description="ngModel"
+      required
+    ></textarea>
+    <p class="text-danger" *ngIf="description.invalid && description.touched">
+      Description is required.
+    </p>
+  </div>
+
+  <!-- Price -->
+  <div>
+    <label class="form-label">Price</label>
+    <input
+      type="number"
+      class="form-control"
+      name="price"
+      [(ngModel)]="formData.price"
+      #price="ngModel"
+      required
+      min="1"
+    />
+    <p class="text-danger" *ngIf="price.invalid && price.touched">
+      Price must be a positive number.
+    </p>
+  </div>
+
+  <!-- Error placeholder if form not valid on submit -->
+  <p class="alert alert-danger" *ngIf="showError">
+    Please fill out all fields correctly.
+  </p>
+
+  <!-- Submit Button -->
+  <div class="d-flex justify-content-center">
+    <input
+      type="submit"
+      value="Create Post"
+      class="btn btn-dark px-5 py-2"
+      [disabled]="!postForm.form.valid"
+    />
+  </div>
+</form>

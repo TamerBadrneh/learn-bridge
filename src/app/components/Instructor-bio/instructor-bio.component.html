@@ -1,0 +1,55 @@
+<div
+  id="container"
+  class="d-flex justify-content-center align-items-center flex-column"
+>
+  <form [formGroup]="bioForm" (ngSubmit)="onSubmitBio()" class="background p-5 rounded-5 d-flex flex-column gap-4">
+    <h1 class="fs-3 fw-bold text-center">Tell Us About Yourself</h1>
+
+    <div>
+      <label class="form-label">Academic Details</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="universityInfo"
+        placeholder="University, Major..."
+      />
+      <p *ngIf="isFieldInvalid('universityInfo')" class="form-text text-danger">
+        University Info is required
+      </p>
+    </div>
+
+    <div>
+      <label class="form-label">About</label>
+      <textarea
+        class="p-2"
+        formControlName="bio"
+        placeholder="Describe yourself..."
+      ></textarea>
+      <p *ngIf="isFieldInvalid('bio')" class="form-text text-danger">
+        Bio is required
+      </p>
+    </div>
+
+    <div>
+      <label class="form-label">Session Price (In - Average)</label>
+      <input
+        type="number"
+        class="form-control"
+        formControlName="avgPrice"
+        placeholder="How much do you usually take per session ?"
+      />
+      <p *ngIf="isFieldInvalid('avgPrice')" class="form-text text-danger">
+        Session price is required
+      </p>
+    </div>
+
+    <div class="d-flex justify-content-center">
+      <input
+        type="submit"
+        value="Submit"
+        class="btn btn-submit px-5 py-2 rounded-3"
+        [disabled]="bioForm.invalid || isLoading"
+      />
+    </div>
+  </form>
+</div>

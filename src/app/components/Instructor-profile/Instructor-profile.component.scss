@@ -1,0 +1,36 @@
+main {
+  height: 100%;
+  width: 80%;
+  margin-inline: auto;
+}
+
+#edit-password,
+#general-details,
+.background {
+  background-color: #d9d9d9;
+}
+
+textarea {
+  border: 1px solid #c3c3c367;
+  border-radius: 5px;
+  width: 100%;
+  height: 120px;
+  resize: none;
+  accent-color: rgb(43, 234, 255);
+}
+
+textarea:focus {
+  outline: none;
+}
+
+textarea {
+  border: 1px solid #c3c3c367;
+  border-radius: 5px;
+  width: 100%;
+  height: 120px;
+  resize: none;
+}
+
+textarea:focus {
+  outline: none;
+}

@@ -1,0 +1,33 @@
+<!-- hero.component.html -->
+<section class="hero-section">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 hero-content">
+        <h1>Online tutoring that releases potential</h1>
+        <p>
+          We bridge the gap between learners and instructors, fostering growth
+          and unlocking potential. With expert guidance and personalized
+          support, we help learners thrive while empowering instructors to make
+          an impact.
+        </p>
+        <p>At LearnBridge, everyone grows together.</p>
+
+        <div class="search-box">
+          <input type="text" placeholder="Search a subject" />
+          <button type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+          <button class="get-started-btn">Get Started</button>
+        </div>
+      </div>
+
+      <div class="col-md-6 hero-image-container">
+        <div class="circle-bg"></div>
+        <div class="tutoring-image">
+          <img [src]="tutorImagePath" alt="Online tutoring session" />
+        </div>
+        <div class="pink-blob"></div>
+      </div>
+    </div>
+  </div>
+</section>

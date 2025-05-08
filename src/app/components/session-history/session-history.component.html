@@ -1,0 +1,60 @@
+<div class="container my-5">
+  <!-- Header -->
+  <h1 class="fw-bold my-5">Session History</h1>
+
+  <!-- Filters -->
+  <div class="d-flex justify-content-center mb-5 mt-3">
+    <div id="nav-container" class="w-fit p-4 rounded-4">
+      <button id="filter-button" class="border-0 btn px-5 m-3">All</button
+      ><button id="filter-button" class="border-0 btn px-5 m-3">Outgoing</button
+      ><button id="filter-button" class="border-0 btn px-5 m-3">
+        Finished
+      </button>
+      <button id="filter-button" class="border-0 btn px-5 m-3">Canceled</button>
+    </div>
+  </div>
+
+  <!-- Sessions List -->
+  <div id="sessions-container" class="my-5">
+    <!-- Session -->
+    <section id="session" class="mx-5 my-3 py-4 px-5 rounded-4 fw-semibold">
+      <div class="d-flex justify-content-between gap-1">
+        <p>Session Id: <span class="text-cyan">12345678</span></p>
+        <p>Session Status: <span class="text-primary">Status</span></p>
+      </div>
+      <p>Instructor Name: <span class="text-cyan">Someones Name</span></p>
+      <p>Learner Name: <span class="text-cyan">Someones Name</span></p>
+      <div class="d-flex justify-content-between gap-1 align-items-center">
+        <p id="price-background" class="rounded-4 px-3 py-2 mb-0">
+          Price: <span class="text-cyan">30JD</span>
+        </p>
+        <button class="btn btn-danger rounded-3 px-4 py-2">Report Issue</button>
+      </div>
+    </section>
+
+    <!-- Session -->
+    <section id="session" class="mx-5 my-3 py-4 px-5 rounded-4 fw-semibold">
+      <div class="d-flex justify-content-between gap-1">
+        <p>Session Id: <span class="text-cyan">12345678</span></p>
+        <p>Session Status: <span class="text-primary">Status</span></p>
+      </div>
+      <p>Instructor Name: <span class="text-cyan">Someones Name</span></p>
+      <p>Learner Name: <span class="text-cyan">Someones Name</span></p>
+      <div class="d-flex justify-content-between gap-1 align-items-center">
+        <p id="price-background" class="rounded-4 px-3 py-2 mb-0">
+          Price: <span class="text-cyan">30JD</span>
+        </p>
+        <button class="btn btn-danger rounded-3 px-4 py-2">Report Issue</button>
+      </div>
+    </section>
+  </div>
+
+  <div class="pagination-container">
+    <ul class="pagination">
+      <li class="active">1</li>
+      <li>2</li>
+      <li>&rarr;</li>
+    </ul>
+  </div>
+
+</div>

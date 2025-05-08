@@ -1,0 +1,116 @@
+<main class="full-height centered-content">
+  <section class="d-flex gap-4 my-5">
+    <input
+      type="text"
+      placeholder="Search"
+      class="search-bar px-4"
+      [(ngModel)]="searchKeyword"
+      (ngModelChange)="filterInstructors()"
+    />
+
+    <h1 class="fw-bold">Private tutors that fit your schedule</h1>
+  </section>
+
+  <section
+    class="filter-bar d-flex align-items-center justify-content-center gap-4 my-4"
+  >
+    <div class="filter-container">
+      <div class="filter-label">
+        <span>Category</span>
+      </div>
+      <select
+        class="form-select rounded-5 px-3 py-2 filter-select"
+        [(ngModel)]="selectedCategory"
+        (change)="onCategoryChange()"
+      >
+        <option value="">All Categories</option>
+        <option>Information Technology</option>
+        <option>Medical</option>
+        <option>Science</option>
+        <option>Languages</option>
+      </select>
+    </div>
+
+    <div class="filter-container">
+      <div class="filter-label">
+        <span>Sort by Sessions</span>
+      </div>
+      <select
+        class="form-select rounded-5 px-3 py-2 filter-select"
+        [(ngModel)]="selectedSortOrder"
+        (change)="filterInstructors()"
+      >
+        <option value="">None</option>
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+    </div>
+    
+
+    <div class="filter-container">
+      <div class="filter-label">
+        <span>Price</span>
+      </div>
+      <select
+        class="form-select rounded-5 px-3 py-2 filter-select"
+        [(ngModel)]="selectedPrice"
+        (change)="filterInstructors()"
+      >
+        <option value="" disabled selected>Price</option>
+        <option>Less than 10 JD</option>
+        <option>10 JD</option>
+        <option>More than 10 JD</option>
+      </select>
+    </div>
+  </section>
+
+  <section class="my-5 teachers-result">
+    <div class="d-flex gap-4 my-4" *ngFor="let instructor of instructors">
+      <img
+        [src]="
+          instructor.image ||
+          'https://staudt-gmbh.com/wp-content/uploads/2018/07/person-dummy.jpg'
+        "
+        alt="Instructor Image"
+        width="165px"
+        height="180px"
+        class="rounded-4"
+      />
+      <section
+        style="background-color: #e7e7e7"
+        class="d-flex flex-grow-1 gap-4 p-3"
+      >
+        <div class="w-75">
+          <h2 class="fs-3">{{ instructor.fullName }}</h2>
+          <p>{{ instructor.university }}</p>
+          <p>{{ instructor.bio }}</p>
+        </div>
+        <div></div>
+        <div
+          class="w-25 d-flex justify-content-center align-items-center flex-column"
+        >
+          <h3 class="fs-5">{{ instructor.hourRate }} JD/Session</h3>
+          <p>
+            <img
+              src="../../../assets/images/star.png"
+              alt="star"
+              width="20px"
+              height="20px"
+            />
+            {{ instructor.rating }}/5
+          </p>
+          <p>{{ instructor.reviewsCount }} Reviews</p>
+          <p>{{ instructor.sessionsCount }} Sessions</p>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <div class="pagination-container">
+    <ul class="pagination">
+      <li class="active">1</li>
+      <li>2</li>
+      <li>&rarr;</li>
+    </ul>
+  </div>
+</main>

@@ -1,0 +1,48 @@
+#full-height {
+  margin-top: 80px;
+  padding-bottom: 50px;
+  display: flex;
+  justify-content: center;
+}
+
+.container-background {
+  background-color: #f8f9fa7d;
+  border: 1px solid #ccc;
+}
+
+h1 {
+  color: #343a40;
+}
+
+form {
+  width: 95%;
+  max-width: 900px;
+}
+
+textarea {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  height: 200px;
+  resize: none;
+  padding: 10px;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #00d2c8;
+}
+
+.bigger-size {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .bigger-size {
+    width: 60% !important;
+  }
+
+  .w-md-40 {
+    width: 40% !important;
+  }
+}

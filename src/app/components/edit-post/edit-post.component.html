@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Post</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Edit your post</h2>
+
+    <label for="subject">Subject</label>
+    <input type="text" id="subject" value="Need Help Understanding Derivatives!">
+
+    <label for="description">Description</label>
+    <textarea id="description" rows="8">
+Hi everyone! I'm struggling with understanding how to find the derivative of composite functions using the chain rule. For example, how do we differentiate something like f(x)=(3x2+5)4f(x) = (3x^2 + 5)^4f(x)=(3x2+5)4? Can anyone break it down for me step by step?
+    </textarea>
+
+    <div class="flex-row">
+      <div class="flex-col">
+        <label for="price">Price</label>
+        <input type="text" id="price" value="33 JOD">
+      </div>
+
+      <div class="flex-col">
+        <label for="category">Category</label>
+        <select id="category">
+          <option selected>Mathematics</option>
+        </select>
+      </div>
+    </div>
+
+    <button>Edit Post</button>
+  </div>
+</body>
+</html>

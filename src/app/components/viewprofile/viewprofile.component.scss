@@ -1,0 +1,83 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f4ef09;
+  margin: 0;
+  padding: 6rem;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Teacher Profile Card */
+.teacher-card {
+  background-color: white;
+  border: 1px solid #333;
+  border-radius: 20px;
+  display: flex;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.profile-pic {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.teacher-info {
+  flex: 1;
+}
+
+.name-rating {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rating {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.star {
+  color: orange;
+}
+
+/* Reviews Section */
+.reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.review {
+  background-color: white;
+  border-radius: 20px;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.review-user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.icon {
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.review-rating {
+  font-weight: bold;
+}

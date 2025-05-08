@@ -1,0 +1,28 @@
+<!-- not-found.component.html -->
+<div class="not-found-container">
+  <div class="error-code">404</div>
+  <h1 class="error-title">Oops! Page Not Found</h1>
+  <p class="error-message">
+    The page you are looking for might have been removed, had its name changed,
+    or is temporarily unavailable.
+  </p>
+  <button class="home-button" (click)="navigateToHome()">Back to Home</button>
+  <div class="illustration">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300">
+      <path
+        fill="#e6e6e6"
+        d="M400 150c0 82-66 148-148 148S104 232 104 150 170 2 252 2s148 66 148 148z"
+      />
+      <circle cx="252" cy="150" r="120" fill="#d1d3d4" />
+      <path
+        fill="#fff"
+        d="M252 30a120 120 0 100 240 120 120 0 000-240zm0 210a90 90 0 110-180 90 90 0 010 180z"
+      />
+      <path
+        fill="#3f3d56"
+        d="M252 60a30 30 0 100 60 30 30 0 000-60zm0 90a60 60 0 110-120 60 60 0 010 120z"
+      />
+      <path fill="#6c63ff" d="M252 90a15 15 0 100 30 15 15 0 000-30z" />
+    </svg>
+  </div>
+</div>
