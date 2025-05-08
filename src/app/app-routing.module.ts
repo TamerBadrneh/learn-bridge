@@ -20,6 +20,7 @@ import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
 import { PendingPostsComponent } from './components/pending-posts/pending-posts.component';
 import { PendingReportsComponent } from './components/pendingreports/pendingreports.component';
+import { AddCardComponent } from './components/add-card/add-card.component';
 
 const routes: Routes = [
   // Guest Pages
@@ -88,6 +89,7 @@ const routes: Routes = [
       },
       { path: 'posts', component: PostsComponent, title: 'Posts' },
       { path: 'payment', component: PaymentComponent, title: 'Payment' },
+      { path: 'add-card', component: AddCardComponent, title: 'Add Card' },
       { path: 'my-posts', component: MyPostsComponent, title: 'My Posts' },
 
       {
