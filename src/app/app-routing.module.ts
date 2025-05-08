@@ -16,7 +16,6 @@ import { InstructorBioComponent } from './components/instructor-bio/instructor-b
 import { InstructorLayoutComponent } from './components/instructor-layout/instructor-layout.component';
 import { InstructorProfile } from './components/Instructor-profile/instructor-profile.component';
 import { LearnerProfile } from './components/learner-profile/learner-profile.component';
-import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
 import { PendingPostsComponent } from './components/pending-posts/pending-posts.component';
 import { PendingReportsComponent } from './components/pendingreports/pendingreports.component';
@@ -87,17 +86,14 @@ const routes: Routes = [
         component: FindInstructorComponent,
         title: 'Find Instructor',
       },
-      { path: 'posts', component: PostsComponent, title: 'Posts' },
       { path: 'payment', component: PaymentComponent, title: 'Payment' },
       { path: 'add-card', component: AddCardComponent, title: 'Add Card' },
       { path: 'my-posts', component: MyPostsComponent, title: 'My Posts' },
-
       {
         path: 'create-post',
         component: CreatePostComponent,
         title: 'Create Post',
       },
-
       {
         path: 'learner-profile',
         component: LearnerProfile,
