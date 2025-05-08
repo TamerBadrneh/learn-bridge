@@ -1,74 +1,46 @@
-/* styles.css */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  background-color: #edecec5a;
-  padding: 110px;
-}
-.pagination {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 40px;
-}
-.page.active {
-  background-color: #00d2c8;
-  color: white;
-  border: none;
-}
 .container {
   max-width: 850px;
   margin: auto;
+  padding: 0 16px;
 }
 
 h1 {
-  font-size: 28px;
-  font-weight: bold;
-  letter-spacing: 2px;
-  margin-bottom: 30px;
+  font-size: 22px;
+  text-align: center;
+  margin-bottom: 24px;
 }
 
 .post-wrapper {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 40px;
-  gap: 20px;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
 }
 
 .card {
   background-color: #fff;
   border-radius: 15px;
-  padding: 20px;
-  width: 85%;
+  padding: 16px;
+  width: 100%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
 }
 
-.post-id, .category, .subject {
+.post-id,
+.category,
+.subject {
   margin-bottom: 6px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
 }
 
-.post-id span {
-  color: #00d2c8;
-}
-
-.math {
-  color: #00d2c8;
-}
-
+.post-id span,
+.math,
 .soft {
   color: #00d2c8;
 }
 
 .subject .link {
-  color: #000000;
+  color: #000;
   text-decoration: underline;
   cursor: pointer;
 }
@@ -87,23 +59,23 @@ h1 {
   border-radius: 20px;
   font-size: 14px;
   display: inline-block;
-} 
+  margin-top: 8px;
+}
 
 .actions-outer {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   gap: 10px;
-  padding-top: 10px;
 }
 
 button {
-  padding: 8px 16px;
+  flex: 1;
+  padding: 10px;
   font-size: 14px;
   font-weight: bold;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  min-width: 90px;
 }
 
 .accept {
@@ -114,4 +86,58 @@ button {
 .reject {
   background-color: #f08a8a;
   color: white;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.page {
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: #f0f0f0;
+  cursor: pointer;
+}
+
+.page.active {
+  background-color: #00d2c8;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .post-wrapper {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .card {
+    width: 85%;
+  }
+
+  .actions-outer {
+    flex-direction: column;
+    width: 15%;
+    padding-top: 10px;
+  }
+}
+
+.container {
+  padding-top: 24px;
+  padding-bottom: 48px;
+}
+
+.post-wrapper:last-child {
+  margin-bottom: 40px;
+}
+
+.pagination {
+  margin-top: 24px;
+  margin-bottom: 40px;
+  padding: 12px 0;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }

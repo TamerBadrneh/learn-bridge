@@ -1,53 +1,40 @@
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pending Posts</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <div class="container">
-    <h1>Pending posts</h1>
+<div class="container">
+  <h1>Pending posts</h1>
 
-    <div class="post-wrapper">
-      <div class="card">
-        <p class="post-id">Post iD: <span>91234691234</span></p>
-        <p class="category">Category : <span class="math">Mathematics</span></p>
-        <p class="subject">Subject : <span class="link">Need Tips for Solving Integration by Parts!</span></p>
-        <p class="desc">
-          Hey everyone! I'm stuck on how to apply integration by parts for problems like ∫xex dx/int e^x x dx, ∫xexdx. I understand the formula ∫u dv=uv − ∫v du, u dv = uv - ∫v∫u , du ∫v=uv−∫vdu, but I'm unsure how to choose u and dv/dvdu. Any tips or tricks to make this easier?
-        </p>
-        <div class="price">Price : <b>25 JOD</b></div>
-      </div>
-      <div class="actions-outer">
-        <button class="accept">Accept</button>
-        <button class="reject">Reject</button>
+  <div class="post-wrapper" *ngFor="let post of paginatedPosts">
+    <div class="card">
+      <p class="post-id">
+        Post ID: <span>{{ post.postId }}</span>
+      </p>
+      <p class="category">
+        Category: <span class="math">{{ post.category }}</span>
+      </p>
+      <p class="subject">
+        Subject: <span class="link">{{ post.subject }}</span>
+      </p>
+      <p class="desc">{{ post.content }}</p>
+      <div class="price">
+        Price: <b>{{ post.price }} JOD</b>
       </div>
     </div>
-
-    <div class="post-wrapper">
-      <div class="card">
-        <p class="post-id">Post iD: <span>91234691567</span></p>
-        <p class="category">Category : <span class="math">Mathematics</span></p>
-        <p class="subject">Subject : <span class="link">Need Help Understanding Derivatives!</span></p>
-        <p class="desc">
-          Hi everyone! I'm struggling with understanding how to find the derivative of composite functions using the chain rule. For example, how do we differentiate something like f(x)=(3x²+5)^4f(x) = (3x^2 + 5)^4f(x)=(3x2+5)4? Can anyone break it down for me step by step?
-        </p>
-        <div class="price">Price : <b>33 JOD</b></div>
-      </div>
-      <div class="actions-outer">
-        <button class="accept">Accept</button>
-        <button class="reject">Reject</button>
-      </div>
+    <div class="actions-outer">
+      <button class="accept" (click)="acceptPost(post.authorId, post.postId)">
+        Accept
+      </button>
+      <button class="reject" (click)="rejectPost(post.authorId, post.postId)">
+        Reject
+      </button>
     </div>
-
-    <div class="pagination">
-      
-      <button class="page active accept">1</button>
-      <button class="page">2</button>
-      <button class="page">&raquo;</button>
-    </div>
-
   </div>
-</body>
-</html>
+
+  <div class="pagination" *ngIf="totalPages() > 1">
+    <button
+      class="page"
+      *ngFor="let page of [].constructor(totalPages()); let i = index"
+      [class.active]="currentPage === i + 1"
+      (click)="changePage(i + 1)"
+    >
+      {{ i + 1 }}
+    </button>
+  </div>
+</div>
