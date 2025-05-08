@@ -8,20 +8,20 @@ import { HttpErrorResponse } from '@angular/common/http';
   selector: 'app-login',
   standalone: false,
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   loginSubmitted = false;
   errorMessage: string = '';
   isLoading = false;
-  showDebugLogs = true; // Set to false in production
+  showDebugLogs = true;
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.initializeForm();
@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
   private initializeForm() {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
@@ -40,7 +40,11 @@ export class LoginComponent implements OnInit {
 
   isFieldInvalid(fieldName: string): boolean {
     const field = this.loginForm.get(fieldName);
-    return !!field && field.invalid && (field.dirty || field.touched || this.loginSubmitted);
+    return (
+      !!field &&
+      field.invalid &&
+      (field.dirty || field.touched || this.loginSubmitted)
+    );
   }
 
   getErrorMessage(fieldName: string): string {
@@ -54,7 +58,8 @@ export class LoginComponent implements OnInit {
 
     if (fieldName === 'password') {
       if (field.errors?.['required']) return 'Password is required';
-      if (field.errors?.['minlength']) return 'Password must be at least 6 characters';
+      if (field.errors?.['minlength'])
+        return 'Password must be at least 6 characters';
     }
 
     return '';
@@ -72,7 +77,7 @@ export class LoginComponent implements OnInit {
     this.isLoading = true;
     const credentials = {
       email: this.loginForm.value.email,
-      password: this.loginForm.value.password
+      password: this.loginForm.value.password,
     };
 
     this.logDebug('Attempting login with:', credentials);
@@ -84,7 +89,7 @@ export class LoginComponent implements OnInit {
       },
       error: (loginError: HttpErrorResponse) => {
         this.handleLoginError(loginError);
-      }
+      },
     });
   }
 
@@ -96,7 +101,7 @@ export class LoginComponent implements OnInit {
       },
       error: (fetchError: HttpErrorResponse) => {
         this.handleUserDataError(fetchError);
-      }
+      },
     });
   }
 
@@ -112,12 +117,15 @@ export class LoginComponent implements OnInit {
     const normalizedRole = userData.role.toUpperCase();
     this.logDebug('Normalized user role:', normalizedRole);
 
-    switch(normalizedRole) {
+    switch (normalizedRole) {
       case 'INSTRUCTOR':
         this.router.navigate(['/instructor/home']);
         break;
       case 'LEARNER':
         this.router.navigate(['/learner/home']);
+        break;
+      case 'ADMIN':
+        this.router.navigate(['/admin/home']);
         break;
       default:
         this.handleUnknownRole(normalizedRole);
@@ -133,17 +141,19 @@ export class LoginComponent implements OnInit {
     } else if (error.status === 401) {
       this.errorMessage = 'Invalid email or password';
     } else {
-      this.errorMessage = error.error?.error || 'Login failed. Please try again.';
+      this.errorMessage =
+        error.error?.error || 'Login failed. Please try again.';
     }
   }
 
   private handleUserDataError(error: HttpErrorResponse) {
     this.isLoading = false;
     this.logError('User data fetch failed:', error);
-    
-    this.errorMessage = error.status === 401 
-      ? 'Session expired - please login again'
-      : 'Failed to load user profile';
+
+    this.errorMessage =
+      error.status === 401
+        ? 'Session expired - please login again'
+        : 'Failed to load user profile';
   }
 
   private handleUnknownRole(role: string) {

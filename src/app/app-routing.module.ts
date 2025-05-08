@@ -16,8 +16,13 @@ import { InstructorBioComponent } from './components/instructor-bio/instructor-b
 import { InstructorLayoutComponent } from './components/instructor-layout/instructor-layout.component';
 import { InstructorProfile } from './components/Instructor-profile/instructor-profile.component';
 import { LearnerProfile } from './components/learner-profile/learner-profile.component';
+import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
+import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
+import { PendingPostsComponent } from './components/pending-posts/pending-posts.component';
+import { PendingReportsComponent } from './components/pendingreports/pendingreports.component';
 
 const routes: Routes = [
+  // Guest Pages
   {
     path: '',
     component: AuthLayoutComponent,
@@ -40,6 +45,36 @@ const routes: Routes = [
     ],
   },
 
+  // Admin Pages
+  {
+    path: 'admin',
+    component: AdminLayoutComponent,
+    children: [
+      { path: 'home', component: HomeComponent, title: 'Home' },
+      {
+        path: 'find-instructor',
+        component: FindInstructorComponent,
+        title: 'Find Instructor',
+      },
+      {
+        path: 'posts',
+        component: PostsComponent,
+        title: 'Posts',
+      },
+      {
+        path: 'pending-posts',
+        component: PendingPostsComponent,
+        title: 'Pending Posts',
+      },
+      {
+        path: 'pending-reports',
+        component: PendingReportsComponent,
+        title: 'Pending Reports',
+      },
+    ],
+  },
+
+  // Learner Pages
   {
     path: 'learner',
     component: BlankLayoutComponent,
@@ -47,18 +82,18 @@ const routes: Routes = [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent, title: 'Home' },
       {
-        path: 'findinstructor',
+        path: 'find-instructor',
         component: FindInstructorComponent,
         title: 'Find Instructor',
       },
       { path: 'posts', component: PostsComponent, title: 'Posts' },
       { path: 'payment', component: PaymentComponent, title: 'Payment' },
-      { path: 'myposts', component: MyPostsComponent, title: 'Myposts' },
+      { path: 'my-posts', component: MyPostsComponent, title: 'My Posts' },
 
       {
         path: 'create-post',
         component: CreatePostComponent,
-        title: 'CreatePost',
+        title: 'Create Post',
       },
 
       {
@@ -68,6 +103,8 @@ const routes: Routes = [
       },
     ],
   },
+
+  // Instructor Pages
   {
     path: 'instructor',
     component: InstructorLayoutComponent,
@@ -88,6 +125,7 @@ const routes: Routes = [
     ],
   },
 
+  // Not found Page
   { path: '**', component: NotFoundComponent, title: 'NotFound' },
 ];
 

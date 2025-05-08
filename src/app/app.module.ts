@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 
+import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
+import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -49,6 +51,8 @@ import { LearnerProfile } from './components/learner-profile/learner-profile.com
     NavInstructorComponent,
     InstructorProfile,
     LearnerProfile,
+    AdminLayoutComponent,
+    AdminNavComponent,
   ],
   imports: [
     BrowserModule,
