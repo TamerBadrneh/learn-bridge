@@ -12,8 +12,7 @@
     #form="ngForm"
   >
     <h2 class="fw-bold fs-4 my-3">General Details</h2>
-
-    <!-- First Name Field -->
+    <!-- First Name -->
     <div class="mb-3">
       <label class="form-label">First Name</label>
       <input
@@ -22,16 +21,17 @@
         name="firstName"
         [(ngModel)]="formData.firstName"
         required
+        #firstName="ngModel"
       />
       <p
         class="form-text text-danger"
-        *ngIf="form.submitted && !formData.firstName"
+        *ngIf="firstName.invalid && firstName.touched"
       >
         First Name is required
       </p>
     </div>
 
-    <!-- Last Name Field -->
+    <!-- Last Name -->
     <div class="mb-3">
       <label class="form-label">Last Name</label>
       <input
@@ -40,16 +40,17 @@
         name="lastName"
         [(ngModel)]="formData.lastName"
         required
+        #lastName="ngModel"
       />
       <p
         class="form-text text-danger"
-        *ngIf="form.submitted && !formData.lastName"
+        *ngIf="lastName.invalid && lastName.touched"
       >
         Last Name is required
       </p>
     </div>
 
-    <!-- Email Field -->
+    <!-- Email -->
     <div class="mb-3">
       <label class="form-label">Email</label>
       <input
@@ -58,12 +59,11 @@
         name="email"
         [(ngModel)]="formData.email"
         required
+        email
+        #email="ngModel"
       />
-      <p
-        class="form-text text-danger"
-        *ngIf="form.submitted && !formData.email"
-      >
-        Email is required
+      <p class="form-text text-danger" *ngIf="email.invalid && email.touched">
+        Valid email is required
       </p>
     </div>
 
@@ -76,12 +76,14 @@
         name="password"
         [(ngModel)]="formData.password"
         required
+        minlength="6"
+        #password="ngModel"
       />
       <p
         class="form-text text-danger"
-        *ngIf="form.submitted && !formData.password"
+        *ngIf="password.invalid && password.touched"
       >
-        Password is required
+        Password (min 6 characters) is required
       </p>
     </div>
 
@@ -93,11 +95,17 @@
         class="form-control"
         name="confirmPassword"
         [(ngModel)]="formData.confirmPassword"
-        required
+        [required]="formData.password"
+        #confirmPassword="ngModel"
       />
       <p
         class="form-text text-danger"
-        *ngIf="form.submitted && formData.password !== formData.confirmPassword"
+        *ngIf="
+          confirmPassword.touched &&
+          formData.password &&
+          formData.confirmPassword &&
+          formData.password !== formData.confirmPassword
+        "
       >
         Passwords do not match
       </p>
@@ -110,6 +118,7 @@
         name="favouriteCategory"
         [(ngModel)]="formData.favouriteCategory"
         required
+        #favouriteCategory="ngModel"
       >
         <option value="" disabled selected>Favorite Category</option>
         <option>IT</option>
@@ -119,7 +128,7 @@
       </select>
       <p
         class="form-text text-danger"
-        *ngIf="form.submitted && !formData.favouriteCategory"
+        *ngIf="favouriteCategory.invalid && favouriteCategory.touched"
       >
         Category selection is required
       </p>
@@ -130,7 +139,7 @@
       type="submit"
       value="Save Changes"
       class="btn btn-dark rounded-pill px-5 py-2 my-3 align-self-end"
-      [disabled]="isFormInvalid()"
+      [disabled]="form.invalid || hasPasswordMismatch()"
     />
   </form>
 </div>

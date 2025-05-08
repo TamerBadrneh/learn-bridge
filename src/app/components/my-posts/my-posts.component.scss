@@ -1,4 +1,3 @@
-/* General Colors & Styling */
 $main-color: #00d2c8;
 $gray: #d9d9d9;
 
@@ -10,7 +9,7 @@ $gray: #d9d9d9;
 
 h1 {
   font-size: 2.5rem;
-  margin: 0.5rem 0 1rem 0; // تقليل كل المسافات حول العنوان
+  margin: 0.5rem 0 1rem 0;
   text-align: center;
 }
 
@@ -106,7 +105,8 @@ h1 {
 .pagination li:hover {
   background-color: #ddd;
 }
-body, main {
+body,
+main {
   margin: 0;
   padding: 0;
 }
