@@ -134,7 +134,7 @@ export class PostsComponent implements OnInit {
     );
     if (!confirmed) return;
 
-    const learnerId = this.authService.userData?.userId;
+    const learnerId = post.authorId;
     const postId = post.postId;
 
     if (!learnerId || !postId) return;
