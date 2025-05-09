@@ -80,9 +80,13 @@ export class MyPostsComponent implements OnInit {
   }
 
   navigateToEdit(postId: number): void {
-    this.router.navigate(['/learner/edit-post'], {
-      queryParams: { id: postId },
-    });
+    const post = this.allPosts.find((p) => p.postId === postId);
+    if (post) {
+      localStorage.setItem('editPostData', JSON.stringify(post));
+      this.router.navigate(['/learner/edit-post'], {
+        queryParams: { id: postId },
+      });
+    }
   }
 
   confirmDelete(postId: number): void {

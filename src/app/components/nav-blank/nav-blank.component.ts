@@ -1,19 +1,65 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
-  selector: 'app-nav-blank',
   standalone: false,
+  selector: 'app-nav-blank',
   templateUrl: './nav-blank.component.html',
-  styleUrl: './nav-blank.component.scss'
+  styleUrl: './nav-blank.component.scss',
 })
-export class NavBlankComponent {
+export class NavBlankComponent implements OnInit {
+  notifications: any[] = [];
+  hasUnread = false;
 
+  constructor(
+    private _AuthService: AuthService,
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
-  constructor(private _AuthService: AuthService) {
-    
+  ngOnInit(): void {
+    this.fetchNotifications();
   }
-  logoutUser(){
-    this._AuthService.logout()
+
+  fetchNotifications() {
+    this.http
+      .get<any[]>('http://localhost:8080/api/agreements/notifications', {
+        withCredentials: true,
+      })
+      .subscribe((data) => {
+        this.notifications = data || [];
+        this.hasUnread = this.notifications.some(
+          (n) => n.readStatus === 'UNREAD'
+        );
+      });
+  }
+
+  handleNotificationClick(notification: any) {
+    if (notification.readStatus === 'UNREAD') {
+      this.http
+        .put(
+          `http://localhost:8080/api/notifications/${notification.notificationId}/read`,
+          {},
+          {
+            withCredentials: true,
+          }
+        )
+        .subscribe(() => {
+          notification.readStatus = 'READ';
+          this.hasUnread = this.notifications.some(
+            (n) => n.readStatus === 'UNREAD'
+          );
+        });
+    }
+
+    if (notification.notificationType === 'AGREEMENT_REQUEST') {
+      this.router.navigate(['/learner/agreement']);
+    }
+  }
+
+  logoutUser() {
+    this._AuthService.logout();
   }
 }

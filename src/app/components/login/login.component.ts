@@ -117,6 +117,12 @@ export class LoginComponent implements OnInit {
     const normalizedRole = userData.role.toUpperCase();
     this.logDebug('Normalized user role:', normalizedRole);
 
+    // TODO: When Zaid finish uncomment this...
+    // if (localStorage.getItem('isNewUser')) {
+    //   this.router.navigate(['/add-card']);
+    //   return;
+    // }
+
     switch (normalizedRole) {
       case 'INSTRUCTOR':
         this.router.navigate(['/instructor/home']);

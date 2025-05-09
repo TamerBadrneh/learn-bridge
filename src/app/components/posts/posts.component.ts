@@ -13,6 +13,7 @@ interface Post {
   content: string;
   postStatus: string;
   category: string;
+  agreementSent?: boolean;
 }
 
 @Component({
@@ -125,5 +126,33 @@ export class PostsComponent implements OnInit {
       start,
       start + this.pageSize
     );
+  }
+
+  confirmAgreement(post: Post) {
+    const confirmed = window.confirm(
+      `Are you sure you wish to teach this learner ?`
+    );
+    if (!confirmed) return;
+
+    const learnerId = post.authorId;
+    const postId = post.postId;
+
+    if (!learnerId || !postId) return;
+
+    this.http
+      .post(
+        `http://localhost:8080/api/agreements/request/${learnerId}/${postId}`,
+        {},
+        { withCredentials: true }
+      )
+      .subscribe({
+        next: () => {
+          post.agreementSent = true;
+        },
+        error: (err) => {
+          console.error('Agreement request failed:', err);
+          alert('Failed to send agreement. Please try again.');
+        },
+      });
   }
 }
