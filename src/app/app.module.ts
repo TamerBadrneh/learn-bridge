@@ -1,9 +1,11 @@
+// src/app/app.module.ts
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { NgxStripeModule } from 'ngx-stripe';
+import { environment } from '../environements/environements';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
-import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
-import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -19,16 +21,14 @@ import { NavBlankComponent } from './components/nav-blank/nav-blank.component';
 import { NavAuthComponent } from './components/nav-auth/nav-auth.component';
 import { AuthLayoutComponent } from './components/auth-layout/auth-layout.component';
 import { BlankLayoutComponent } from './components/blank-layout/blank-layout.component';
-import { ReactiveFormsModule } from '@angular/forms';
-
-
-import { HttpClientModule } from '@angular/common/http';
 import { CreatePostComponent } from './components/create-post/create-post.component';
 import { InstructorBioComponent } from './components/instructor-bio/instructor-bio.component';
 import { InstructorLayoutComponent } from './components/instructor-layout/instructor-layout.component';
 import { NavInstructorComponent } from './components/nav-instructor/nav-instructor.component';
 import { InstructorProfile } from './components/Instructor-profile/instructor-profile.component';
 import { LearnerProfile } from './components/learner-profile/learner-profile.component';
+import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
+import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +58,10 @@ import { LearnerProfile } from './components/learner-profile/learner-profile.com
   imports: [
     BrowserModule,
     AppRoutingModule,
+
+    // Stripe Elements
+    NgxStripeModule.forRoot(environment.stripe.publicKey),
+
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
