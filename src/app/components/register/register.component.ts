@@ -180,8 +180,7 @@ export class RegisterComponent implements OnInit {
     };
 
     // We are storing the value for adding the card...
-    // TODO: When Zaid finish, uncomment this
-    // localStorage.setItem('isNewUser', 'true');
+    localStorage.setItem('isNewUser', 'true');
 
     if (userData.role === 'INSTRUCTOR') {
       localStorage.setItem('pendingInstructor', JSON.stringify(userData));
@@ -195,7 +194,6 @@ export class RegisterComponent implements OnInit {
         universityInfo: '',
       };
 
-      // TODO: fix api call when deploy the project...
       axios
         .post('http://localhost:8080/api/register', formattedUserData)
         .then(() => {

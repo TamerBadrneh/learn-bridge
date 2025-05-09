@@ -64,18 +64,16 @@ export class InstructorBioComponent implements OnInit {
 
     this.isLoading = true;
 
-    // TODO: fix api call when deploy the project...
     axios
       .post('http://localhost:8080/api/register', fullUserData)
       .then(() => {
         this.isLoading = false;
         alert('Bio Successfully Updated !');
 
-        // TODO: When Zaid finish uncomment this
-        // if (localStorage.getItem('isNewUser')) {
-        //   this._Router.navigate(['/add-card']);
-        //   return;
-        // }
+        if (localStorage.getItem('isNewUser')) {
+          this._Router.navigate(['/add-card']);
+          return;
+        }
 
         this._Router.navigate(['/instructor/home']);
       })
