@@ -179,9 +179,12 @@ export class RegisterComponent implements OnInit {
       favouriteCategory: this.signupForm.value.favoriteCategories,
     };
 
+    // We are storing the value for adding the card...
+    // TODO: When Zaid finish, uncomment this
+    // localStorage.setItem('isNewUser', 'true');
+
     if (userData.role === 'INSTRUCTOR') {
       localStorage.setItem('pendingInstructor', JSON.stringify(userData));
-
       this.isLoading = false;
       this._Router.navigate(['/instructor-bio']);
     } else {

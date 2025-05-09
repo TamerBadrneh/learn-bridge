@@ -131,6 +131,13 @@ const routes: Routes = [
     ],
   },
 
+  // Add Card "Mandatory Setup" route
+  {
+    path: 'add-card',
+    component: AddCardComponent,
+    title: 'Add Your Card',
+  },
+
   // Not found Page
   { path: '**', component: NotFoundComponent, title: 'NotFound' },
 ];

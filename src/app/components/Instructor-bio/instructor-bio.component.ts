@@ -70,6 +70,13 @@ export class InstructorBioComponent implements OnInit {
       .then(() => {
         this.isLoading = false;
         alert('Bio Successfully Updated !');
+
+        // TODO: When Zaid finish uncomment this
+        // if (localStorage.getItem('isNewUser')) {
+        //   this._Router.navigate(['/add-card']);
+        //   return;
+        // }
+
         this._Router.navigate(['/instructor/home']);
       })
       .catch((error) => {
