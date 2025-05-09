@@ -69,6 +69,7 @@ export class InstructorBioComponent implements OnInit {
       .post('http://localhost:8080/api/register', fullUserData)
       .then(() => {
         this.isLoading = false;
+        alert('Bio Successfully Updated !');
         this._Router.navigate(['/instructor/home']);
       })
       .catch((error) => {

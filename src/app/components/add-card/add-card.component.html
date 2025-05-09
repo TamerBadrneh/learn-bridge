@@ -16,9 +16,11 @@
           required
           pattern="^[0-9]{16}$"
           #cardNumber="ngModel"
-          (input)="onInput()"
         />
-        <p *ngIf="cardNumber.invalid && (cardNumber.dirty || form.submitted)" class="form-text text-danger">
+        <p
+          *ngIf="cardNumber.invalid && (cardNumber.dirty || form.submitted)"
+          class="form-text text-danger"
+        >
           Card number must be exactly 16 digits.
         </p>
       </div>
@@ -35,9 +37,11 @@
           required
           pattern="^(0[1-9]|1[0-2])\/(2[0-9])$"
           #expireDate="ngModel"
-          (input)="onInput()"
         />
-        <p *ngIf="expireDate.invalid && (expireDate.dirty || form.submitted)" class="form-text text-danger">
+        <p
+          *ngIf="expireDate.invalid && (expireDate.dirty || form.submitted)"
+          class="form-text text-danger"
+        >
           Expiry date must be in MM/YY format.
         </p>
       </div>
@@ -54,10 +58,33 @@
           required
           pattern="^[0-9]{3}$"
           #cvv="ngModel"
-          (input)="onInput()"
         />
-        <p *ngIf="cvv.invalid && (cvv.dirty || form.submitted)" class="form-text text-danger">
+        <p
+          *ngIf="cvv.invalid && (cvv.dirty || form.submitted)"
+          class="form-text text-danger"
+        >
           CVV must be exactly 3 digits.
+        </p>
+      </div>
+
+      <!-- CVC -->
+      <div class="my-3">
+        <label class="form-label">CVC</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="card.cvc"
+          name="cvc"
+          placeholder="###"
+          required
+          pattern="^[0-9]{3}$"
+          #cvc="ngModel"
+        />
+        <p
+          *ngIf="cvc.invalid && (cvc.dirty || form.submitted)"
+          class="form-text text-danger"
+        >
+          CVC must be exactly 3 digits.
         </p>
       </div>
 
@@ -84,7 +111,9 @@
     </form>
 
     <!-- Buttons -->
-    <div class="col-12 col-md-5 d-flex flex-column justify-content-center align-items-center gap-4">
+    <div
+      class="col-12 col-md-5 d-flex flex-column justify-content-center align-items-center gap-4"
+    >
       <button
         id="padding-button"
         type="submit"

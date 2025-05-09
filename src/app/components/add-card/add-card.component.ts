@@ -16,14 +16,11 @@ export class AddCardComponent {
     cardNumber: '',
     expireDate: '',
     cvv: '',
+    cvc: '',
     holderName: '',
   };
 
   constructor(private http: HttpClient, private router: Router) {}
-
-  onInput() {
-    // Add any specific logic when a user enters input, e.g., formatting card number
-  }
 
   onSubmit(form: any) {
     if (form.valid) {
@@ -33,21 +30,30 @@ export class AddCardComponent {
         holderName: this.card.holderName,
       };
 
-      this.http.post('http://localhost:8080/api/cards/add', payload, {
-        withCredentials: true,
-        headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-      }).subscribe({
-        next: () => {
-          console.log('Card added successfully');
-        },
-        error: (err) => {
-          console.error('Error adding card:', err);
-        }
-      });
+      this.http
+        .post('http://localhost:8080/api/cards/add', payload, {
+          withCredentials: true,
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        })
+        .subscribe({
+          next: () => {
+            alert('Card Added Successfully !');
+          },
+          error: (err) => {
+            console.error('Error adding card:', err);
+          },
+        });
     }
   }
 
+  // TODO: Ask Zaid for new endpoint so we can navigate correctly
+  // Or we can store the data in local Storage "not recommended"...
   cancel() {
-    this.router.navigate(['/learner/payment']);
+    const role = localStorage.getItem('role');
+    if (role === 'instructor') {
+      this.router.navigate(['/instructor/payment']);
+    } else {
+      this.router.navigate(['/learner/payment']);
+    }
   }
 }

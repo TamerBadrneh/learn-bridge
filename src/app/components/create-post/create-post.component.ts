@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: false,
@@ -8,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./create-post.component.scss'],
 })
 export class CreatePostComponent {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   categories: string[] = ['IT', 'SCIENCE', 'LANGUAGES', 'MEDICAL'];
 
@@ -45,7 +46,10 @@ export class CreatePostComponent {
         }
       )
       .subscribe({
-        next: () => alert('Post created successfully!'),
+        next: () => {
+          alert('Post created successfully!');
+          this.router.navigate(['/learner/my-posts']);
+        },
         error: (err) => console.error('Error creating post', err),
       });
   }

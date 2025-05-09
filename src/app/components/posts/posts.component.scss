@@ -1,88 +1,52 @@
-#full-height {
-  height: 100vh;
-}
-
 .centered-content {
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
 }
 
 .search-bar {
-  width: 30%;
-  border: solid 5px rgb(190, 190, 190);
-  border-radius: 30px;
-}
-
-.search-bar:focus {
-  outline: none;
-}
-
-select,
-option {
-  color: #000000;
-}
-
-.filter-btn {
-  margin-top: 25px;
-  color: #000000;
-  font-weight: bolds;
+  flex: 1;
+  min-width: 250px;
+  max-width: 400px;
+  border: 2px solid #ccc;
+  border-radius: 20px;
 }
 
 .teachers-result {
-  height: 65vh;
-  padding: 20px;
-  overflow-y: scroll;
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
 .post-container {
   background-color: #d9d9d9;
   border: 1px solid #ccc;
   border-radius: 40px;
-}
-
-.custom-button {
-  background-color: #00d2c8;
-  color: white;
-  border: none;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.custom-button:hover {
-  background-color: #008d85;
-  color: black;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .pagination-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100%;
 }
 
 .pagination {
-  display: flex;
-  gap: 10px;
   list-style: none;
-  padding: 10px;
-  font-family: Arial, sans-serif;
+  display: flex;
+  gap: 8px;
+  padding: 0;
 }
 
 .pagination li {
-  padding: 8px 14px;
-  border: 1px solid #ccc;
+  padding: 8px 12px;
+  background: #eee;
   border-radius: 5px;
   cursor: pointer;
-  user-select: none;
 }
 
 .pagination li.active {
-  background-color: #04ccbc;
+  background: #04ccbc;
   color: white;
   font-weight: bold;
-  border-color: #04ccbc;
-}
-
-.pagination li:hover {
-  background-color: #ddd;
 }
