@@ -51,7 +51,12 @@
         </p>
       </div>
       <div>
-        <button class="edit-btn me-2" (click)="navigateToEdit(post.postId)">
+        <button
+          class="edit-btn me-2"
+          [class.disabled-btn]="post.postStatus === 'REJECTED'"
+          [disabled]="post.postStatus === 'REJECTED'"
+          (click)="navigateToEdit(post.postId)"
+        >
           Edit
         </button>
         <button class="btn btn-danger" (click)="confirmDelete(post.postId)">
