@@ -47,7 +47,7 @@ export class InstructorProfile {
         }
       )
       .subscribe({
-        next: () => console.log('Payload Sent:', payload),
+        next: () => alert('Your Information got successfully updated !'),
         error: (error) => console.error('Error:', error),
       });
   }

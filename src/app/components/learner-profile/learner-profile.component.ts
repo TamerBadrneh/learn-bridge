@@ -49,6 +49,7 @@ export class LearnerProfile {
           withCredentials: true,
         })
         .toPromise();
+      alert('Your Information got successfully updated !');
     } catch (error) {
       console.error('Profile update failed', error);
     }
