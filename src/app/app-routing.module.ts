@@ -21,6 +21,7 @@ import { PendingPostsComponent } from './components/pending-posts/pending-posts.
 import { PendingReportsComponent } from './components/pendingreports/pendingreports.component';
 import { AddCardComponent } from './components/add-card/add-card.component';
 import { EditPostComponent } from './components/edit-post/edit-post.component';
+import { AgreementComponent } from './components/agreement/agreement.component';
 
 const routes: Routes = [
   // Guest Pages
@@ -104,6 +105,11 @@ const routes: Routes = [
         path: 'edit-post',
         component: EditPostComponent,
         title: 'Edit Post',
+      },
+      {
+        path: 'agreement',
+        component: AgreementComponent,
+        title: 'Agreement Confirmation',
       },
     ],
   },
