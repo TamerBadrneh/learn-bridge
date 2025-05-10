@@ -29,6 +29,11 @@ import { InstructorProfile } from './components/Instructor-profile/instructor-pr
 import { LearnerProfile } from './components/learner-profile/learner-profile.component';
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 
 @NgModule({
   declarations: [
@@ -54,6 +59,7 @@ import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
     LearnerProfile,
     AdminLayoutComponent,
     AdminNavComponent,
+    ChatComponent,
   ],
   imports: [
     BrowserModule,
@@ -65,6 +71,10 @@ import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
+
+    // firebase
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
