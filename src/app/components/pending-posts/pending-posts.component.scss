@@ -1,13 +1,20 @@
 .container {
   max-width: 850px;
   margin: auto;
-  padding: 0 16px;
+  padding: 24px 16px 48px;
 }
 
 h1 {
   font-size: 22px;
   text-align: center;
   margin-bottom: 24px;
+}
+
+.no-posts {
+  text-align: center;
+  font-size: 18px;
+  color: #888;
+  padding: 60px 0;
 }
 
 .post-wrapper {
@@ -66,6 +73,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   gap: 10px;
+  margin-top: 16px;
 }
 
 button {
@@ -76,6 +84,7 @@ button {
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
 
 .accept {
@@ -88,11 +97,19 @@ button {
   color: white;
 }
 
+button:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
 .pagination {
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-top: 30px;
+  margin: 24px 0 40px;
+  padding: 12px 0;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
   flex-wrap: wrap;
 }
 
@@ -115,29 +132,11 @@ button {
   }
 
   .card {
-    width: 85%;
+    width: 100%;
   }
 
   .actions-outer {
-    flex-direction: column;
-    width: 15%;
-    padding-top: 10px;
+    flex-direction: row;
+    justify-content: flex-end;
   }
-}
-
-.container {
-  padding-top: 24px;
-  padding-bottom: 48px;
-}
-
-.post-wrapper:last-child {
-  margin-bottom: 40px;
-}
-
-.pagination {
-  margin-top: 24px;
-  margin-bottom: 40px;
-  padding: 12px 0;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
 }

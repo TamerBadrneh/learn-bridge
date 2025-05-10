@@ -1,40 +1,51 @@
 <div class="container">
   <h1>Pending posts</h1>
 
-  <div class="post-wrapper" *ngFor="let post of paginatedPosts">
-    <div class="card">
-      <p class="post-id">
-        Post ID: <span>{{ post.postId }}</span>
-      </p>
-      <p class="category">
-        Category: <span class="math">{{ post.category }}</span>
-      </p>
-      <p class="subject">
-        Subject: <span class="link">{{ post.subject }}</span>
-      </p>
-      <p class="desc">{{ post.content }}</p>
-      <div class="price">
-        Price: <b>{{ post.price }} JOD</b>
+  <div *ngIf="posts.length === 0" class="no-posts">No pending posts.</div>
+
+  <div *ngIf="posts.length > 0">
+    <div class="post-wrapper" *ngFor="let post of paginatedPosts">
+      <div class="card">
+        <p class="post-id">
+          Post ID: <span>{{ post.postId }}</span>
+        </p>
+        <p class="category">
+          Category: <span class="math">{{ post.category }}</span>
+        </p>
+        <p class="subject">
+          Subject: <span class="link">{{ post.subject }}</span>
+        </p>
+        <p class="desc">{{ post.content }}</p>
+        <div class="price">
+          Price: <b>{{ post.price }} JOD</b>
+        </div>
+
+        <div class="actions-outer">
+          <button
+            class="accept"
+            (click)="acceptPost(post.authorId, post.postId)"
+          >
+            Accept
+          </button>
+          <button
+            class="reject"
+            (click)="rejectPost(post.authorId, post.postId)"
+          >
+            Reject
+          </button>
+        </div>
       </div>
     </div>
-    <div class="actions-outer">
-      <button class="accept" (click)="acceptPost(post.authorId, post.postId)">
-        Accept
-      </button>
-      <button class="reject" (click)="rejectPost(post.authorId, post.postId)">
-        Reject
+
+    <div class="pagination" *ngIf="totalPages() > 1">
+      <button
+        class="page"
+        *ngFor="let page of [].constructor(totalPages()); let i = index"
+        [class.active]="currentPage === i + 1"
+        (click)="changePage(i + 1)"
+      >
+        {{ i + 1 }}
       </button>
     </div>
-  </div>
-
-  <div class="pagination" *ngIf="totalPages() > 1">
-    <button
-      class="page"
-      *ngFor="let page of [].constructor(totalPages()); let i = index"
-      [class.active]="currentPage === i + 1"
-      (click)="changePage(i + 1)"
-    >
-      {{ i + 1 }}
-    </button>
   </div>
 </div>

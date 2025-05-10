@@ -55,17 +55,31 @@ export class PendingPostsComponent implements OnInit {
 
   acceptPost(authorId: number, postId: number) {
     this.http
-      .put(`http://localhost:8080/api/posts/accept/${authorId}/${postId}`, {
-        withCredentials: true,
-      })
-      .subscribe(() => this.fetchPendingPosts());
+      .put(
+        `http://localhost:8080/api/posts/accept/${authorId}/${postId}`,
+        null,
+        {
+          withCredentials: true,
+        }
+      )
+      .subscribe(() => {
+        alert('Post accepted successfully');
+        this.fetchPendingPosts();
+      });
   }
 
   rejectPost(authorId: number, postId: number) {
     this.http
-      .put(`http://localhost:8080/api/posts/reject/${authorId}/${postId}`, {
-        withCredentials: true,
-      })
-      .subscribe(() => this.fetchPendingPosts());
+      .put(
+        `http://localhost:8080/api/posts/reject/${authorId}/${postId}`,
+        null,
+        {
+          withCredentials: true,
+        }
+      )
+      .subscribe(() => {
+        alert('Post rejected successfully');
+        this.fetchPendingPosts();
+      });
   }
 }
