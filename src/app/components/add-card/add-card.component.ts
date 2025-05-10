@@ -103,6 +103,7 @@ export class AddCardComponent {
 
                   if (localStorage.getItem('isNewUser') === 'true') {
                     localStorage.setItem('isNewUser', 'false');
+                    wasNewUser = true;
                   }
 
                   const role =
