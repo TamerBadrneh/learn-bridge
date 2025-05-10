@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../shared/services/auth.service';
 import { Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 import axios from 'axios';
-import { first, last } from 'rxjs';
 
 @Component({
   selector: 'app-instructor-bio',
@@ -70,15 +68,14 @@ export class InstructorBioComponent implements OnInit {
         this.isLoading = false;
         alert('Bio Successfully Updated !');
 
-        if (localStorage.getItem('isNewUser')) {
-          this._Router.navigate(['/add-card']);
-          return;
-        }
+        localStorage.setItem('isNewUser', 'true');
 
-        this._Router.navigate(['/instructor/home']);
+        this._Router.navigate(['/login']);
       })
       .catch((error) => {
         console.log(error);
+        this.isLoading = false;
+        this.errorMessage = 'Something went wrong. Please try again.';
       });
   }
 }

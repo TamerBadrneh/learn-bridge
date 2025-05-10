@@ -29,6 +29,7 @@ import { InstructorProfile } from './components/Instructor-profile/instructor-pr
 import { LearnerProfile } from './components/learner-profile/learner-profile.component';
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
+import { ChatComponent } from './components/chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
     LearnerProfile,
     AdminLayoutComponent,
     AdminNavComponent,
+    ChatComponent,
   ],
   imports: [
     BrowserModule,
