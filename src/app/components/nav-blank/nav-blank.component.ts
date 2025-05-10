@@ -54,8 +54,12 @@ export class NavBlankComponent implements OnInit {
         });
     }
 
+    // Navigate to Agreement page when the notification is related to an agreement request
     if (notification.notificationType === 'AGREEMENT_REQUEST') {
-      this.router.navigate(['/learner/agreement']);
+      this.router.navigate(
+        ['/learner/agreement'],
+        { queryParams: { notificationId: notification.notificationId } }
+      );
     }
   }
 

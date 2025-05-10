@@ -17,3 +17,44 @@ main {
 #accept-btn:hover {
   background-color: #0069609c;
 }
+
+
+/* Add any styles you want here for the agreement component */
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: bold;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: normal;
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.button-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  font-size: 1rem;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+button.accept {
+  background-color: #28a745;
+  color: white;
+}
+
+button.reject {
+  background-color: #dc3545;
+  color: white;
+}
