@@ -14,14 +14,17 @@
     "@angular/common": "^19.1.0",
     "@angular/compiler": "^19.1.0",
     "@angular/core": "^19.1.0",
+    "@angular/fire": "^19.1.0",
     "@angular/forms": "^19.1.0",
     "@angular/platform-browser": "^19.1.0",
     "@angular/platform-browser-dynamic": "^19.1.0",
     "@angular/router": "^19.1.0",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@stripe/stripe-js": "^7.3.0",
+    "angular": "^1.8.3",
     "axios": "^1.9.0",
     "bootstrap": "^5.3.3",
+    "firebase": "^11.7.1",
     "jquery": "^3.7.1",
     "jwt-decode": "^4.0.0",
     "ngx-stripe": "^19.0.0",
@@ -43,5 +46,18 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.7.2"
-  }
+  },
+  "description": "This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.4.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TamerBadrneh/learn-bridge.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TamerBadrneh/learn-bridge/issues"
+  },
+  "homepage": "https://github.com/TamerBadrneh/learn-bridge#readme"
 }
