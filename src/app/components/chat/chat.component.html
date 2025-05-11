@@ -5,17 +5,16 @@
     <div class="chat-sidebar">
       <div class="search-container">
         <div class="input-group">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Search..."
-            value=""
-          />
+          <input type="text" class="form-control" placeholder="Search..." />
         </div>
       </div>
 
       <div class="chat-list">
-        <div class="chat-item" *ngFor="let chat of chats">
+        <div
+          class="chat-item"
+          *ngFor="let chat of chats"
+          (click)="loadMessages(chat.chatId)"
+        >
           <img
             src="https://staudt-gmbh.com/wp-content/uploads/2018/07/person-dummy.jpg"
             class="avatar"
@@ -23,15 +22,6 @@
           />
           <div class="chat-info">
             <h5>{{ chat.participantName || "Unknown" }}</h5>
-            <p>{{ chat.lastMessage?.text || "No messages yet" }}</p>
-          </div>
-          <div class="meta">
-            <span class="timestamp">{{
-              chat.lastMessage?.timestamp | date : "shortTime"
-            }}</span>
-            <span class="unread" *ngIf="chat.unreadCount > 0">{{
-              chat.unreadCount
-            }}</span>
           </div>
         </div>
       </div>
@@ -39,76 +29,58 @@
 
     <!-- Chat main area -->
     <div class="chat-main">
-      <div class="chat-header">
-        <div class="user">
-          <img
-            src="https://staudt-gmbh.com/wp-content/uploads/2018/07/person-dummy.jpg"
-            class="avatar"
-            alt="John Doe"
-          />
-          <h5>John Doe</h5>
-        </div>
-        <div class="session-buttons">
-          <button class="btn btn-light">Cancel session</button>
-          <button class="btn btn-info text-white">End Session</button>
-        </div>
-      </div>
-
-      <div class="chat-messages">
-        <!-- Message 1 - Received -->
-        <div class="message left">
-          Hi there! How can I help you with the project today?
-          <span class="msg-time">10:30 AM</span>
-        </div>
-
-        <!-- Message 2 - Sent -->
-        <div class="message right">
-          I need some help with the database schema. Can you review it?
-          <span class="msg-time">10:32 AM</span>
-        </div>
-
-        <!-- Message 3 - Received -->
-        <div class="message left">
-          Sure, I'd be happy to review it. Can you send me the current schema?
-          <span class="msg-time">10:33 AM</span>
-        </div>
-
-        <!-- Message 4 - Sent with file -->
-        <div class="message right">
-          Here's the schema file I've been working on
-          <span class="msg-time">10:35 AM</span>
-          <div class="file-msg">
-            <i class="bi bi-file-earmark me-2"></i>
-            database_schema.sql
+      <ng-container *ngIf="selectedChatId !== null; else placeholder">
+        <div class="chat-header">
+          <div class="user">
+            <img
+              src="https://staudt-gmbh.com/wp-content/uploads/2018/07/person-dummy.jpg"
+              class="avatar"
+              alt="Chat User"
+            />
+            <h5>{{ selectedChatName }}</h5>
+          </div>
+          <div class="session-buttons">
+            <button class="btn btn-light">Cancel session</button>
+            <button class="btn btn-info text-white">End Session</button>
           </div>
         </div>
 
-        <!-- Message 5 - Received -->
-        <div class="message left">
-          Thanks for sharing! I'll take a look and get back to you with my
-          feedback soon.
-          <span class="msg-time">10:40 AM</span>
+        <div class="chat-messages">
+          <div
+            class="message"
+            *ngFor="let msg of messages"
+            [ngClass]="msg.sender === 'LEARNER' ? 'right' : 'left'"
+          >
+            {{ msg.text }}
+            <span class="msg-time">{{
+              msg.timestamp | date : "shortTime"
+            }}</span>
+
+            <div class="file-msg" *ngIf="msg.fileName">
+              <i class="bi bi-file-earmark me-2"></i>
+              {{ msg.fileName }}
+            </div>
+          </div>
         </div>
 
-        <!-- Message 6 - Received -->
-        <div class="message left">
-          I've reviewed the schema. It looks good overall, but I have a few
-          suggestions for improving the relationships between the User and
-          Orders tables.
-          <span class="msg-time">10:45 AM</span>
+        <div class="chat-input">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Type your message and press enter..."
+            />
+          </div>
         </div>
-      </div>
+      </ng-container>
 
-      <div class="chat-input">
-        <div class="input-group">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Type your message and press enter..."
-            value=""
-          />
+      <ng-template #placeholder>
+        <div
+          class="d-flex h-100 justify-content-center align-items-center text-muted"
+        >
+          <h4>Select a chat to view messages</h4>
         </div>
-      </div>
+      </ng-template>
     </div>
   </div>
 </div>
