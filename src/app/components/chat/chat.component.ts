@@ -1,34 +1,34 @@
 import { Component, OnInit } from '@angular/core';
-import { ChatService } from './ChatService';
-import { ChatMessage } from './ChatMessage';
-import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'app-chat',
   standalone: false,
+  selector: 'app-chat',
   templateUrl: './chat.component.html',
-  styleUrl: './chat.component.scss',
+  styleUrls: ['./chat.component.scss'],
 })
-export class ChatComponent {
-  messages$: Observable<ChatMessage[]> | undefined;
-  messageText = '';
-  chatId = 'example_chat_id'; // Replace with actual chatId
+export class ChatComponent implements OnInit {
+  chats: any[] = [];
 
-  constructor(private chatService: ChatService) {}
+  constructor(private _HttpClient: HttpClient) {}
 
-  ngOnInit() {
-    this.messages$ = this.chatService.getMessages(this.chatId);
+  ngOnInit(): void {
+    this.fetchChats();
   }
 
-  sendMessage() {
-    if (!this.messageText.trim()) return;
-    const msg: ChatMessage = {
-      sender_id: 1,
-      sender_name: 'You',
-      content: this.messageText,
-      sent_at: new Date(),
-    };
-    this.chatService.sendMessage(this.chatId, msg);
-    this.messageText = '';
+  fetchChats() {
+    this._HttpClient
+      .get<any[]>('http://localhost:8080/api/chat/my-chats', {
+        withCredentials: true,
+      })
+      .subscribe({
+        next: (data) => {
+          this.chats = data;
+          console.log(this.chats); // Works !!!
+        },
+        error: (err) => {
+          console.error('Failed to fetch chats:', err);
+        },
+      });
   }
 }
