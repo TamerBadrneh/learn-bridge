@@ -102,21 +102,46 @@ export class ChatComponent implements OnInit {
   }
 
   fetchMessages(chatId: number) {
-    this.http
-      .get<any[]>(`${this.baseUrlForChat}/all-messages/${chatId}`, {
+    const messages$ = this.http.get<any[]>(
+      `${this.baseUrlForChat}/all-messages/${chatId}`,
+      {
         withCredentials: true,
+      }
+    );
+
+    const files$ = this.http.get<any[]>(
+      `${this.baseUrlForFiles}/chat-files/${chatId}`,
+      {
+        withCredentials: true,
+      }
+    );
+
+    Promise.all([messages$.toPromise(), files$.toPromise()])
+      .then(([messages = [], files = []]) => {
+        const formattedMessages = (messages || []).map((msg) => ({
+          type: 'message',
+          text: msg.content,
+          timestamp: msg.sentAt,
+          isSender: msg.senderId === this.currentUserId,
+          senderName: msg.senderName,
+        }));
+
+        const formattedFiles = (files || []).map((file) => ({
+          type: 'file',
+          fileName: file.fileName,
+          fileType: file.fileType,
+          fileData: file.fileData,
+          timestamp: file.uploadedAt,
+          isSender: file.senderId === this.currentUserId,
+        }));
+
+        const merged = [...formattedMessages, ...formattedFiles];
+        this.messages = merged.sort(
+          (a, b) =>
+            new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+        );
       })
-      .subscribe({
-        next: (data) => {
-          this.messages = data.map((msg) => ({
-            ...msg,
-            text: msg.content,
-            timestamp: msg.sentAt,
-            isSender: msg.senderId === this.currentUserId,
-          }));
-        },
-        error: (err) => console.error('Failed to fetch messages:', err),
-      });
+      .catch((err) => console.error('Failed to fetch chat content:', err));
   }
 
   sendMessage() {
