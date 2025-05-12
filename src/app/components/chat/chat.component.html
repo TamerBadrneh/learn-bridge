@@ -5,14 +5,19 @@
     <div class="chat-sidebar">
       <div class="search-container">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search..." />
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Type here to search..."
+            [(ngModel)]="chatSearchTerm"
+          />
         </div>
       </div>
 
       <div class="chat-list">
         <div
           class="chat-item"
-          *ngFor="let chat of chats"
+          *ngFor="let chat of chats | chatFilter : chatSearchTerm"
           (click)="selectChat(chat)"
         >
           <img
@@ -63,14 +68,47 @@
             *ngFor="let msg of messages"
             [ngClass]="msg.isSender ? 'right' : 'left'"
           >
-            {{ msg.text }}
-            <span class="msg-time">
-              {{ msg.timestamp | date : "shortTime" }}
-            </span>
-            <div class="file-msg" *ngIf="msg.fileName">
-              <i class="bi bi-file-earmark me-2"></i>
-              {{ msg.fileName }}
-            </div>
+            <!-- File Message -->
+            <ng-container *ngIf="msg.fileName; else textMessage">
+              <div class="card mb-2" style="max-width: 300px">
+                <div class="card-body p-2 text-center">
+                  <ng-container
+                    *ngIf="msg.fileType.startsWith('image/'); else fileBlock"
+                  >
+                    <img
+                      [src]="'data:' + msg.fileType + ';base64,' + msg.fileData"
+                      class="img-fluid rounded mb-2"
+                    />
+                  </ng-container>
+
+                  <ng-template #fileBlock>
+                    <a
+                      [href]="
+                        'data:' + msg.fileType + ';base64,' + msg.fileData
+                      "
+                      [download]="msg.fileName"
+                      target="_blank"
+                      class="text-decoration-none d-block"
+                    >
+                      <i class="bi bi-file-earmark fs-4 text-primary"></i>
+                      <div class="text-truncate">{{ msg.fileName }}</div>
+                    </a>
+                  </ng-template>
+
+                  <small class="text-muted">{{
+                    msg.timestamp | date : "shortTime"
+                  }}</small>
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- Text Message -->
+            <ng-template #textMessage>
+              {{ msg.text }}
+              <span class="msg-time">
+                {{ msg.timestamp | date : "shortTime" }}
+              </span>
+            </ng-template>
           </div>
         </div>
 

@@ -3,11 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../shared/services/auth.service';
+import { ChatFilterPipe } from './Chat Filter Pipe.component';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ChatFilterPipe],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
@@ -20,6 +21,7 @@ export class ChatComponent implements OnInit {
   newMessage = '';
   currentUserId: number | null = null;
   selectedFile: File | null = null;
+  chatSearchTerm: string = '';
 
   loadingCancel = false;
   loadingFinish = false;
@@ -65,6 +67,13 @@ export class ChatComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log('Upload success:', res);
+          this.messages.push({
+            fileName: res.fileName,
+            fileType: res.fileType,
+            fileData: res.fileData,
+            timestamp: res.uploadedAt,
+            isSender: true,
+          });
         },
         error: (err) => {
           console.error('Upload failed:', err);
