@@ -7,10 +7,7 @@ import { AuthService } from '../../shared/services/auth.service';
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [
-    CommonModule, // *ngIf, *ngFor, [ngClass], etc.
-    FormsModule, // [(ngModel)]
-  ],
+  imports: [CommonModule, FormsModule],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
@@ -22,12 +19,14 @@ export class ChatComponent implements OnInit {
   selectedChatName = '';
   newMessage = '';
   currentUserId: number | null = null;
+  selectedFile: File | null = null;
 
   loadingCancel = false;
   loadingFinish = false;
 
   private baseUrlForSession = 'http://localhost:8080/api/session';
   private baseUrlForChat = 'http://localhost:8080/api/chat';
+  private baseUrlForFiles = 'http://localhost:8080/api/file';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
@@ -39,6 +38,38 @@ export class ChatComponent implements OnInit {
       },
       error: (err) => console.error('Error fetching user data:', err),
     });
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.uploadFile();
+    }
+  }
+
+  uploadFile() {
+    if (!this.selectedFile || this.selectedChatId === null) return;
+
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+
+    this.http
+      .post<any>(
+        `${this.baseUrlForFiles}/upload/${this.selectedChatId}`,
+        formData,
+        {
+          withCredentials: true,
+        }
+      )
+      .subscribe({
+        next: (res) => {
+          console.log('Upload success:', res);
+        },
+        error: (err) => {
+          console.error('Upload failed:', err);
+        },
+      });
   }
 
   fetchChats() {
