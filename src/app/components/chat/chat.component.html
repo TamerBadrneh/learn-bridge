@@ -21,7 +21,7 @@
             [alt]="chat.participantName || 'Chat'"
           />
           <div class="chat-info">
-            <h5>{{ chat.participantName || 'Unknown' }}</h5>
+            <h5>{{ chat.participantName || "Unknown" }}</h5>
           </div>
         </div>
       </div>
@@ -45,14 +45,14 @@
               [disabled]="loadingCancel"
               (click)="onCancelSession()"
             >
-              {{ loadingCancel ? 'Cancelling…' : 'Cancel session' }}
+              {{ loadingCancel ? "Cancelling…" : "Cancel session" }}
             </button>
             <button
               class="btn btn-info text-white"
               [disabled]="loadingFinish"
               (click)="onFinishSession()"
             >
-              {{ loadingFinish ? 'Ending…' : 'End Session' }}
+              {{ loadingFinish ? "Ending…" : "End Session" }}
             </button>
           </div>
         </div>
@@ -61,11 +61,11 @@
           <div
             class="message"
             *ngFor="let msg of messages"
-            [ngClass]="msg.sender === 'LEARNER' ? 'right' : 'left'"
+            [ngClass]="msg.isSender ? 'right' : 'left'"
           >
             {{ msg.text }}
             <span class="msg-time">
-              {{ msg.timestamp | date : 'shortTime' }}
+              {{ msg.timestamp | date : "shortTime" }}
             </span>
             <div class="file-msg" *ngIf="msg.fileName">
               <i class="bi bi-file-earmark me-2"></i>

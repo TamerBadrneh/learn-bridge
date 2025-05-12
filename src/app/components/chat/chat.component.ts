@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
   imports: [
-    CommonModule,   // *ngIf, *ngFor, [ngClass], etc.
-    FormsModule     // [(ngModel)]
+    CommonModule, // *ngIf, *ngFor, [ngClass], etc.
+    FormsModule, // [(ngModel)]
   ],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
@@ -20,47 +21,60 @@ export class ChatComponent implements OnInit {
   selectedSessionId: number | null = null;
   selectedChatName = '';
   newMessage = '';
+  currentUserId: number | null = null;
 
   loadingCancel = false;
   loadingFinish = false;
 
-  // ⚠️ Make sure this matches your @RequestMapping("/api/sessions") in Spring
-  private baseUrl = 'http://localhost:8080/api/session';
+  private baseUrlForSession = 'http://localhost:8080/api/session';
+  private baseUrlForChat = 'http://localhost:8080/api/chat';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.fetchChats();
+    this.authService.fetchUserData().subscribe({
+      next: () => {
+        this.currentUserId = this.authService.userData.userId;
+        this.fetchChats();
+      },
+      error: (err) => console.error('Error fetching user data:', err),
+    });
   }
 
   fetchChats() {
     this.http
-      .get<any[]>('http://localhost:8080/api/chat/my-chats', {
+      .get<any[]>(`${this.baseUrlForChat}/my-chats`, {
         withCredentials: true,
       })
       .subscribe({
         next: (data) => {
-          // only keep those whose sessionStatus === 'ONGOING'
-          this.chats = data.filter(chat => chat.sessionStatus === 'ONGOING');
+          this.chats = data;
         },
         error: (err) => console.error('Failed to fetch chats:', err),
       });
   }
 
   selectChat(chat: any) {
-    this.selectedChatId    = chat.chatId;
+    this.selectedChatId = chat.chatId;
     this.selectedSessionId = chat.sessionId;
-    this.selectedChatName  = chat.participantName;
+    this.selectedChatName = chat.participantName;
     this.fetchMessages(chat.chatId);
   }
 
   fetchMessages(chatId: number) {
     this.http
-      .get<any[]>(`http://localhost:8080/api/chat/all-messages/${chatId}`, {
+      .get<any[]>(`${this.baseUrlForChat}/all-messages/${chatId}`, {
         withCredentials: true,
       })
       .subscribe({
-        next: (data) => (this.messages = data),
+        next: (data) => {
+          this.messages = data.map((msg) => ({
+            ...msg,
+            text: msg.content,
+            timestamp: msg.sentAt,
+            isSender: msg.senderId === this.currentUserId,
+          }));
+        },
         error: (err) => console.error('Failed to fetch messages:', err),
       });
   }
@@ -71,7 +85,7 @@ export class ChatComponent implements OnInit {
     const body = { content: this.newMessage };
     this.http
       .post<any>(
-        `http://localhost:8080/api/chat/send-message/${this.selectedChatId}`,
+        `${this.baseUrlForChat}/send-message/${this.selectedChatId}`,
         body,
         { withCredentials: true }
       )
@@ -80,8 +94,8 @@ export class ChatComponent implements OnInit {
           this.messages.push({
             text: sentMsg.content,
             timestamp: sentMsg.sentAt,
-            sender: 'LEARNER',
             senderName: sentMsg.senderName,
+            isSender: true,
           });
           this.newMessage = '';
         },
@@ -95,7 +109,7 @@ export class ChatComponent implements OnInit {
     this.loadingCancel = true;
     this.http
       .put<any>(
-        `${this.baseUrl}/cancel-session/${this.selectedSessionId}`,
+        `${this.baseUrlForSession}/cancel-session/${this.selectedSessionId}`,
         {},
         { withCredentials: true }
       )
@@ -118,7 +132,7 @@ export class ChatComponent implements OnInit {
     this.loadingFinish = true;
     this.http
       .put<any>(
-        `${this.baseUrl}/finish-session/${this.selectedSessionId}`,
+        `${this.baseUrlForSession}/finish-session/${this.selectedSessionId}`,
         {},
         { withCredentials: true }
       )
