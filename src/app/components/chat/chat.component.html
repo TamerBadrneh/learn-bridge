@@ -61,21 +61,37 @@
             />
             <h5>{{ selectedChatName }}</h5>
           </div>
-          <div class="session-buttons">
+          <!-- Session Actions Dropdown -->
+          <div class="dropdown mt-3 ms-auto" *ngIf="selectedSessionId">
             <button
-              class="btn btn-light"
-              [disabled]="loadingCancel"
-              (click)="onCancelSession()"
+              class="btn btn-primary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
             >
-              {{ loadingCancel ? "Cancelling…" : "Cancel session" }}
+              Session Actions
             </button>
-            <button
-              class="btn btn-info text-white"
-              [disabled]="loadingFinish"
-              (click)="onFinishSession()"
-            >
-              {{ loadingFinish ? "Ending…" : "End Session" }}
-            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <button class="dropdown-item" (click)="onCancelSession()">
+                  Cancel Session
+                </button>
+              </li>
+
+              <li
+                *ngIf="
+                  authService.userData?.role.toLowerCase() === 'instructor'
+                "
+              >
+                <button class="dropdown-item" (click)="onFinishSession()">
+                  Finish Session
+                </button>
+              </li>
+
+              <li>
+                <button class="dropdown-item">Report</button>
+              </li>
+            </ul>
           </div>
         </div>
 
