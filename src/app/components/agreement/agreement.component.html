@@ -1,74 +1,113 @@
+<!-- src/app/components/agreement/agreement.component.html -->
+
 <main class="container my-5">
-  <!-- Header -->
-  <h1 class="text-center mb-4">
-    Instructor {{ instructorName }} Asked for an agreement
-  </h1>
-
-  <!-- Instructor Card -->
-  <div class="card mb-4 p-4 rounded-4 shadow-sm">
-    <div class="d-flex align-items-center mb-3">
-      <img
-        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-        alt="instructor profile"
-        width="80"
-        height="80"
-        class="rounded-circle me-3"
-      />
-      <div>
-        <h2 class="mb-1">{{ instructorName }}</h2>
-        <p class="mb-0 fst-italic">{{ instructorBio }}</p>
+  <!-- Loading Spinner -->
+  <ng-container *ngIf="loading; else showContent">
+    <div class="text-center py-5">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
       </div>
-      <div class="ms-auto text-end">
-        <div>
-          <strong>{{ averageRating.toFixed(1) }}/5</strong>
-          <img src="../../../assets/images/star.png" alt="star" width="20" />
+      <p class="mt-3">Loading…</p>
+    </div>
+  </ng-container>
+
+  <!-- Main Content -->
+  <ng-template #showContent>
+    <!-- Error Message -->
+    <ng-container *ngIf="error; else agreementBlock">
+      <div class="alert alert-danger text-center">{{ error }}</div>
+    </ng-container>
+
+    <!-- Agreement Info -->
+    <ng-template #agreementBlock>
+      <!-- Capture `info` into a local template variable -->
+      <ng-container *ngIf="info as data">
+        <!-- Header -->
+        <h1 class="text-center mb-4">
+          Instructor {{ data.instructorName }} asked for an agreement
+        </h1>
+
+        <!-- Instructor Card -->
+        <div class="card mb-4 p-4 rounded-4 shadow-sm">
+          <div class="d-flex align-items-center mb-3">
+            <img
+              src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+              alt="Instructor profile"
+              width="80"
+              height="80"
+              class="rounded-circle me-3"
+            />
+            <div>
+              <h2 class="mb-1">{{ data.instructorName }}</h2>
+              <p class="mb-0 fst-italic">{{ data.instructorBio }}</p>
+            </div>
+            <div class="ms-auto text-end">
+              <div>
+                <strong>{{ data.averageRating.toFixed(1) }}/5</strong>
+                <img src="../../../assets/images/star.png" alt="star" width="20" />
+              </div>
+              <small class="d-block">{{ data.ratingsNumber }} reviews</small>
+              <small class="d-block">{{ data.sessionsNumber }} sessions</small>
+            </div>
+          </div>
+          <div class="text-end">
+            <button class="btn btn-secondary">View Profile</button>
+          </div>
         </div>
-        <small class="d-block">{{ ratingsNumber }} reviews</small>
-        <small class="d-block">{{ sessionsNumber }} sessions</small>
-      </div>
-    </div>
-    <div class="text-end">
-      <button class="btn btn-secondary">View Profile</button>
-    </div>
-  </div>
 
-  <!-- Action Buttons -->
-  <div class="text-center mb-5">
-    <button class="btn btn-danger me-3 px-4" (click)="rejectAgreement()">
-      Reject
-    </button>
-    <button id="accept-btn" class="btn btn-success px-4" (click)="acceptAgreement()">
-      Accept
-    </button>
-  </div>
+        <!-- Action Buttons -->
+        <div class="text-center mb-5">
+          <button
+            class="btn btn-danger me-3 px-4"
+            (click)="rejectAgreement()"
+            [disabled]="loading"
+          >
+            Reject
+          </button>
+          <button
+            id="accept-btn"
+            class="btn btn-success px-4"
+            (click)="acceptAgreement()"
+            [disabled]="loading"
+          >
+            Accept
+          </button>
+        </div>
 
-  <!-- Your Post -->
-  <h2 class="mb-3">Your Post</h2>
-  <div class="card p-4 rounded-4 shadow-sm">
-    <div class="d-flex align-items-center mb-3">
-      <img
-        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-        alt="learner profile"
-        width="60"
-        height="60"
-        class="rounded-circle me-3"
-      />
-      <div>
-        <h4 class="mb-1">{{ postTitle }}</h4>
-        <small class="text-muted">{{ learnerName }}</small>
-      </div>
-      <div class="ms-auto text-end">
-        <span class="badge bg-secondary me-1">Subject: {{ postTitle }}</span>
-        <span class="badge bg-secondary">Category: {{ category }}</span>
-      </div>
-    </div>
+        <!-- Learner's Post -->
+        <h2 class="mb-3">Your Post</h2>
+        <div class="card p-4 rounded-4 shadow-sm">
+          <div class="d-flex align-items-center mb-3">
+            <img
+              src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+              alt="Learner profile"
+              width="60"
+              height="60"
+              class="rounded-circle me-3"
+            />
+            <div>
+              <h4 class="mb-1">{{ data.subject }}</h4>
+              <small class="text-muted">{{ data.learnerName }}</small>
+            </div>
+            <div class="ms-auto text-end">
+              <span class="badge bg-secondary me-1">
+                Subject: {{ data.subject }}
+              </span>
+              <span class="badge bg-secondary">
+                Category: {{ data.category }}
+              </span>
+            </div>
+          </div>
 
-    <p class="fst-italic">{{ postDescription }}</p>
+          <p class="fst-italic">{{ data.description }}</p>
 
-    <div class="mt-3">
-      <span class="badge bg-light text-dark">
-        Price: {{ price }} JD
-      </span>
-    </div>
-  </div>
+          <div class="mt-3">
+            <span class="badge bg-light text-dark">
+              Price: {{ data.price }} JD
+            </span>
+          </div>
+        </div>
+      </ng-container>
+    </ng-template>
+  </ng-template>
 </main>

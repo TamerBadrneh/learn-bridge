@@ -1,6 +1,9 @@
+// src/app/components/agreement/agreement.component.ts
+
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 interface AskForAgreementInfo {
   agreementId: number;
@@ -19,106 +22,112 @@ interface AskForAgreementInfo {
   price: number;
 }
 
+interface SessionDTO {
+  sessionId: number;
+  instructorId: number;
+  agreementId: number;
+  sessionStatus: string;
+}
+
 @Component({
   selector: 'app-agreement',
+  standalone: true,
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    RouterModule
+  ],
   templateUrl: './agreement.component.html',
   styleUrls: ['./agreement.component.scss'],
 })
 export class AgreementComponent implements OnInit {
-  // instructor info
-  instructorName = '';
-  instructorBio = '';
-  averageRating = 0;
-  sessionsNumber = 0;
-  ratingsNumber = 0;
+  info: AskForAgreementInfo | null = null;
+  loading = false;
+  error: string | null = null;
 
-  // post / learner info
-  learnerName = '';
-  postTitle = '';
-  category = '';
-  postDescription = '';
-  price = 0;
-
-  notificationId: number | null = null;
+  private notificationId!: number;
+  private baseUrl = 'http://localhost:8080/api/agreements';
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.queryParams.subscribe((params) => {
-      this.notificationId = params['notificationId']
-        ? +params['notificationId']
-        : null;
-      this.fetchAgreementInfo();
+    this.route.queryParams.subscribe(params => {
+      const id = params['notificationId'];
+      if (!id) {
+        this.error = 'No notification specified.';
+        return;
+      }
+      this.notificationId = +id;
+      this.fetchInfo();
     });
   }
 
-  private fetchAgreementInfo() {
-    if (this.notificationId == null) {
-      return;
-    }
-
+  private fetchInfo(): void {
+    this.loading = true;
     this.http
       .get<AskForAgreementInfo>(
-        `http://localhost:8080/api/agreements/${this.notificationId}/info`,
+        `${this.baseUrl}/${this.notificationId}/info`,
         { withCredentials: true }
       )
-      .subscribe(
-        (data) => {
-          // Instructor side
-          this.instructorName = data.instructorName;
-          this.instructorBio = data.instructorBio;
-          this.averageRating = data.averageRating;
-          this.sessionsNumber = data.sessionsNumber;
-          this.ratingsNumber = data.ratingsNumber;
-
-          // Post / learner side
-          this.learnerName = data.learnerName;
-          this.postTitle = data.subject;
-          this.category = data.category;
-          this.postDescription = data.description;
-          this.price = data.price;
+      .subscribe({
+        next: data => {
+          this.info = data;
+          this.loading = false;
         },
-        (err) => {
+        error: err => {
           console.error('Error fetching agreement info', err);
+          this.error = 'Failed to load agreement details.';
+          this.loading = false;
         }
-      );
+      });
   }
 
-  acceptAgreement() {
-    if (this.notificationId == null) {
+  acceptAgreement(): void {
+    if (!this.info) {
       return;
     }
-
+    this.loading = true;
     this.http
-      .post(
-        `http://localhost:8080/api/agreements/notifications/${this.notificationId}/accept`,
+      .post<SessionDTO>(
+        `${this.baseUrl}/notifications/${this.notificationId}/accept`,
         {},
         { withCredentials: true }
       )
-      .subscribe(
-        () => this.router.navigate(['/learner/payment']),
-        (err) => console.error('Error accepting agreement', err)
-      );
+      .subscribe({
+        next: (session: SessionDTO) => {
+          this.router.navigate(['/learner/payment'], {
+            queryParams: { sessionId: session.sessionId }
+          });
+        },
+        error: err => {
+          console.error('Error accepting agreement', err);
+          this.error = 'Could not accept the offer. You might have insufficient funds.';
+          this.loading = false;
+        }
+      });
   }
 
-  rejectAgreement() {
-    if (this.notificationId == null) {
-      return;
-    }
-
+  rejectAgreement(): void {
+    this.loading = true;
     this.http
-      .post(
-        `http://localhost:8080/api/agreements/notifications/${this.notificationId}/reject`,
+      .post<void>(
+        `${this.baseUrl}/notifications/${this.notificationId}/reject`,
         {},
         { withCredentials: true }
       )
-      .subscribe(
-        () => this.router.navigate(['/learner/home']),
-        (err) => console.error('Error rejecting agreement', err)
-      );
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/learner/home']);
+        },
+        error: err => {
+          console.error('Error rejecting agreement', err);
+          this.error = 'Could not reject the offer.';
+          this.loading = false;
+        }
+      });
   }
 }
