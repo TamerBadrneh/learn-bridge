@@ -23,6 +23,7 @@ import { AddCardComponent } from './components/add-card/add-card.component';
 import { EditPostComponent } from './components/edit-post/edit-post.component';
 import { AgreementComponent } from './components/agreement/agreement.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { ReportComponent } from './components/report/report.component';
 
 const routes: Routes = [
   // Guest Pages
@@ -122,6 +123,11 @@ const routes: Routes = [
         component: ChatComponent,
         title: 'Chat',
       },
+      {
+        path: 'report-user',
+        component: ReportComponent,
+        title: 'Report',
+      },
     ],
   },
 
@@ -149,6 +155,11 @@ const routes: Routes = [
         path: 'chat',
         component: ChatComponent,
         title: 'Chat',
+      },
+      {
+        path: 'report-user',
+        component: ReportComponent,
+        title: 'Report',
       },
     ],
   },

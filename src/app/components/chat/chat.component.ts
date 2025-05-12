@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../shared/services/auth.service';
 import { ChatFilterPipe } from './Chat Filter Pipe.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -30,7 +31,7 @@ export class ChatComponent implements OnInit {
   private baseUrlForChat = 'http://localhost:8080/api/chat';
   private baseUrlForFiles = 'http://localhost:8080/api/file';
 
-  constructor(private http: HttpClient, public authService: AuthService) {}
+  constructor(private http: HttpClient, public authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     this.authService.fetchUserData().subscribe({
@@ -212,5 +213,13 @@ export class ChatComponent implements OnInit {
           this.loadingFinish = false;
         },
       });
+  }
+
+  navigateToReport() {
+    const path =
+      this.authService.userData.role.toLowerCase() === 'learner'
+        ? '/learner/report-user'
+        : '/instructor/report-user';
+    this.router.navigate([path]);
   }
 }
