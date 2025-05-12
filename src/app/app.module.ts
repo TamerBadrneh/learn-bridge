@@ -59,7 +59,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
     LearnerProfile,
     AdminLayoutComponent,
     AdminNavComponent,
-    ChatComponent,
+    // ChatComponent,
   ],
   imports: [
     BrowserModule,
@@ -75,6 +75,9 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
     // firebase
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
+
+    // chat component
+    ChatComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],
