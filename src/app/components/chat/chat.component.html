@@ -13,7 +13,7 @@
         <div
           class="chat-item"
           *ngFor="let chat of chats"
-          (click)="loadMessages(chat.chatId)"
+          (click)="selectChat(chat)"
         >
           <img
             src="https://staudt-gmbh.com/wp-content/uploads/2018/07/person-dummy.jpg"
@@ -69,6 +69,8 @@
               type="text"
               class="form-control"
               placeholder="Type your message and press enter..."
+              [(ngModel)]="newMessage"
+              (keydown.enter)="sendMessage()"
             />
           </div>
         </div>

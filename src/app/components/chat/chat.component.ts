@@ -10,8 +10,9 @@ import { HttpClient } from '@angular/common/http';
 export class ChatComponent implements OnInit {
   chats: any[] = [];
   messages: any[] = [];
-  selectedChatName: string = '';
   selectedChatId: number | null = null;
+  selectedChatName: string = '';
+  newMessage: string = '';
 
   constructor(private _HttpClient: HttpClient) {}
 
@@ -34,11 +35,13 @@ export class ChatComponent implements OnInit {
       });
   }
 
-  loadMessages(chatId: number) {
-    this.selectedChatId = chatId;
-    const chat = this.chats.find((c) => c.chatId === chatId);
-    this.selectedChatName = chat?.participantName || 'Unknown';
+  selectChat(chat: any) {
+    this.selectedChatId = chat.chatId;
+    this.selectedChatName = chat.participantName;
+    this.fetchMessages(chat.chatId);
+  }
 
+  fetchMessages(chatId: number) {
     this._HttpClient
       .get<any[]>(`http://localhost:8080/api/chat/all-messages/${chatId}`, {
         withCredentials: true,
@@ -49,6 +52,33 @@ export class ChatComponent implements OnInit {
         },
         error: (err) => {
           console.error('Failed to fetch messages:', err);
+        },
+      });
+  }
+
+  sendMessage() {
+    if (!this.newMessage.trim() || this.selectedChatId === null) return;
+
+    const body = { content: this.newMessage };
+
+    this._HttpClient
+      .post<any>(
+        `http://localhost:8080/api/chat/send-message/${this.selectedChatId}`,
+        body,
+        { withCredentials: true }
+      )
+      .subscribe({
+        next: (sentMsg) => {
+          this.messages.push({
+            text: sentMsg.content,
+            timestamp: sentMsg.sentAt,
+            sender: 'LEARNER', // Adjust based on user role if needed
+            senderName: sentMsg.senderName,
+          });
+          this.newMessage = '';
+        },
+        error: (err) => {
+          console.error('Failed to send message:', err);
         },
       });
   }
