@@ -76,7 +76,7 @@ const routes: Routes = [
       },
       {
         path: 'learner-profile',
-        component: LearnerProfile,
+        component: LearnerProfileComponent,
         title: 'Learner Profile',
       },
       {
