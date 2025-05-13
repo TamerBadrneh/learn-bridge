@@ -43,7 +43,7 @@
             </div>
             <div class="ms-auto text-end">
               <div>
-                <strong>{{ data.averageRating.toFixed(1) }}/5</strong>
+                <strong>{{data && data.averageRating > 0 ? data.averageRating.toFixed(1) : 'NA'}}/5</strong>
                 <img src="../../../assets/images/star.png" alt="star" width="20" />
               </div>
               <small class="d-block">{{ data.ratingsNumber }} reviews</small>
@@ -51,7 +51,12 @@
             </div>
           </div>
           <div class="text-end">
-            <button class="btn btn-secondary">View Profile</button>
+                      <button
+            class="btn btn-secondary"
+            [routerLink]="['/instructor', data.instructorId, 'view-profile']"
+          >
+            View Profile
+          </button>
           </div>
         </div>
 

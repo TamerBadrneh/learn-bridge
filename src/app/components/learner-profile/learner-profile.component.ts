@@ -7,7 +7,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   templateUrl: './learner-profile.component.html',
   styleUrls: ['./learner-profile.component.scss'],
 })
-export class LearnerProfile {
+export class LearnerProfileComponent {
   formData = {
     firstName: '',
     lastName: '',

@@ -8,7 +8,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
   templateUrl: './instructor-profile.component.html',
   styleUrls: ['./instructor-profile.component.scss'],
 })
-export class InstructorProfile {
+export class InstructorProfileComponent  {
   form: FormGroup;
 
   constructor(private http: HttpClient, private fb: FormBuilder) {

@@ -1,5 +1,3 @@
-// src/app/components/agreement/agreement.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -99,9 +97,8 @@ export class AgreementComponent implements OnInit {
       )
       .subscribe({
         next: (session: SessionDTO) => {
-          this.router.navigate(['/learner/payment'], {
-            queryParams: { sessionId: session.sessionId }
-          });
+          // After accepting, reload the page
+          window.location.reload();
         },
         error: err => {
           console.error('Error accepting agreement', err);
@@ -121,7 +118,8 @@ export class AgreementComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          this.router.navigate(['/learner/home']);
+          // After rejecting, reload the page
+          window.location.reload();
         },
         error: err => {
           console.error('Error rejecting agreement', err);
