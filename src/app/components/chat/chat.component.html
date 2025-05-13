@@ -2,17 +2,24 @@
   <h2>Chats</h2>
   <div class="chat-container">
     <!-- Sidebar -->
-    <div class="chat-sidebar">
+    <div class="chat-sidebar d-flex flex-column">
+      <!-- Search -->
       <div class="search-container">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search..." />
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search..."
+            [(ngModel)]="chatSearchTerm"
+          />
         </div>
       </div>
 
-      <div class="chat-list">
+      <!-- Chat List -->
+      <div class="chat-list flex-grow-1 overflow-auto">
         <div
           class="chat-item"
-          *ngFor="let chat of chats"
+          *ngFor="let chat of chats | chatFilter : chatSearchTerm"
           (click)="selectChat(chat)"
         >
           <img
@@ -21,8 +28,23 @@
             [alt]="chat.participantName || 'Chat'"
           />
           <div class="chat-info">
-            <h5>{{ chat.participantName || 'Unknown' }}</h5>
+            <h5>{{ chat.participantName || "Unknown" }}</h5>
           </div>
+        </div>
+      </div>
+
+      <!-- Chat Filters at bottom -->
+      <div class="mt-auto p-2">
+        <div class="btn-group w-100" role="group" aria-label="Chat Filters">
+          <button type="button" class="btn btn-outline-primary w-100">
+            Ongoing
+          </button>
+          <button type="button" class="btn btn-outline-primary w-100">
+            Finished
+          </button>
+          <button type="button" class="btn btn-outline-primary w-100">
+            Canceled
+          </button>
         </div>
       </div>
     </div>
@@ -39,21 +61,39 @@
             />
             <h5>{{ selectedChatName }}</h5>
           </div>
-          <div class="session-buttons">
+          <!-- Session Actions Dropdown -->
+          <div class="dropdown mt-3 ms-auto" *ngIf="selectedSessionId">
             <button
-              class="btn btn-light"
-              [disabled]="loadingCancel"
-              (click)="onCancelSession()"
+              class="btn btn-primary dropdown-toggle"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
             >
-              {{ loadingCancel ? 'Cancelling…' : 'Cancel session' }}
+              Session Actions
             </button>
-            <button
-              class="btn btn-info text-white"
-              [disabled]="loadingFinish"
-              (click)="onFinishSession()"
-            >
-              {{ loadingFinish ? 'Ending…' : 'End Session' }}
-            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <button class="dropdown-item" (click)="onCancelSession()">
+                  Cancel Session
+                </button>
+              </li>
+
+              <li
+                *ngIf="
+                  authService.userData?.role.toLowerCase() === 'instructor'
+                "
+              >
+                <button class="dropdown-item" (click)="onFinishSession()">
+                  Finish Session
+                </button>
+              </li>
+
+              <li>
+                <button class="dropdown-item" (click)="navigateToReport()">
+                  Report
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
 
@@ -61,16 +101,49 @@
           <div
             class="message"
             *ngFor="let msg of messages"
-            [ngClass]="msg.sender === 'LEARNER' ? 'right' : 'left'"
+            [ngClass]="msg.isSender ? 'right' : 'left'"
           >
-            {{ msg.text }}
-            <span class="msg-time">
-              {{ msg.timestamp | date : 'shortTime' }}
-            </span>
-            <div class="file-msg" *ngIf="msg.fileName">
-              <i class="bi bi-file-earmark me-2"></i>
-              {{ msg.fileName }}
-            </div>
+            <!-- File Message -->
+            <ng-container *ngIf="msg.fileName; else textMessage">
+              <div class="card mb-2" style="max-width: 300px">
+                <div class="card-body p-2 text-center">
+                  <ng-container
+                    *ngIf="msg.fileType.startsWith('image/'); else fileBlock"
+                  >
+                    <img
+                      [src]="'data:' + msg.fileType + ';base64,' + msg.fileData"
+                      class="img-fluid rounded mb-2"
+                    />
+                  </ng-container>
+
+                  <ng-template #fileBlock>
+                    <a
+                      [href]="
+                        'data:' + msg.fileType + ';base64,' + msg.fileData
+                      "
+                      [download]="msg.fileName"
+                      target="_blank"
+                      class="text-decoration-none d-block"
+                    >
+                      <i class="bi bi-file-earmark fs-4 text-primary"></i>
+                      <div class="text-truncate">{{ msg.fileName }}</div>
+                    </a>
+                  </ng-template>
+
+                  <small class="text-muted">{{
+                    msg.timestamp | date : "shortTime"
+                  }}</small>
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- Text Message -->
+            <ng-template #textMessage>
+              {{ msg.text }}
+              <span class="msg-time">
+                {{ msg.timestamp | date : "shortTime" }}
+              </span>
+            </ng-template>
           </div>
         </div>
 
@@ -82,6 +155,33 @@
               placeholder="Type your message and press enter..."
               [(ngModel)]="newMessage"
               (keydown.enter)="sendMessage()"
+            />
+
+            <!-- File Upload Button -->
+            <button
+              class="btn btn-secondary"
+              (click)="fileInput.click()"
+              type="button"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M6.354 1.5a4.5 4.5 0 0 1 6.364 6.364l-6.708 6.708a3.5 3.5 0 0 1-4.95-4.95l7.5-7.5a2.5 2.5 0 0 1 3.536 3.536l-7.5 7.5a1.5 1.5 0 0 1-2.122-2.122l6.708-6.708.708.708-6.708 6.708a.5.5 0 0 0 .708.708l7.5-7.5a1.5 1.5 0 0 0-2.122-2.122l-7.5 7.5a2.5 2.5 0 1 0 3.536 3.536l6.708-6.708a3.5 3.5 0 1 0-4.95-4.95l-6.708 6.708-.708-.708 6.708-6.708Z"
+                />
+              </svg>
+            </button>
+
+            <!-- Hidden File Input -->
+            <input
+              type="file"
+              hidden
+              #fileInput
+              (change)="onFileSelected($event)"
             />
           </div>
         </div>

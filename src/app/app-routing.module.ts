@@ -25,6 +25,7 @@ import { AddCardComponent } from './components/add-card/add-card.component';
 import { EditPostComponent } from './components/edit-post/edit-post.component';
 import { AgreementComponent } from './components/agreement/agreement.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { ReportComponent } from './components/report/report.component';
 import { ViewProfileComponent } from './components/viewprofile/viewprofile.component';
 
 const routes: Routes = [
@@ -68,6 +69,36 @@ const routes: Routes = [
       { path: 'payment', component: PaymentComponent, title: 'Payment' },
       { path: 'add-card', component: AddCardComponent, title: 'Add Card' },
       { path: 'my-posts', component: MyPostsComponent, title: 'My Posts' },
+      {
+        path: 'create-post',
+        component: CreatePostComponent,
+        title: 'Create Post',
+      },
+      {
+        path: 'learner-profile',
+        component: LearnerProfile,
+        title: 'Learner Profile',
+      },
+      {
+        path: 'edit-post',
+        component: EditPostComponent,
+        title: 'Edit Post',
+      },
+      {
+        path: 'agreement',
+        component: AgreementComponent,
+        title: 'Agreement Confirmation',
+      },
+      {
+        path: 'chat',
+        component: ChatComponent,
+        title: 'Chat',
+      },
+      {
+        path: 'report-user',
+        component: ReportComponent,
+        title: 'Report',
+      },
       { path: 'create-post', component: CreatePostComponent, title: 'Create Post' },
       { path: 'learner-profile', component: LearnerProfileComponent, title: 'Learner Profile' },
       { path: 'edit-post', component: EditPostComponent, title: 'Edit Post' },
@@ -88,6 +119,16 @@ const routes: Routes = [
       // Profile by ID
       { path: ':id/view-profile', component: ViewProfileComponent, title: 'Instructor Profile' },
       { path: 'add-card', component: AddCardComponent, title: 'Add Card' },
+      {
+        path: 'chat',
+        component: ChatComponent,
+        title: 'Chat',
+      },
+      {
+        path: 'report-user',
+        component: ReportComponent,
+        title: 'Report',
+      },
       { path: 'chat', component: ChatComponent, title: 'Chat' },
     ],
   },
