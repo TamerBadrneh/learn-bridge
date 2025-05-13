@@ -29,6 +29,16 @@
           />
           <div class="chat-info">
             <h5>{{ chat.participantName || "Unknown" }}</h5>
+            <span
+              class="badge"
+              [ngClass]="{
+                'bg-success': chat.sessionStatus === 'ONGOING',
+                'bg-primary': chat.sessionStatus === 'FINISHED',
+                'bg-danger': chat.sessionStatus === 'CANCELLED'
+              }"
+            >
+              {{ chat.sessionStatus }}
+            </span>
           </div>
         </div>
       </div>
