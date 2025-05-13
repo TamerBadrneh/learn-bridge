@@ -24,6 +24,8 @@ export class ChatComponent implements OnInit {
   selectedFile: File | null = null;
   chatSearchTerm: string = '';
 
+  selectedFilter: 'ONGOING' | 'FINISHED' | 'CANCELLED' | 'ALL' = 'ALL';
+
   loadingCancel = false;
   loadingFinish = false;
 
@@ -94,9 +96,22 @@ export class ChatComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.chats = data;
+          this.applyFilter(); // Apply filter after loading
         },
         error: (err) => console.error('Failed to fetch chats:', err),
       });
+  }
+
+  applyFilter() {
+    console.log(this.chats);
+    return this.selectedFilter === 'ALL'
+      ? this.chats
+      : this.chats.filter((chat) => chat.sessionStatus === this.selectedFilter);
+  }
+
+  setFilter(status: 'ONGOING' | 'FINISHED' | 'CANCELLED' | 'ALL') {
+    this.selectedFilter = status;
+    this.applyFilter();
   }
 
   selectChat(chat: any) {

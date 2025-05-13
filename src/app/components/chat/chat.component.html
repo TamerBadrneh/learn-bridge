@@ -19,7 +19,7 @@
       <div class="chat-list flex-grow-1 overflow-auto">
         <div
           class="chat-item"
-          *ngFor="let chat of chats | chatFilter : chatSearchTerm"
+          *ngFor="let chat of applyFilter() | chatFilter : chatSearchTerm"
           (click)="selectChat(chat)"
         >
           <img
@@ -36,13 +36,40 @@
       <!-- Chat Filters at bottom -->
       <div class="mt-auto p-2">
         <div class="btn-group w-100" role="group" aria-label="Chat Filters">
-          <button type="button" class="btn btn-outline-primary w-100">
+          <button
+            [ngClass]="
+              selectedFilter === 'ONGOING'
+                ? 'btn-primary'
+                : 'btn-outline-primary'
+            "
+            type="button"
+            class="btn w-100"
+            (click)="setFilter('ONGOING')"
+          >
             Ongoing
           </button>
-          <button type="button" class="btn btn-outline-primary w-100">
+          <button
+            [ngClass]="
+              selectedFilter === 'FINISHED'
+                ? 'btn-primary'
+                : 'btn-outline-primary'
+            "
+            type="button"
+            class="btn w-100"
+            (click)="setFilter('FINISHED')"
+          >
             Finished
           </button>
-          <button type="button" class="btn btn-outline-primary w-100">
+          <button
+            [ngClass]="
+              selectedFilter === 'CANCELLED'
+                ? 'btn-primary'
+                : 'btn-outline-primary'
+            "
+            type="button"
+            class="btn w-100"
+            (click)="setFilter('CANCELLED')"
+          >
             Canceled
           </button>
         </div>
