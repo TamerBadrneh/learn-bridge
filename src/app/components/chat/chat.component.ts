@@ -31,7 +31,11 @@ export class ChatComponent implements OnInit {
   private baseUrlForChat = 'http://localhost:8080/api/chat';
   private baseUrlForFiles = 'http://localhost:8080/api/file';
 
-  constructor(private http: HttpClient, public authService: AuthService, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    public authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.authService.fetchUserData().subscribe({
