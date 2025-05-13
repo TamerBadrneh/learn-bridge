@@ -23,7 +23,6 @@ export class ChatComponent implements OnInit {
   currentUserId: number | null = null;
   selectedFile: File | null = null;
   chatSearchTerm: string = '';
-
   selectedFilter: 'ONGOING' | 'FINISHED' | 'CANCELLED' | 'ALL' = 'ALL';
 
   loadingCancel = false;
