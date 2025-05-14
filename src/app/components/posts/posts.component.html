@@ -84,7 +84,7 @@
           [disabled]="post.agreementSent"
           [ngClass]="{
             'btn-disabled': post.agreementSent,
-            'btn-success': !post.agreementSent
+            'btn-primary': !post.agreementSent
           }"
           (click)="confirmAgreement(post)"
         >

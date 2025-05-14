@@ -92,7 +92,7 @@ export class PaymentComponent implements OnInit {
         },
         error: err => {
           console.error(err);
-          this.errorHistory = 'Could not load payment history.';
+          // this.errorHistory = 'Could not load payment history.';
           this.loadingHistory = false;
         }
       });
