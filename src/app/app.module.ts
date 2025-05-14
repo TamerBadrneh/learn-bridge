@@ -45,8 +45,8 @@ import { ChatComponent } from './components/chat/chat.component';
     RegisterComponent,
     FindInstructorComponent,
     PostsComponent,
-    PaymentComponent,
-    MyPostsComponent,
+    // PaymentComponent,
+    // MyPostsComponent,
     NotFoundComponent,
     NavBlankComponent,
     NavAuthComponent,
@@ -56,8 +56,8 @@ import { ChatComponent } from './components/chat/chat.component';
     InstructorBioComponent,
     InstructorLayoutComponent,
     NavInstructorComponent,
-    InstructorProfileComponent,
-    LearnerProfileComponent,
+    // InstructorProfileComponent,
+    // LearnerProfileComponent,
     AdminLayoutComponent,
     AdminNavComponent,
     // ChatComponent
@@ -72,6 +72,7 @@ import { ChatComponent } from './components/chat/chat.component';
     NgxStripeModule.forRoot(environment.stripe.publicKey),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

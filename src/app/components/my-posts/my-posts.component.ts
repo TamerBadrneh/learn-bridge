@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Router, RouterModule } from '@angular/router';
 
 interface Post {
   postId: number;
@@ -12,8 +13,13 @@ interface Post {
 }
 
 @Component({
-  standalone: false,
   selector: 'app-my-posts',
+  standalone: true,
+  imports: [
+    CommonModule,      // for *ngIf, *ngFor, etc.
+    RouterModule,      // if you use [routerLink] or router.navigate()
+    HttpClientModule,  // for HttpClient
+  ],
   templateUrl: './my-posts.component.html',
   styleUrls: ['./my-posts.component.scss'],
 })
@@ -36,22 +42,22 @@ export class MyPostsComponent implements OnInit {
         withCredentials: true,
       })
       .subscribe((posts) => {
-        this.allPosts = posts;
+        // Immediately filter out ON_HOLD posts
+        this.allPosts = posts.filter(p => p.postStatus !== 'ON_HOLD');
         this.applyFilter();
       });
   }
 
   applyFilter(): void {
+    // 1. Apply status filter (‘ALL’ shows everything except on-hold)
     let filtered =
       this.currentFilter === 'ALL'
         ? this.allPosts
-        : this.allPosts.filter(
-            (post) => post.postStatus === this.currentFilter
-          );
+        : this.allPosts.filter(p => p.postStatus === this.currentFilter);
 
+    // 2. Paginate
     const start = (this.currentPage - 1) * this.postsPerPage;
     const end = this.currentPage * this.postsPerPage;
-
     this.displayedPosts = filtered.slice(start, end);
   }
 
@@ -67,20 +73,19 @@ export class MyPostsComponent implements OnInit {
   }
 
   get totalPages(): number[] {
-    const totalFiltered =
+    const totalCount =
       this.currentFilter === 'ALL'
         ? this.allPosts.length
-        : this.allPosts.filter((p) => p.postStatus === this.currentFilter)
-            .length;
+        : this.allPosts.filter(p => p.postStatus === this.currentFilter).length;
 
     return Array.from(
-      { length: Math.ceil(totalFiltered / this.postsPerPage) },
+      { length: Math.ceil(totalCount / this.postsPerPage) },
       (_, i) => i + 1
     );
   }
 
   navigateToEdit(postId: number): void {
-    const post = this.allPosts.find((p) => p.postId === postId);
+    const post = this.allPosts.find(p => p.postId === postId);
     if (post) {
       localStorage.setItem('editPostData', JSON.stringify(post));
       this.router.navigate(['/learner/edit-post'], {
@@ -90,10 +95,7 @@ export class MyPostsComponent implements OnInit {
   }
 
   confirmDelete(postId: number): void {
-    const confirm = window.confirm(
-      'Are you sure you want to delete this post?'
-    );
-    if (confirm) {
+    if (window.confirm('Are you sure you want to delete this post?')) {
       this.deletePost(postId);
     }
   }
@@ -105,7 +107,8 @@ export class MyPostsComponent implements OnInit {
         responseType: 'text',
       })
       .subscribe(() => {
-        this.allPosts = this.allPosts.filter((p) => p.postId !== postId);
+        // Remove from allPosts and re-apply filter/pagination
+        this.allPosts = this.allPosts.filter(p => p.postId !== postId);
         this.applyFilter();
       });
   }

@@ -118,6 +118,7 @@ const routes: Routes = [
       { path: 'instructor-bio', component: InstructorBioComponent, title: 'Instructor Bio' },
       // Profile by ID
       { path: ':id/view-profile', component: ViewProfileComponent, title: 'Instructor Profile' },
+      { path: 'personal-profile', component: InstructorProfileComponent, title: 'Personal Profile' },
       { path: 'add-card', component: AddCardComponent, title: 'Add Card' },
       {
         path: 'chat',

@@ -1,6 +1,6 @@
 <main class="container py-5">
   <div class="row gy-5">
-    <!-- General Details Form Section -->
+    <!-- General Details -->
     <section class="col-md-6">
       <form
         [formGroup]="form"
@@ -11,7 +11,7 @@
 
         <!-- First Name -->
         <div class="mb-4">
-          <label class="form-label" for="firstName">First Name</label>
+          <label for="firstName" class="form-label">First Name</label>
           <input
             id="firstName"
             type="text"
@@ -21,9 +21,7 @@
           />
           <p
             class="text-danger"
-            *ngIf="
-              form.get('firstName')?.invalid && form.get('firstName')?.touched
-            "
+            *ngIf="form.get('firstName')?.invalid && form.get('firstName')?.touched"
           >
             First Name is required
           </p>
@@ -31,7 +29,7 @@
 
         <!-- Last Name -->
         <div class="mb-4">
-          <label class="form-label" for="lastName">Last Name</label>
+          <label for="lastName" class="form-label">Last Name</label>
           <input
             id="lastName"
             type="text"
@@ -41,9 +39,7 @@
           />
           <p
             class="text-danger"
-            *ngIf="
-              form.get('lastName')?.invalid && form.get('lastName')?.touched
-            "
+            *ngIf="form.get('lastName')?.invalid && form.get('lastName')?.touched"
           >
             Last Name is required
           </p>
@@ -51,7 +47,7 @@
 
         <!-- Email -->
         <div class="mb-4">
-          <label class="form-label" for="email">Email</label>
+          <label for="email" class="form-label">Email</label>
           <input
             id="email"
             type="email"
@@ -67,15 +63,16 @@
           </p>
         </div>
 
-        <!-- Category -->
+        <!-- Favorite Category -->
         <div class="mb-4">
-          <label class="form-label" for="category">Favorite Category</label>
+          <label for="category" class="form-label">Favorite Category</label>
           <select
             id="category"
             class="form-select"
             formControlName="favouriteCategory"
+            required
           >
-            <option selected disabled>Choose a category</option>
+            <option value="" disabled>Choose a category</option>
             <option>IT</option>
             <option>MEDICAL</option>
             <option>SCIENCE</option>
@@ -83,9 +80,7 @@
           </select>
           <p
             class="text-danger"
-            *ngIf="
-              form.get('category')?.invalid && form.get('category')?.touched
-            "
+            *ngIf="form.get('favouriteCategory')?.invalid && form.get('favouriteCategory')?.touched"
           >
             Category is required
           </p>
@@ -93,34 +88,32 @@
 
         <!-- New Password -->
         <div class="mb-4">
-          <label class="form-label" for="password">New Password</label>
+          <label for="password" class="form-label">New Password</label>
           <input
             id="password"
             type="password"
             class="form-control"
             formControlName="password"
-            required
           />
         </div>
 
         <!-- Confirm New Password -->
         <div class="mb-4">
-          <label class="form-label" for="confirmPassword"
-            >Confirm New Password</label
-          >
+          <label for="confirmPassword" class="form-label">
+            Confirm New Password
+          </label>
           <input
             id="confirmPassword"
             type="password"
             class="form-control"
             formControlName="confirmPassword"
-            required
           />
           <p
             class="text-danger"
             *ngIf="
-              form.get('confirmPassword')?.value !==
-                form.get('password')?.value &&
-              form.get('confirmPassword')?.touched
+              form.get('confirmPassword')?.touched &&
+              form.get('password')?.value &&
+              form.get('confirmPassword')?.value !== form.get('password')?.value
             "
           >
             Passwords do not match
@@ -129,7 +122,7 @@
       </form>
     </section>
 
-    <!-- Bio Details Form Section -->
+    <!-- Bio Details -->
     <section class="col-md-6">
       <form
         [formGroup]="form"
@@ -138,9 +131,9 @@
       >
         <h2 class="fs-4 fw-bold mb-4">Bio Details</h2>
 
-        <!-- Academic Details -->
+        <!-- University Info -->
         <div class="mb-4">
-          <label class="form-label" for="academic">Academic Details</label>
+          <label for="academic" class="form-label">Academic Details</label>
           <input
             id="academic"
             type="text"
@@ -151,14 +144,14 @@
           />
         </div>
 
-        <!-- About Section -->
+        <!-- About -->
         <div class="mb-4">
-          <label class="form-label" for="about">About</label>
+          <label for="about" class="form-label">About</label>
           <textarea
             id="about"
             class="form-control"
             formControlName="bio"
-            placeholder="Describe yourself..."
+            [placeholder]="form.get('bio')?.value || 'Describe yourself...'"
             rows="5"
             required
           ></textarea>
@@ -166,10 +159,10 @@
 
         <!-- Session Price -->
         <div class="mb-4">
-          <label class="form-label" for="price">Session Price</label>
+          <label for="price" class="form-label">Session Price</label>
           <input
             id="price"
-            type="text"
+            type="number"
             class="form-control"
             formControlName="avgPrice"
             placeholder="How much do you charge per session?"
@@ -177,29 +170,23 @@
           />
           <div
             *ngIf="
-              form.get('avgPrice')?.touched && form.get('avgPrice')?.invalid
+              form.get('avgPrice')?.touched &&
+              form.get('avgPrice')?.invalid
             "
-            class="error"
           >
-            <p
-              class="text-danger"
-              *ngIf="form.get('avgPrice')?.errors?.['required']"
-            >
+            <p class="text-danger" *ngIf="form.get('avgPrice')?.errors?.['required']">
               Average price is required.
             </p>
-            <p
-              class="text-danger"
-              *ngIf="form.get('avgPrice')?.errors?.['min']"
-            >
+            <p class="text-danger" *ngIf="form.get('avgPrice')?.errors?.['min']">
               Average price must be greater than 0.
             </p>
           </div>
         </div>
 
-        <!-- Save Changes Button -->
         <button
           type="submit"
           class="btn btn-dark w-50 py-2 rounded-pill mt-4 mx-auto d-block"
+          [disabled]="form.invalid"
         >
           Save Changes
         </button>
