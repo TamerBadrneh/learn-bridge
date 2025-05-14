@@ -72,10 +72,18 @@
         <p style="width: 90%">{{ post.content }}</p>
       </div>
 
+      <!-- NEW: display the deadline -->
+      <div>
+        <p class="mb-1">
+          <strong>Deadline:</strong>
+          {{ post.sessionDeadline | date:'mediumDate' }}
+        </p>
+      </div>
+
       <div class="mt-auto d-flex justify-content-between align-items-center">
         <p
           class="px-4 py-2 rounded-3 m-0"
-          style="background-color: #939393; color: white"
+          style="background-color: #6fc24e; color: white"
         >
           Price: {{ post.price }} JD
         </p>

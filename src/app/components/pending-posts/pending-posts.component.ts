@@ -12,6 +12,7 @@ interface Post {
   content: string;
   postStatus: string;
   category: string;
+  sessionDeadline: string;   // ← new
 }
 
 @Component({
@@ -53,32 +54,23 @@ export class PendingPostsComponent implements OnInit {
     return Math.ceil(this.posts.length / this.postsPerPage);
   }
 
-acceptPost(authorId: number, postId: number) {
-  this.http
-    .put(
-      `http://localhost:8080/api/posts/accept/${authorId}/${postId}`,
-      null,
-      { withCredentials: true }
-    )
-    .subscribe(() => {
-      alert('Post accepted successfully');
-      // Full reload:
-      window.location.reload();
-    });
-}
+  acceptPost(authorId: number, postId: number) {
+    this.http
+      .put(
+        `http://localhost:8080/api/posts/accept/${authorId}/${postId}`,
+        null,
+        { withCredentials: true }
+      )
+      .subscribe(() => window.location.reload());
+  }
 
-rejectPost(authorId: number, postId: number) {
-  this.http
-    .put(
-      `http://localhost:8080/api/posts/reject/${authorId}/${postId}`,
-      null,
-      { withCredentials: true }
-    )
-    .subscribe(() => {
-      alert('Post rejected successfully');
-      // Full reload:
-      window.location.reload();
-    });
-}
-
+  rejectPost(authorId: number, postId: number) {
+    this.http
+      .put(
+        `http://localhost:8080/api/posts/reject/${authorId}/${postId}`,
+        null,
+        { withCredentials: true }
+      )
+      .subscribe(() => window.location.reload());
+  }
 }

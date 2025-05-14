@@ -1,14 +1,13 @@
 <form
   class="container-background m-auto rounded-5 p-5 d-flex flex-column gap-4 shadow-lg"
-  (ngSubmit)="onSubmit()"
   #postForm="ngForm"
+  (ngSubmit)="onSubmit(postForm)"
   novalidate
 >
   <h1>What's on your mind?</h1>
 
   <!-- Subject + Category -->
   <div class="d-flex flex-column flex-md-row gap-4">
-    <!-- Subject -->
     <div class="bigger-size">
       <label class="form-label">Subject</label>
       <input
@@ -24,8 +23,7 @@
       </p>
     </div>
 
-    <!-- Category -->
-    <div style="width: 100%" class="w-md-40">
+    <div class="w-md-40">
       <label class="form-label">Category</label>
       <select
         class="form-select"
@@ -49,13 +47,13 @@
   <div>
     <label class="form-label">Description</label>
     <textarea
-      class="p-2"
-      name="description"
+      class="form-control"
+      name="content"
       [(ngModel)]="formData.content"
-      #description="ngModel"
+      #content="ngModel"
       required
     ></textarea>
-    <p class="text-danger" *ngIf="description.invalid && description.touched">
+    <p class="text-danger" *ngIf="content.invalid && content.touched">
       Description is required.
     </p>
   </div>
@@ -77,18 +75,36 @@
     </p>
   </div>
 
-  <!-- Error placeholder if form not valid on submit -->
+  <!-- Session Deadline -->
+  <div>
+    <label class="form-label">Session Deadline</label>
+    <input
+      type="date"
+      class="form-control"
+      name="sessionDeadline"
+      [(ngModel)]="formData.sessionDeadline"
+      #deadline="ngModel"
+      required
+      [min]="today"
+    />
+    <p class="text-danger" *ngIf="deadline.invalid && deadline.touched">
+      Please select a valid deadline (today or later).
+    </p>
+  </div>
+
+  <!-- Form Error -->
   <p class="alert alert-danger" *ngIf="showError">
     Please fill out all fields correctly.
   </p>
 
-  <!-- Submit Button -->
+  <!-- Submit -->
   <div class="d-flex justify-content-center">
-    <input
+    <button
       type="submit"
-      value="Create Post"
       class="btn btn-dark px-5 py-2"
-      [disabled]="!postForm.form.valid"
-    />
+      [disabled]="postForm.form.invalid"
+    >
+      Create Post
+    </button>
   </div>
 </form>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 interface Post {
   postId: number;
@@ -10,15 +10,16 @@ interface Post {
   subject: string;
   content: string;
   price: number;
+  sessionDeadline: string;
 }
 
 @Component({
   selector: 'app-my-posts',
   standalone: true,
   imports: [
-    CommonModule,      // for *ngIf, *ngFor, etc.
-    RouterModule,      // if you use [routerLink] or router.navigate()
-    HttpClientModule,  // for HttpClient
+    CommonModule,
+    RouterModule,
+    HttpClientModule
   ],
   templateUrl: './my-posts.component.html',
   styleUrls: ['./my-posts.component.scss'],
@@ -42,23 +43,20 @@ export class MyPostsComponent implements OnInit {
         withCredentials: true,
       })
       .subscribe((posts) => {
-        // Immediately filter out ON_HOLD posts
+        // filter out any ON_HOLD if needed
         this.allPosts = posts.filter(p => p.postStatus !== 'ON_HOLD');
         this.applyFilter();
       });
   }
 
   applyFilter(): void {
-    // 1. Apply status filter (‘ALL’ shows everything except on-hold)
     let filtered =
       this.currentFilter === 'ALL'
         ? this.allPosts
         : this.allPosts.filter(p => p.postStatus === this.currentFilter);
 
-    // 2. Paginate
     const start = (this.currentPage - 1) * this.postsPerPage;
-    const end = this.currentPage * this.postsPerPage;
-    this.displayedPosts = filtered.slice(start, end);
+    this.displayedPosts = filtered.slice(start, start + this.postsPerPage);
   }
 
   changePage(page: number): void {
@@ -106,10 +104,18 @@ export class MyPostsComponent implements OnInit {
         withCredentials: true,
         responseType: 'text',
       })
-      .subscribe(() => {
-        // Remove from allPosts and re-apply filter/pagination
-        this.allPosts = this.allPosts.filter(p => p.postId !== postId);
-        this.applyFilter();
+      .subscribe({
+        next: (msg) => {
+          // backend could send a success message too
+          this.allPosts = this.allPosts.filter(p => p.postId !== postId);
+          this.applyFilter();
+          alert(msg || 'Post deleted successfully.');
+        },
+        error: (err) => {
+          console.error('Delete failed:', err);
+          const serverMsg = err.error || 'Unknown error occurred.';
+          alert(`Could not delete post:\n${serverMsg}`);
+        }
       });
   }
 }

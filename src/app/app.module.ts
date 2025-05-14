@@ -52,7 +52,7 @@ import { ChatComponent } from './components/chat/chat.component';
     NavAuthComponent,
     AuthLayoutComponent,
     BlankLayoutComponent,
-    CreatePostComponent,
+    // CreatePostComponent,
     InstructorBioComponent,
     InstructorLayoutComponent,
     NavInstructorComponent,

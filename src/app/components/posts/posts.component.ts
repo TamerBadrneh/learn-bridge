@@ -13,6 +13,7 @@ interface Post {
   content: string;
   postStatus: string;
   category: string;
+  sessionDeadline: string;      // <-- new
   agreementSent?: boolean;
 }
 
@@ -49,7 +50,6 @@ export class PostsComponent implements OnInit {
       this.router.navigate(['/login']);
       return;
     }
-
     this.fetchPosts();
   }
 
@@ -88,16 +88,22 @@ export class PostsComponent implements OnInit {
   }
 
   applyFilters() {
+    const today = new Date();
     let result = [...this.allPosts];
 
-    // Filter by search
+    // 1) Remove expired posts
+    result = result.filter(post =>
+      new Date(post.sessionDeadline) >= today
+    );
+
+    // 2) Filter by search
     if (this.searchQuery) {
       result = result.filter((post) =>
         post.subject.toLowerCase().includes(this.searchQuery)
       );
     }
 
-    // Filter by price
+    // 3) Filter by price
     result = result.filter((post) => {
       if (this.selectedPrice === 'Less than 20') return post.price < 20;
       if (this.selectedPrice === '20') return post.price === 20;
@@ -105,7 +111,7 @@ export class PostsComponent implements OnInit {
       return true;
     });
 
-    // Sort
+    // 4) Sort by price
     result.sort((a, b) =>
       this.sortOrder === 'Ascending' ? a.price - b.price : b.price - a.price
     );
@@ -130,7 +136,7 @@ export class PostsComponent implements OnInit {
 
   confirmAgreement(post: Post) {
     const confirmed = window.confirm(
-      `Are you sure you wish to teach this learner ?`
+      `Are you sure you wish to teach this learner?`
     );
     if (!confirmed) return;
 
