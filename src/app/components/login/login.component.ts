@@ -117,24 +117,38 @@ export class LoginComponent implements OnInit {
     const normalizedRole = userData.role.toUpperCase();
     this.logDebug('Normalized user role:', normalizedRole);
 
-    if (localStorage.getItem('isNewUser') === 'true') {
-      this.router.navigate(['/add-card']);
+    if (normalizedRole === 'ADMIN') {
+      this.router.navigate(['/admin/home']);
       return;
     }
 
-    switch (normalizedRole) {
-      case 'INSTRUCTOR':
-        this.router.navigate(['/instructor/home']);
-        break;
-      case 'LEARNER':
-        this.router.navigate(['/learner/home']);
-        break;
-      case 'ADMIN':
-        this.router.navigate(['/admin/home']);
-        break;
-      default:
-        this.handleUnknownRole(normalizedRole);
-    }
+    fetch('http://localhost:8080/api/cards/has-card', {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.logDebug('Card existence response:', data);
+
+        if (data?.hasCard) {
+          switch (normalizedRole) {
+            case 'INSTRUCTOR':
+              this.router.navigate(['/instructor/home']);
+              break;
+            case 'LEARNER':
+              this.router.navigate(['/learner/home']);
+              break;
+            default:
+              this.handleUnknownRole(normalizedRole);
+          }
+        } else {
+          this.router.navigate(['/add-card']);
+        }
+      })
+      .catch((error) => {
+        this.logError('Error checking card existence:', error);
+        this.errorMessage = 'Failed to verify card existence';
+      });
   }
 
   private handleLoginError(error: HttpErrorResponse) {

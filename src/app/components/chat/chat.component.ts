@@ -23,6 +23,7 @@ export class ChatComponent implements OnInit {
   currentUserId: number | null = null;
   selectedFile: File | null = null;
   chatSearchTerm: string = '';
+  selectedFilter: 'ONGOING' | 'FINISHED' | 'CANCELLED' | 'ALL' = 'ALL';
 
   loadingCancel = false;
   loadingFinish = false;
@@ -31,7 +32,11 @@ export class ChatComponent implements OnInit {
   private baseUrlForChat = 'http://localhost:8080/api/chat';
   private baseUrlForFiles = 'http://localhost:8080/api/file';
 
-  constructor(private http: HttpClient, public authService: AuthService, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    public authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.authService.fetchUserData().subscribe({
@@ -90,9 +95,22 @@ export class ChatComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.chats = data;
+          this.applyFilter(); // Apply filter after loading
         },
         error: (err) => console.error('Failed to fetch chats:', err),
       });
+  }
+
+  applyFilter() {
+    console.log(this.chats);
+    return this.selectedFilter === 'ALL'
+      ? this.chats
+      : this.chats.filter((chat) => chat.sessionStatus === this.selectedFilter);
+  }
+
+  setFilter(status: 'ONGOING' | 'FINISHED' | 'CANCELLED' | 'ALL') {
+    this.selectedFilter = status;
+    this.applyFilter();
   }
 
   selectChat(chat: any) {

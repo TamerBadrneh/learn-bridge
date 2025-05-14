@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -26,10 +26,11 @@ import { AuthService } from '../../shared/services/auth.service';
   styleUrls: ['./add-card.component.scss'],
   imports: [CommonModule, ReactiveFormsModule, NgxStripeModule],
 })
-export class AddCardComponent {
+export class AddCardComponent implements OnInit {
   @ViewChild(StripeCardComponent) card: StripeCardComponent;
 
   cardForm: FormGroup;
+  hasCard = false;
 
   cardOptions: StripeCardElementOptions = {
     style: {
@@ -63,10 +64,24 @@ export class AddCardComponent {
     });
   }
 
+  ngOnInit() {
+    this.http
+      .get<{ hasCard: boolean }>('http://localhost:8080/api/cards/has-card', {
+        withCredentials: true,
+      })
+      .subscribe({
+        next: (res) => {
+          this.hasCard = res.hasCard;
+          console.log('Has card:', this.hasCard);
+        },
+        error: (err) => {
+          console.error('Failed to check card:', err);
+        },
+      });
+  }
+
   onSubmit() {
-    if (this.cardForm.invalid) {
-      return;
-    }
+    if (this.cardForm.invalid) return;
 
     const holderName = this.cardForm.get('holderName')?.value;
     const isDefault = this.cardForm.get('isDefault')?.value;
@@ -84,8 +99,8 @@ export class AddCardComponent {
           if (result.paymentMethod) {
             const payload = {
               paymentMethodId: result.paymentMethod.id,
-              holderName: holderName,
-              isDefault: isDefault,
+              holderName,
+              isDefault,
             };
 
             this.http
@@ -98,20 +113,13 @@ export class AddCardComponent {
               .subscribe({
                 next: () => {
                   alert('Card Added Successfully!');
-
-                  let wasNewUser = false;
-
-                  if (localStorage.getItem('isNewUser') === 'true') {
-                    localStorage.setItem('isNewUser', 'false');
-                    wasNewUser = true;
-                  }
-
                   const role =
                     this.authService.userData.role.toLowerCase() || '';
 
-                  this.router.navigate([
-                    `${role}/${wasNewUser ? 'home' : 'payment'}`,
-                  ]);
+                  const route = this.hasCard
+                    ? `${role}/payment`
+                    : `${role}/home`;
+                  this.router.navigate([route]);
                 },
                 error: (err) => {
                   console.error('Error adding card:', err);
@@ -131,17 +139,11 @@ export class AddCardComponent {
   }
 
   cancel() {
-    if (localStorage.getItem('isNewUser') === 'true') {
+    const role = this.authService.userData.role.toLowerCase() || '';
+    if (!this.hasCard) {
       this.router.navigate(['/login']);
-      return;
-    }
-
-    const role = localStorage.getItem('role');
-
-    if (role === 'instructor') {
-      this.router.navigate(['/instructor/payment']);
     } else {
-      this.router.navigate(['/learner/payment']);
+      this.router.navigate([`${role}/payment`]);
     }
   }
 }
