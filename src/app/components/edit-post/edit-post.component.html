@@ -1,37 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Post</title>
-</head>
-<body>
-  <div class="container">
-    <h2>Edit your post</h2>
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="container p-4 rounded-4 shadow-sm bg-white">
+  <h2 class="mb-4">Edit your post</h2>
 
-    <label for="subject">Subject</label>
-    <input type="text" id="subject" value="Need Help Understanding Derivatives!">
-
-    <label for="description">Description</label>
-    <textarea id="description" rows="8">
-Hi everyone! I'm struggling with understanding how to find the derivative of composite functions using the chain rule. For example, how do we differentiate something like f(x)=(3x2+5)4f(x) = (3x^2 + 5)^4f(x)=(3x2+5)4? Can anyone break it down for me step by step?
-    </textarea>
-
-    <div class="flex-row">
-      <div class="flex-col">
-        <label for="price">Price</label>
-        <input type="text" id="price" value="33 JOD">
-      </div>
-
-      <div class="flex-col">
-        <label for="category">Category</label>
-        <select id="category">
-          <option selected>Mathematics</option>
-        </select>
-      </div>
-    </div>
-
-    <button>Edit Post</button>
+  <!-- Subject -->
+  <div class="mb-3">
+    <label for="subject" class="form-label">Subject</label>
+    <input id="subject" class="form-control" formControlName="subject" />
   </div>
-</body>
-</html>
+
+  <!-- Description -->
+  <div class="mb-3">
+    <label for="content" class="form-label">Description</label>
+    <textarea id="content" class="form-control" rows="5" formControlName="content"></textarea>
+  </div>
+
+  <!-- Price & Category -->
+  <div class="row mb-3">
+    <div class="col">
+      <label for="price" class="form-label">Price (JD)</label>
+      <input id="price" type="number" class="form-control" formControlName="price" />
+    </div>
+    <div class="col">
+      <label for="category" class="form-label">Category</label>
+      <select id="category" class="form-select" formControlName="category">
+        <!-- Remove a blank placeholder so Angular can match the patched value -->
+        <option *ngFor="let cat of categories" [ngValue]="cat">{{ cat }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Deadline -->
+  <div class="mb-3">
+    <label for="deadline" class="form-label">Session Deadline</label>
+    <input
+      id="deadline"
+      type="date"
+      class="form-control"
+      formControlName="sessionDeadline"
+    />
+  </div>
+
+  <!-- Submit -->
+  <button
+    type="submit"
+    class="btn btn-primary"
+    [disabled]="form.invalid"
+  >
+    Save Changes
+  </button>
+</form>

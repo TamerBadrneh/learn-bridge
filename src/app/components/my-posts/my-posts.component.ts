@@ -40,17 +40,18 @@ export class MyPostsComponent implements OnInit {
   fetchPosts(): void {
     this.http
       .get<Post[]>('http://localhost:8080/api/posts/my-posts', {
-        withCredentials: true,
+        withCredentials: true
       })
-      .subscribe((posts) => {
-        // filter out any ON_HOLD if needed
+      .subscribe(posts => {
         this.allPosts = posts.filter(p => p.postStatus !== 'ON_HOLD');
         this.applyFilter();
+      }, err => {
+        console.error('Could not fetch posts', err);
       });
   }
 
   applyFilter(): void {
-    let filtered =
+    const filtered =
       this.currentFilter === 'ALL'
         ? this.allPosts
         : this.allPosts.filter(p => p.postStatus === this.currentFilter);
@@ -83,13 +84,8 @@ export class MyPostsComponent implements OnInit {
   }
 
   navigateToEdit(postId: number): void {
-    const post = this.allPosts.find(p => p.postId === postId);
-    if (post) {
-      localStorage.setItem('editPostData', JSON.stringify(post));
-      this.router.navigate(['/learner/edit-post'], {
-        queryParams: { id: postId },
-      });
-    }
+    // navigate via path param so route matches
+    this.router.navigate(['/learner', 'edit-post', postId]);
   }
 
   confirmDelete(postId: number): void {
@@ -100,21 +96,19 @@ export class MyPostsComponent implements OnInit {
 
   deletePost(postId: number): void {
     this.http
-      .delete(`http://localhost:8080/api/posts/${postId}`, {
-        withCredentials: true,
-        responseType: 'text',
-      })
+      .delete(
+        `http://localhost:8080/api/posts/${postId}`,
+        { withCredentials: true, responseType: 'text' }
+      )
       .subscribe({
-        next: (msg) => {
-          // backend could send a success message too
+        next: msg => {
           this.allPosts = this.allPosts.filter(p => p.postId !== postId);
           this.applyFilter();
           alert(msg || 'Post deleted successfully.');
         },
-        error: (err) => {
+        error: err => {
           console.error('Delete failed:', err);
-          const serverMsg = err.error || 'Unknown error occurred.';
-          alert(`Could not delete post:\n${serverMsg}`);
+          alert('Could not delete post: ' + (err.error || err.message));
         }
       });
   }

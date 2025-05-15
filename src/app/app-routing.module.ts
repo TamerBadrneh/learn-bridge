@@ -14,9 +14,9 @@ import { MyPostsComponent } from './components/my-posts/my-posts.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { CreatePostComponent } from './components/create-post/create-post.component';
-import { InstructorBioComponent } from './components/Instructor-bio/instructor-bio.component';
+import { InstructorBioComponent } from './components/instructor-bio/instructor-bio.component';
 import { InstructorLayoutComponent } from './components/instructor-layout/instructor-layout.component';
-import { InstructorProfileComponent } from './components/Instructor-profile/instructor-profile.component';
+import { InstructorProfileComponent } from './components/instructor-profile/instructor-profile.component';
 import { LearnerProfileComponent } from './components/learner-profile/learner-profile.component';
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
 import { PendingPostsComponent } from './components/pending-posts/pending-posts.component';
@@ -31,8 +31,6 @@ import { AddRatingComponent } from './components/add-rating/add-rating.component
 
 const routes: Routes = [
   // Guest Pages
-  // Routing Config status => WORKS WELL
-  // No Comments on...
   {
     path: '',
     component: AuthLayoutComponent,
@@ -41,101 +39,51 @@ const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'home', component: HomeComponent, title: 'Home' },
-      {
-        path: 'find-instructor',
-        component: FindInstructorComponent,
-        title: 'Find Instructor',
-      },
+      { path: 'find-instructor', component: FindInstructorComponent, title: 'Find Instructor' },
       { path: 'posts', component: PostsComponent, title: 'Posts' },
     ],
   },
 
   // Admin Pages
-  // Routing Config status => WORKS WELL
-  // 1 Page Left to associate => Chat and I will handle it...
   {
     path: 'admin',
     component: AdminLayoutComponent,
     children: [
       { path: 'home', component: HomeComponent, title: 'Home' },
-      {
-        path: 'find-instructor',
-        component: FindInstructorComponent,
-        title: 'Find Instructor',
-      },
+      { path: 'find-instructor', component: FindInstructorComponent, title: 'Find Instructor' },
       { path: 'posts', component: PostsComponent, title: 'Posts' },
-      {
-        path: 'pending-posts',
-        component: PendingPostsComponent,
-        title: 'Pending Posts',
-      },
-      {
-        path: 'pending-reports',
-        component: PendingReportsComponent,
-        title: 'Pending Reports',
-      },
+      { path: 'pending-posts', component: PendingPostsComponent, title: 'Pending Posts' },
+      { path: 'pending-reports', component: PendingReportsComponent, title: 'Pending Reports' },
       { path: 'chat', component: ChatComponent, title: 'Chat' },
     ],
   },
 
   // Learner Pages
-  // Routing Config status => WORKS WELL
-  // 1 New Page should be added and modified by Zaid here => View Profile, bcs it's rendering the nav bar for the instructor instead of learner...
   {
     path: 'learner',
     component: BlankLayoutComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent, title: 'Home' },
-      {
-        path: 'find-instructor',
-        component: FindInstructorComponent,
-        title: 'Find Instructor',
-      },
+      { path: 'find-instructor', component: FindInstructorComponent, title: 'Find Instructor' },
       { path: 'payment', component: PaymentComponent, title: 'Payment' },
       { path: 'add-card', component: AddCardComponent, title: 'Add Card' },
       { path: 'my-posts', component: MyPostsComponent, title: 'My Posts' },
+      { path: 'create-post', component: CreatePostComponent, title: 'Create Post' },
       {
-        path: 'create-post',
-        component: CreatePostComponent,
-        title: 'Create Post',
-      },
-      {
-        path: 'learner-profile',
-        component: LearnerProfileComponent,
-        title: 'Learner Profile',
-      },
-      {
-        path: 'edit-post',
+        path: 'edit-post/:postId',
         component: EditPostComponent,
-        title: 'Edit Post',
+        title: 'Edit Post'
       },
-      {
-        path: 'chat',
-        component: ChatComponent,
-        title: 'Chat',
-      },
-      {
-        path: 'report-user',
-        component: ReportComponent,
-        title: 'Report',
-      },
-      {
-        path: 'agreement',
-        component: AgreementComponent,
-        title: 'Agreement Confirmation',
-      },
-      {
-        path: 'rate-instructor',
-        component: AddRatingComponent,
-        title: 'Rate Instructor',
-      },
+      { path: 'learner-profile', component: LearnerProfileComponent, title: 'Learner Profile' },
+      { path: 'chat', component: ChatComponent, title: 'Chat' },
+      { path: 'report-user', component: ReportComponent, title: 'Report' },
+      { path: 'agreement', component: AgreementComponent, title: 'Agreement Confirmation' },
+      { path: 'rate-instructor', component: AddRatingComponent, title: 'Rate Instructor' },
     ],
   },
 
   // Instructor Pages
-  // Routing Cinfig stats => WORKS WELL
-  // 1 Old Page should be naviagted to successfully "ADD-CARD", Tamer will fix it.
   {
     path: 'instructor',
     component: InstructorLayoutComponent,
@@ -143,50 +91,17 @@ const routes: Routes = [
       { path: 'home', component: HomeComponent, title: 'Home' },
       { path: 'posts', component: PostsComponent, title: 'Posts' },
       { path: 'payment', component: PaymentComponent, title: 'Payment' },
-      {
-        path: 'instructor-bio',
-        component: InstructorBioComponent,
-        title: 'Instructor Bio',
-      },
-
-      // MODIFY as noted in Learner Stats
-      // Profile by ID
-      {
-        path: ':id/view-profile',
-        component: ViewProfileComponent,
-        title: 'Instructor Profile',
-      },
-
-      {
-        path: ':id/view-profile',
-        component: ViewProfileComponent,
-        title: 'Instructor Profile',
-      },
-      {
-        path: 'personal-profile',
-        component: InstructorProfileComponent,
-        title: 'Personal Profile',
-      },
+      { path: 'instructor-bio', component: InstructorBioComponent, title: 'Instructor Bio' },
+      { path: ':id/view-profile', component: ViewProfileComponent, title: 'Instructor Profile' },
+      { path: 'personal-profile', component: InstructorProfileComponent, title: 'Personal Profile' },
       { path: 'add-card', component: AddCardComponent, title: 'Add Card' },
-      {
-        path: 'chat',
-        component: ChatComponent,
-        title: 'Chat',
-      },
-      {
-        path: 'report-user',
-        component: ReportComponent,
-        title: 'Report',
-      },
-      {
-        path: 'instructor-profile',
-        component: InstructorProfileComponent,
-        title: 'Instructor Profile',
-      },
+      { path: 'chat', component: ChatComponent, title: 'Chat' },
+      { path: 'report-user', component: ReportComponent, title: 'Report' },
+      { path: 'instructor-profile', component: InstructorProfileComponent, title: 'Instructor Profile' },
     ],
   },
 
-  // Mandatory Add Card route (global)
+  // Global Add Card
   { path: 'add-card', component: AddCardComponent, title: 'Add Your Card' },
 
   // 404 Fallback
