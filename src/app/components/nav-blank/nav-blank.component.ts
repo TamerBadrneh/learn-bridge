@@ -34,6 +34,7 @@ export class NavBlankComponent implements OnInit {
           (n) => n.readStatus === 'UNREAD'
         );
       });
+
   }
 
   handleNotificationClick(notification: any) {

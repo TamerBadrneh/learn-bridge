@@ -92,6 +92,9 @@
               [ngClass]="{ 'fw-bold': !notif.read }"
             >
               {{ notif.message }}
+              <div class="small text-muted mt-1">
+                {{ notif.readStatus === "READ" ? "Read" : "Unread" }}
+              </div>
             </li>
           </ul>
         </li>

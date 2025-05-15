@@ -22,17 +22,25 @@
           <a class="nav-link text-capitalize menu" routerLink="home">home</a>
         </li>
         <li class="nav-item ms-3">
-          <a class="nav-link text-capitalize menu" routerLink="find-instructor">find instructor</a>
+          <a class="nav-link text-capitalize menu" routerLink="find-instructor"
+            >find instructor</a
+          >
         </li>
 
         <li class="nav-item ms-3">
-          <a class="nav-link text-capitalize menu" routerLink="payment">payment</a>
+          <a class="nav-link text-capitalize menu" routerLink="payment"
+            >payment</a
+          >
         </li>
         <li class="nav-item ms-3">
-          <a class="nav-link text-capitalize menu" routerLink="my-posts">my posts</a>
+          <a class="nav-link text-capitalize menu" routerLink="my-posts"
+            >my posts</a
+          >
         </li>
         <li class="nav-item ms-3">
-          <a class="nav-link text-capitalize menu" routerLink="create-post">create post</a>
+          <a class="nav-link text-capitalize menu" routerLink="create-post"
+            >create post</a
+          >
         </li>
       </ul>
 
@@ -45,16 +53,40 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
-              <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="currentColor"
+              class="bi bi-bell-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"
+              />
             </svg>
-            <span *ngIf="hasUnread" class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger" style="width: 12px; height: 12px; padding: 0; border: 2px solid white;">
+            <span
+              *ngIf="hasUnread"
+              class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger"
+              style="
+                width: 12px;
+                height: 12px;
+                padding: 0;
+                border: 2px solid white;
+              "
+            >
               <span class="visually-hidden">Unread notifications</span>
             </span>
           </a>
 
-          <ul class="dropdown-menu dropdown-menu-end p-0 border-0 shadow" style="min-width: 350px; max-height: 400px; overflow-y: auto">
-            <li *ngIf="notifications.length === 0" class="dropdown-item text-center text-muted py-4">
+          <ul
+            class="dropdown-menu dropdown-menu-end p-0 border-0 shadow"
+            style="min-width: 350px; max-height: 400px; overflow-y: auto"
+          >
+            <li
+              *ngIf="notifications.length === 0"
+              class="dropdown-item text-center text-muted py-4"
+            >
               No notifications available.
             </li>
             <li
@@ -64,6 +96,9 @@
               [ngClass]="{ 'fw-bold': !notif.read }"
             >
               {{ notif.message }}
+              <div class="small text-muted mt-1">
+                {{ notif.readStatus === "READ" ? "Read" : "Unread" }}
+              </div>
             </li>
           </ul>
         </li>
@@ -78,7 +113,9 @@
           </a>
         </li>
         <li class="nav-item">
-          <span class="nav-link cursor-pointer me-3" (click)="logoutUser()">Sign Out</span>
+          <span class="nav-link cursor-pointer me-3" (click)="logoutUser()"
+            >Sign Out</span
+          >
         </li>
       </ul>
     </div>
