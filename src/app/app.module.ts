@@ -36,6 +36,7 @@ import { AdminLayoutComponent } from './components/admin-layout/admin-layout.com
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ReportComponent } from './components/report/report.component';
+import { AddRatingComponent } from './components/add-rating/add-rating.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { ReportComponent } from './components/report/report.component';
     AdminLayoutComponent,
     AdminNavComponent,
     ReportComponent,
+    AddRatingComponent,
     // ChatComponent
   ],
   imports: [

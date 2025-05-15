@@ -1,26 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Review Box</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="review-container">
-    <div class="stars">
-      <span>★</span>
-      <span>★</span>
-      <span>★</span>
-      <span>★</span>
-      <span>★</span>
-    </div>
-    <label for="review">Review</label>
-    <textarea id="review" placeholder="Write your review here..."></textarea>
-    <div class="buttons">
-      <button class="skip">Skip</button>
-      <button class="submit">Submit</button>
+<div class="container py-5">
+  <div class="card shadow mx-auto" style="max-width: 500px">
+    <div class="card-body">
+      <h5 class="card-title text-center mb-4">Rate this instructor</h5>
+
+      <div class="d-flex justify-content-center mb-1">
+        <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
+          <span
+            class="fs-3 me-1"
+            (click)="selectRating(i + 1)"
+            [ngClass]="{ 'text-warning': i < selectedRating }"
+            style="cursor: pointer"
+            >★</span
+          >
+        </ng-container>
+      </div>
+      <p
+        *ngIf="showError && selectedRating === 0"
+        class="text-danger text-center"
+      >
+        Please select a rating.
+      </p>
+
+      <div class="mb-3">
+        <label for="review" class="form-label">Comment</label>
+        <textarea
+          id="review"
+          style="resize: none"
+          class="form-control"
+          rows="4"
+          placeholder="Write your review here..."
+          [(ngModel)]="reviewText"
+          [disabled]="selectedRating === 0"
+        ></textarea>
+        <p
+          *ngIf="showError && selectedRating > 0 && !reviewText.trim()"
+          class="text-danger"
+        >
+          Please enter a comment.
+        </p>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <button class="btn btn-secondary" (click)="skip()">Skip</button>
+        <button class="btn btn-primary" (click)="submit()">Submit</button>
+      </div>
     </div>
   </div>
-</body>
-</html>
+</div>

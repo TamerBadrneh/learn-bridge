@@ -27,6 +27,7 @@ import { AgreementComponent } from './components/agreement/agreement.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ReportComponent } from './components/report/report.component';
 import { ViewProfileComponent } from './components/viewprofile/viewprofile.component';
+import { AddRatingComponent } from './components/add-rating/add-rating.component';
 
 const routes: Routes = [
   // Guest Pages
@@ -124,6 +125,11 @@ const routes: Routes = [
         component: AgreementComponent,
         title: 'Agreement Confirmation',
       },
+      {
+        path: 'rate-instructor',
+        component: AddRatingComponent,
+        title: 'Rate Instructor',
+      },
     ],
   },
 
@@ -151,8 +157,16 @@ const routes: Routes = [
         title: 'Instructor Profile',
       },
 
-      { path: ':id/view-profile', component: ViewProfileComponent, title: 'Instructor Profile' },
-      { path: 'personal-profile', component: InstructorProfileComponent, title: 'Personal Profile' },
+      {
+        path: ':id/view-profile',
+        component: ViewProfileComponent,
+        title: 'Instructor Profile',
+      },
+      {
+        path: 'personal-profile',
+        component: InstructorProfileComponent,
+        title: 'Personal Profile',
+      },
       { path: 'add-card', component: AddCardComponent, title: 'Add Card' },
       {
         path: 'chat',

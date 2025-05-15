@@ -12,8 +12,14 @@ export class NotFoundComponent {
   constructor(private _Router: Router, private authService: AuthService) {}
 
   navigateToHome() {
-    this._Router.navigate([
-      `${this.authService.userData.role.toLowerCase() || ''}/home`,
-    ]);
+    this.authService.fetchUserData().subscribe({
+      next: (user) => {
+        const role = user.role?.toLowerCase() || '';
+        this._Router.navigate([`${role}/home`]);
+      },
+      error: (err) => {
+        console.error('Failed to fetch user data', err);
+      },
+    });
   }
 }
