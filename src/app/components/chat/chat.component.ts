@@ -240,4 +240,13 @@ export class ChatComponent implements OnInit {
         : '/instructor/report-user';
     this.router.navigate([path]);
   }
+
+  isSessionInactive(): boolean {
+    const selectedChat = this.chats.find(
+      (chat) => chat.chatId === this.selectedChatId
+    );
+    const status = selectedChat?.sessionStatus;
+    console.log('Session status:', status);
+    return status === 'CANCELLED' || status === 'FINISHED';
+  }
 }

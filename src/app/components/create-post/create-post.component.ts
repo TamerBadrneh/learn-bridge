@@ -8,9 +8,9 @@ import { Router } from '@angular/router';
   selector: 'app-create-post',
   standalone: true,
   imports: [
-    CommonModule,    // for *ngIf, *ngFor, etc.
-    FormsModule,     // for ngModel, ngForm
-    HttpClientModule // for HttpClient
+    CommonModule, // for *ngIf, *ngFor, etc.
+    FormsModule, // for ngModel, ngForm
+    HttpClientModule, // for HttpClient
   ],
   templateUrl: './create-post.component.html',
   styleUrls: ['./create-post.component.scss'],
@@ -31,7 +31,7 @@ export class CreatePostComponent implements OnInit {
     category: '',
     content: '',
     price: null,
-    sessionDeadline: null
+    sessionDeadline: null,
   };
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -58,23 +58,24 @@ export class CreatePostComponent implements OnInit {
       category: this.formData.category,
       content: this.formData.content,
       price: this.formData.price,
-      sessionDeadline: this.formData.sessionDeadline
+      sessionDeadline: this.formData.sessionDeadline,
     };
 
     this.http
       .post('http://localhost:8080/api/posts/create-post', payload, {
         headers: { 'Content-Type': 'application/json' },
-        withCredentials: true
+        withCredentials: true,
       })
       .subscribe({
         next: () => {
           alert('Post created successfully!');
+          console.log(this.formData);
           this.router.navigate(['/learner/my-posts']);
         },
         error: (err) => {
           console.error('Error creating post', err);
           this.showError = true;
-        }
+        },
       });
   }
 }

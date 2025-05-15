@@ -13,7 +13,7 @@ interface Post {
   content: string;
   postStatus: string;
   category: string;
-  sessionDeadline: string;      // <-- new
+  sessionDeadline: string; // <-- new
   agreementSent?: boolean;
 }
 
@@ -53,10 +53,10 @@ export class PostsComponent implements OnInit {
     this.fetchPosts();
   }
 
+  // Modify this
   fetchPosts() {
     this.isLoading = true;
     this.errorMessage = '';
-
     this.http
       .get<Post[]>('http://localhost:8080/api/posts/favourite-category', {
         withCredentials: true,
@@ -92,9 +92,7 @@ export class PostsComponent implements OnInit {
     let result = [...this.allPosts];
 
     // 1) Remove expired posts
-    result = result.filter(post =>
-      new Date(post.sessionDeadline) >= today
-    );
+    result = result.filter((post) => new Date(post.sessionDeadline) >= today);
 
     // 2) Filter by search
     if (this.searchQuery) {

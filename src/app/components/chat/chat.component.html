@@ -185,42 +185,47 @@
         </div>
 
         <div class="chat-input">
-          <div class="input-group">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Type your message and press enter..."
-              [(ngModel)]="newMessage"
-              (keydown.enter)="sendMessage()"
-            />
+          <ng-container *ngIf="!isSessionInactive(); else sessionInactiveMsg">
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Type your message and press enter..."
+                [(ngModel)]="newMessage"
+                (keydown.enter)="sendMessage()"
+              />
 
-            <!-- File Upload Button -->
-            <button
-              class="btn btn-secondary"
-              (click)="fileInput.click()"
-              type="button"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                viewBox="0 0 16 16"
+              <button
+                class="btn btn-secondary"
+                (click)="fileInput.click()"
+                type="button"
               >
-                <path
-                  d="M6.354 1.5a4.5 4.5 0 0 1 6.364 6.364l-6.708 6.708a3.5 3.5 0 0 1-4.95-4.95l7.5-7.5a2.5 2.5 0 0 1 3.536 3.536l-7.5 7.5a1.5 1.5 0 0 1-2.122-2.122l6.708-6.708.708.708-6.708 6.708a.5.5 0 0 0 .708.708l7.5-7.5a1.5 1.5 0 0 0-2.122-2.122l-7.5 7.5a2.5 2.5 0 1 0 3.536 3.536l6.708-6.708a3.5 3.5 0 1 0-4.95-4.95l-6.708 6.708-.708-.708 6.708-6.708Z"
-                />
-              </svg>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M6.354 1.5a4.5 4.5 0 0 1 6.364 6.364l-6.708 6.708a3.5 3.5 0 0 1-4.95-4.95l7.5-7.5a2.5 2.5 0 0 1 3.536 3.536l-7.5 7.5a1.5 1.5 0 0 1-2.122-2.122l6.708-6.708.708.708-6.708 6.708a.5.5 0 0 0 .708.708l7.5-7.5a1.5 1.5 0 0 0-2.122-2.122l-7.5 7.5a2.5 2.5 0 1 0 3.536 3.536l6.708-6.708a3.5 3.5 0 1 0-4.95-4.95l-6.708 6.708-.708-.708 6.708-6.708Z"
+                  />
+                </svg>
+              </button>
+              <input
+                type="file"
+                hidden
+                #fileInput
+                (change)="onFileSelected($event)"
+              />
+            </div>
+          </ng-container>
 
-            <!-- Hidden File Input -->
-            <input
-              type="file"
-              hidden
-              #fileInput
-              (change)="onFileSelected($event)"
-            />
-          </div>
+          <ng-template #sessionInactiveMsg>
+            <div class="alert alert-danger mb-0 text-center">
+              Finished / Canceled Sessions can't be contacted...
+            </div>
+          </ng-template>
         </div>
       </ng-container>
 
