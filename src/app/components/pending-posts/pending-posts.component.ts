@@ -12,6 +12,7 @@ interface Post {
   content: string;
   postStatus: string;
   category: string;
+  sessionDeadline: string;   // ← new
 }
 
 @Component({
@@ -58,14 +59,9 @@ export class PendingPostsComponent implements OnInit {
       .put(
         `http://localhost:8080/api/posts/accept/${authorId}/${postId}`,
         null,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       )
-      .subscribe(() => {
-        alert('Post accepted successfully');
-        this.fetchPendingPosts();
-      });
+      .subscribe(() => window.location.reload());
   }
 
   rejectPost(authorId: number, postId: number) {
@@ -73,13 +69,8 @@ export class PendingPostsComponent implements OnInit {
       .put(
         `http://localhost:8080/api/posts/reject/${authorId}/${postId}`,
         null,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       )
-      .subscribe(() => {
-        alert('Post rejected successfully');
-        this.fetchPendingPosts();
-      });
+      .subscribe(() => window.location.reload());
   }
 }

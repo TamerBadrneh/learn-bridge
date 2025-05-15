@@ -35,6 +35,7 @@ import { LearnerProfileComponent } from './components/learner-profile/learner-pr
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { ReportComponent } from './components/report/report.component';
 
 @NgModule({
   declarations: [
@@ -45,21 +46,22 @@ import { ChatComponent } from './components/chat/chat.component';
     RegisterComponent,
     FindInstructorComponent,
     PostsComponent,
-    PaymentComponent,
-    MyPostsComponent,
+    // PaymentComponent,
+    // MyPostsComponent,
     NotFoundComponent,
     NavBlankComponent,
     NavAuthComponent,
     AuthLayoutComponent,
     BlankLayoutComponent,
-    CreatePostComponent,
+    // CreatePostComponent,
     InstructorBioComponent,
     InstructorLayoutComponent,
     NavInstructorComponent,
-    InstructorProfileComponent,
-    LearnerProfileComponent,
+    // InstructorProfileComponent,
+    // LearnerProfileComponent,
     AdminLayoutComponent,
     AdminNavComponent,
+    ReportComponent,
     // ChatComponent
   ],
   imports: [
@@ -71,9 +73,9 @@ import { ChatComponent } from './components/chat/chat.component';
     RouterModule,
     NgxStripeModule.forRoot(environment.stripe.publicKey),
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule
+    AngularFirestoreModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

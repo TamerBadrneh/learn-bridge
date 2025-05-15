@@ -50,3 +50,23 @@
   color: white;
   font-weight: bold;
 }
+
+/* Button Overrides */
+
+.post-container .btn-primary {
+  background-color: #04ccbc;
+  border-color:    #04ccbc;
+  color:           #ffffff;
+}
+
+.post-container .btn-primary:hover,
+.post-container .btn-primary:focus {
+  background-color: #039b94;
+  border-color:    #039b94;
+}
+
+.btn-disabled {
+  background-color: #cccccc !important;
+  color:            #666666 !important;
+  cursor:           not-allowed;
+}

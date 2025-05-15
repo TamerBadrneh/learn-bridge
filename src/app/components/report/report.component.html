@@ -7,16 +7,58 @@
 <body>
   <div class="report-modal">
     <button class="close-btn">X</button>
+<div
+  class="container mt-5 d-flex flex-column justify-content-center"
+  style="height: 80vh; width: 65vw"
+>
+  <h1 class="text-center mb-3">
+    Report {{ userRole === "LEARNER" ? "Instructor" : "Learner" }}
+  </h1>
 
-    <label for="report-type">Report type</label>
-    <select id="report-type">
-      <option>---select report type---</option>
-    </select>
+  <div class="card shadow-lg">
+    <div class="card-body">
+      <form #reportForm="ngForm" (ngSubmit)="onSubmit(reportForm)">
+        <div class="mb-3">
+          <label for="report-type" class="form-label">Report Type</label>
+          <select
+            class="form-select"
+            id="report-type"
+            name="reportType"
+            [(ngModel)]="reportType"
+            required
+          >
+            <option value="" disabled selected>Select Report Type</option>
+            <option *ngFor="let type of filteredReportTypes" [value]="type.key">
+              {{ type.label }}
+            </option>
+          </select>
 
-    <label for="description">Description</label>
-    <textarea id="description" rows="6"></textarea>
+          <div class="text-danger" *ngIf="reportForm.submitted && !reportType">
+            Report type is required.
+          </div>
+        </div>
 
-    <button class="submit-btn">Submit</button>
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea
+            placeholder="What happened ?"
+            class="form-control"
+            style="resize: none !important"
+            id="description"
+            name="description"
+            [(ngModel)]="description"
+            rows="5"
+            required
+          ></textarea>
+          <div class="text-danger" *ngIf="reportForm.submitted && !description">
+            Description is required.
+          </div>
+        </div>
+
+        <div class="text-end">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
+    </div>
   </div>
-</body>
-</html>
+</div>

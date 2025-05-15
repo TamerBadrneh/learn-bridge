@@ -84,48 +84,54 @@ export class AgreementComponent implements OnInit {
       });
   }
 
-  acceptAgreement(): void {
-    if (!this.info) {
-      return;
-    }
-    this.loading = true;
-    this.http
-      .post<SessionDTO>(
-        `${this.baseUrl}/notifications/${this.notificationId}/accept`,
-        {},
-        { withCredentials: true }
-      )
-      .subscribe({
-        next: (session: SessionDTO) => {
-          // After accepting, reload the page
-          window.location.reload();
-        },
-        error: err => {
-          console.error('Error accepting agreement', err);
-          this.error = 'Could not accept the offer. You might have insufficient funds.';
-          this.loading = false;
-        }
-      });
-  }
+acceptAgreement(): void {
+  if (!this.info) return;
+  this.loading = true;
 
-  rejectAgreement(): void {
-    this.loading = true;
-    this.http
-      .post<void>(
-        `${this.baseUrl}/notifications/${this.notificationId}/reject`,
-        {},
-        { withCredentials: true }
-      )
-      .subscribe({
-        next: () => {
-          // After rejecting, reload the page
-          window.location.reload();
-        },
-        error: err => {
-          console.error('Error rejecting agreement', err);
-          this.error = 'Could not reject the offer.';
-          this.loading = false;
-        }
-      });
-  }
+  this.http
+    .post<SessionDTO>(
+      `${this.baseUrl}/notifications/${this.notificationId}/accept`,
+      {},
+      { withCredentials: true }
+    )
+    .subscribe({
+      next: (session: SessionDTO) => {
+
+        const url = this.router.createUrlTree(
+          ['/learner/chat'],
+          { queryParams: { sessionId: session.sessionId } }
+        ).toString();
+
+        window.location.href = url;
+      },
+      error: err => {
+        console.error('Error accepting agreement', err);
+        this.error = 'Could not accept the offer. You might have insufficient funds.';
+        this.loading = false;
+      }
+    });
+}
+
+rejectAgreement(): void {
+  this.loading = true;
+
+  this.http
+    .post<void>(
+      `${this.baseUrl}/notifications/${this.notificationId}/reject`,
+      {},
+      { withCredentials: true }
+    )
+    .subscribe({
+      next: () => {
+
+        window.location.href = this.router.createUrlTree(['/learner/home']).toString();
+      },
+      error: err => {
+        console.error('Error rejecting agreement', err);
+        this.error = 'Could not reject the offer.';
+        this.loading = false;
+      }
+    });
+}
+
 }

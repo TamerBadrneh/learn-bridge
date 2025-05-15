@@ -1,17 +1,16 @@
 <div id="details-container" class="container my-3">
-  <!-- Header -->
   <header class="my-4 text-center">
     <h1 class="fw-bold">Personal Details</h1>
   </header>
 
-  <!-- Forms -->
   <form
     id="general-details"
     class="w-75 px-4 py-4 rounded-4 mx-auto"
-    (ngSubmit)="submitForm()"
+    (ngSubmit)="submitForm(form)"
     #form="ngForm"
   >
     <h2 class="fw-bold fs-4 my-3">General Details</h2>
+
     <!-- First Name -->
     <div class="mb-3">
       <label class="form-label">First Name</label>
@@ -23,10 +22,7 @@
         required
         #firstName="ngModel"
       />
-      <p
-        class="form-text text-danger"
-        *ngIf="firstName.invalid && firstName.touched"
-      >
+      <p class="form-text text-danger" *ngIf="firstName.invalid && firstName.touched">
         First Name is required
       </p>
     </div>
@@ -42,10 +38,7 @@
         required
         #lastName="ngModel"
       />
-      <p
-        class="form-text text-danger"
-        *ngIf="lastName.invalid && lastName.touched"
-      >
+      <p class="form-text text-danger" *ngIf="lastName.invalid && lastName.touched">
         Last Name is required
       </p>
     </div>
@@ -75,14 +68,10 @@
         class="form-control"
         name="password"
         [(ngModel)]="formData.password"
-        required
         minlength="6"
         #password="ngModel"
       />
-      <p
-        class="form-text text-danger"
-        *ngIf="password.invalid && password.touched"
-      >
+      <p class="form-text text-danger" *ngIf="password.invalid && password.touched">
         Password (min 6 characters) is required
       </p>
     </div>
@@ -95,24 +84,17 @@
         class="form-control"
         name="confirmPassword"
         [(ngModel)]="formData.confirmPassword"
-        [required]="formData.password"
         #confirmPassword="ngModel"
       />
-      <p
-        class="form-text text-danger"
-        *ngIf="
-          confirmPassword.touched &&
-          formData.password &&
-          formData.confirmPassword &&
-          formData.password !== formData.confirmPassword
-        "
-      >
+      <p class="form-text text-danger"
+         *ngIf="confirmPassword.touched && formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword">
         Passwords do not match
       </p>
     </div>
 
     <!-- Category Select -->
     <div class="mb-3">
+      <label class="form-label">Favorite Category</label>
       <select
         class="form-select"
         name="favouriteCategory"
@@ -120,21 +102,17 @@
         required
         #favouriteCategory="ngModel"
       >
-        <option value="" disabled selected>Favorite Category</option>
+        <option value="" disabled>Choose a category</option>
         <option>IT</option>
         <option>MEDICAL</option>
         <option>SCIENCE</option>
         <option>LANGUAGES</option>
       </select>
-      <p
-        class="form-text text-danger"
-        *ngIf="favouriteCategory.invalid && favouriteCategory.touched"
-      >
+      <p class="form-text text-danger" *ngIf="favouriteCategory.invalid && favouriteCategory.touched">
         Category selection is required
       </p>
     </div>
 
-    <!-- Submit button -->
     <input
       type="submit"
       value="Save Changes"

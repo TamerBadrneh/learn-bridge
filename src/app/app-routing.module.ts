@@ -30,6 +30,8 @@ import { ViewProfileComponent } from './components/viewprofile/viewprofile.compo
 
 const routes: Routes = [
   // Guest Pages
+  // Routing Config status => WORKS WELL
+  // No Comments on...
   {
     path: '',
     component: AuthLayoutComponent,
@@ -37,35 +39,58 @@ const routes: Routes = [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
-      { path: 'instructor-bio', component: InstructorBioComponent, title: 'Instructor Bio' },
       { path: 'home', component: HomeComponent, title: 'Home' },
-      { path: 'findinstructor', component: FindInstructorComponent, title: 'Find Instructor' },
+      {
+        path: 'find-instructor',
+        component: FindInstructorComponent,
+        title: 'Find Instructor',
+      },
       { path: 'posts', component: PostsComponent, title: 'Posts' },
     ],
   },
 
   // Admin Pages
+  // Routing Config status => WORKS WELL
+  // 1 Page Left to associate => Chat and I will handle it...
   {
     path: 'admin',
     component: AdminLayoutComponent,
     children: [
       { path: 'home', component: HomeComponent, title: 'Home' },
-      { path: 'find-instructor', component: FindInstructorComponent, title: 'Find Instructor' },
+      {
+        path: 'find-instructor',
+        component: FindInstructorComponent,
+        title: 'Find Instructor',
+      },
       { path: 'posts', component: PostsComponent, title: 'Posts' },
-      { path: 'pending-posts', component: PendingPostsComponent, title: 'Pending Posts' },
-      { path: 'pending-reports', component: PendingReportsComponent, title: 'Pending Reports' },
+      {
+        path: 'pending-posts',
+        component: PendingPostsComponent,
+        title: 'Pending Posts',
+      },
+      {
+        path: 'pending-reports',
+        component: PendingReportsComponent,
+        title: 'Pending Reports',
+      },
       { path: 'chat', component: ChatComponent, title: 'Chat' },
     ],
   },
 
   // Learner Pages
+  // Routing Config status => WORKS WELL
+  // 1 New Page should be added and modified by Zaid here => View Profile, bcs it's rendering the nav bar for the instructor instead of learner...
   {
     path: 'learner',
     component: BlankLayoutComponent,
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent, title: 'Home' },
-      { path: 'find-instructor', component: FindInstructorComponent, title: 'Find Instructor' },
+      {
+        path: 'find-instructor',
+        component: FindInstructorComponent,
+        title: 'Find Instructor',
+      },
       { path: 'payment', component: PaymentComponent, title: 'Payment' },
       { path: 'add-card', component: AddCardComponent, title: 'Add Card' },
       { path: 'my-posts', component: MyPostsComponent, title: 'My Posts' },
@@ -85,11 +110,6 @@ const routes: Routes = [
         title: 'Edit Post',
       },
       {
-        path: 'agreement',
-        component: AgreementComponent,
-        title: 'Agreement Confirmation',
-      },
-      {
         path: 'chat',
         component: ChatComponent,
         title: 'Chat',
@@ -99,15 +119,17 @@ const routes: Routes = [
         component: ReportComponent,
         title: 'Report',
       },
-      { path: 'create-post', component: CreatePostComponent, title: 'Create Post' },
-      { path: 'learner-profile', component: LearnerProfileComponent, title: 'Learner Profile' },
-      { path: 'edit-post', component: EditPostComponent, title: 'Edit Post' },
-      { path: 'agreement', component: AgreementComponent, title: 'Agreement Confirmation' },
-      { path: 'chat', component: ChatComponent, title: 'Chat' },
+      {
+        path: 'agreement',
+        component: AgreementComponent,
+        title: 'Agreement Confirmation',
+      },
     ],
   },
 
   // Instructor Pages
+  // Routing Cinfig stats => WORKS WELL
+  // 1 Old Page should be naviagted to successfully "ADD-CARD", Tamer will fix it.
   {
     path: 'instructor',
     component: InstructorLayoutComponent,
@@ -115,9 +137,22 @@ const routes: Routes = [
       { path: 'home', component: HomeComponent, title: 'Home' },
       { path: 'posts', component: PostsComponent, title: 'Posts' },
       { path: 'payment', component: PaymentComponent, title: 'Payment' },
-      { path: 'instructor-bio', component: InstructorBioComponent, title: 'Instructor Bio' },
+      {
+        path: 'instructor-bio',
+        component: InstructorBioComponent,
+        title: 'Instructor Bio',
+      },
+
+      // MODIFY as noted in Learner Stats
       // Profile by ID
+      {
+        path: ':id/view-profile',
+        component: ViewProfileComponent,
+        title: 'Instructor Profile',
+      },
+
       { path: ':id/view-profile', component: ViewProfileComponent, title: 'Instructor Profile' },
+      { path: 'personal-profile', component: InstructorProfileComponent, title: 'Personal Profile' },
       { path: 'add-card', component: AddCardComponent, title: 'Add Card' },
       {
         path: 'chat',
@@ -129,7 +164,11 @@ const routes: Routes = [
         component: ReportComponent,
         title: 'Report',
       },
-      { path: 'chat', component: ChatComponent, title: 'Chat' },
+      {
+        path: 'instructor-profile',
+        component: InstructorProfileComponent,
+        title: 'Instructor Profile',
+      },
     ],
   },
 
@@ -141,7 +180,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled' })],
+  imports: [
+    RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled' }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

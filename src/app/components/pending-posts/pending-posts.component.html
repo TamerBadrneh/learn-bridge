@@ -1,7 +1,9 @@
 <div class="container">
   <h1>Pending posts</h1>
 
-  <div *ngIf="posts.length === 0" class="no-posts">No pending posts.</div>
+  <div *ngIf="posts.length === 0" class="no-posts">
+    No pending posts.
+  </div>
 
   <div *ngIf="posts.length > 0">
     <div class="post-wrapper" *ngFor="let post of paginatedPosts">
@@ -19,6 +21,11 @@
         <div class="price">
           Price: <b>{{ post.price }} JOD</b>
         </div>
+
+        <!-- New: Deadline display -->
+        <p class="deadline">
+          Deadline: {{ post.sessionDeadline | date: 'mediumDate' }}
+        </p>
 
         <div class="actions-outer">
           <button
