@@ -2,7 +2,7 @@
   <h1 class="fw-bold text-center mb-4">Payments</h1>
 
   <div class="top-buttons mb-4">
-    <button class="add-card" (click)="addCard()">Add card ➕</button>
+    <button class="add-card" (click)="addCard()">Add card</button>
   </div>
 
   <div class="cards-history-container">
@@ -15,38 +15,42 @@
       <div *ngIf="errorCards" class="alert alert-danger">{{ errorCards }}</div>
 
       <!-- No Cards -->
-      <p *ngIf="!loadingCards && cards.length === 0" class="text-center text-muted">
+      <p
+        *ngIf="!loadingCards && cards.length === 0"
+        class="text-center text-muted"
+      >
         No saved cards yet.
       </p>
 
       <!-- Cards List -->
-  <ng-container *ngFor="let card of cards; trackBy: trackByCardId">
-    <div
-      class="card my-3 py-5"
-      [ngClass]="{
-        'master-card': card.cardType.toLowerCase() === 'mastercard',
-        'visa-card': card.cardType.toLowerCase() === 'visa'
-      }"
-    >
-      <div class="card-info d-flex gap-5">
-        <img
-          [src]="'assets/images/' + card.cardType.toLowerCase() + '.png'"
-          alt="{{ card.cardType }} logo"
-          id="card-image"
-          (error)="$any($event.target).src='assets/images/generic-card.png'"
-        />
-        <div class="card-details">
-          <p class="number">{{ card.cardNumber }}</p>
-          <p class="expiry">{{ card.expiryDate }}</p>
-          <p class="holder"> {{ card.holderName }} </p>
+      <ng-container *ngFor="let card of cards; trackBy: trackByCardId">
+        <div
+          class="card my-3 py-5"
+          [ngClass]="{
+            'master-card': card.cardType.toLowerCase() === 'mastercard',
+            'visa-card': card.cardType.toLowerCase() === 'visa'
+          }"
+        >
+          <div class="card-info d-flex gap-5">
+            <img
+              [src]="'assets/images/' + card.cardType.toLowerCase() + '.png'"
+              alt="{{ card.cardType }} logo"
+              id="card-image"
+              (error)="
+                $any($event.target).src = 'assets/images/generic-card.png'
+              "
+            />
+            <div class="card-details">
+              <p class="number">{{ card.cardNumber }}</p>
+              <p class="expiry">{{ card.expiryDate }}</p>
+              <p class="holder">{{ card.holderName }}</p>
+            </div>
+          </div>
+          <button class="delete-btn" (click)="deleteCard(card.cardId)">
+            Delete
+          </button>
         </div>
-      </div>
-      <button class="delete-btn" (click)="deleteCard(card.cardId)">
-        Delete
-      </button>
-    </div>
-  </ng-container>
-
+      </ng-container>
     </div>
 
     <!-- Payment History -->
@@ -54,8 +58,12 @@
       <h2>Payment history</h2>
 
       <!-- Loading & Error -->
-      <div *ngIf="loadingHistory" class="text-center py-3">Loading history…</div>
-      <div *ngIf="errorHistory" class="alert alert-danger">{{ errorHistory }}</div>
+      <div *ngIf="loadingHistory" class="text-center py-3">
+        Loading history…
+      </div>
+      <div *ngIf="errorHistory" class="alert alert-danger">
+        {{ errorHistory }}
+      </div>
 
       <!-- History Table -->
       <table *ngIf="!loadingHistory && paymentHistory.length > 0">
@@ -68,7 +76,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let tx of paymentHistory">
-            <td>{{ tx.paymentDate | date:'dd/MM/yyyy' }}</td>
+            <td>{{ tx.paymentDate | date : "dd/MM/yyyy" }}</td>
             <td>{{ tx.paymentId }}</td>
             <td>{{ tx.amount }} JOD</td>
           </tr>
@@ -76,7 +84,10 @@
       </table>
 
       <!-- No History -->
-      <p *ngIf="!loadingHistory && paymentHistory.length === 0" class="text-center text-muted">
+      <p
+        *ngIf="!loadingHistory && paymentHistory.length === 0"
+        class="text-center text-muted"
+      >
         No transactions yet.
       </p>
     </div>

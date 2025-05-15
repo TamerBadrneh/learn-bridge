@@ -1,107 +1,119 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9f321;
-    margin: 0;
-    padding: 20px;
-  }
-  .container {
-    max-width: 900px;
-    margin: auto;
-  }
-  
-  h1 {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .top-buttons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .add-card {
-    background-color: #00d2c8;
-    border: none;
-    border-radius: 15px;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-weight: bold;
-    color: #000;
-  }
-  
-  .wallet-balance {
-    background-color: #00d2c8;
-    padding: 10px 15px;
-    border-radius: 15px;
-    font-weight: bold;
-  }
-  
-  .cards-history-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-  
-  .saved-cards, .payment-history {
-    flex: 1;
-    background-color: #fff;
-    border-radius: 15px;
-    padding: 20px;
-    min-width: 280px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  }
-  
-  .card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: #f0f0f0;
-  }
-  
-  .card-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .card-info img {
-    width: 40px;
-  }
-  
-  .delete-btn {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 7px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .payment-history table {
-    width: 100%;
-    margin-top: 15px;
-    border-collapse: collapse;
-  }
-  
-  .payment-history th, .payment-history td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .payment-history th {
-    color: #00d2c8;
-  }
-  #card-image{
-    width: 100px;
-    height: 100px;
-  }
+  font-family: Arial, sans-serif;
+  background-color: #f8f9f321;
+  margin: 0;
+  padding: 20px;
+}
+.container {
+  max-width: 900px;
+  margin: auto;
+}
 
-  
+h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.top-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-card {
+  background-color: #00d2c8;
+  border: none;
+  border-radius: 15px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #000;
+  transition: all 300ms ease-in-out;
+}
+
+.add-card:hover {
+  background-color: #000 !important;
+  color: white !important;
+}
+
+.wallet-balance {
+  background-color: #00d2c8;
+  padding: 10px 15px;
+  border-radius: 15px;
+  font-weight: bold;
+}
+
+.cards-history-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.saved-cards,
+.payment-history {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 20px;
+  min-width: 280px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #f0f0f0;
+}
+
+.card-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-info img {
+  width: 40px;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 7px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 300ms ease-in-out;
+}
+
+.delete-btn:hover {
+  background-color: red;
+  color: white;
+}
+
+.payment-history table {
+  width: 100%;
+  margin-top: 15px;
+  border-collapse: collapse;
+}
+
+.payment-history th,
+.payment-history td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.payment-history th {
+  color: #00d2c8;
+}
+#card-image {
+  width: 100px;
+  height: 100px;
+}
