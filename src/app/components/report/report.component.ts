@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AuthService } from '../../shared/services/auth.service';
+import { ReportService } from './Report Service.component';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: false,
@@ -8,10 +11,11 @@ import { AuthService } from '../../shared/services/auth.service';
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss'],
 })
-export class ReportComponent {
+export class ReportComponent implements OnInit {
   reportType: string = '';
   description: string = '';
-  userRole: 'LEARNER' | 'INSTRUCTOR';
+  userRole: 'LEARNER' | 'INSTRUCTOR' = 'LEARNER'; // default fallback
+  chatId: number | null = null;
 
   instructorReportMap: { [key: string]: string } = {
     INSTRUCTOR_INAPPROPRIATE_BEHAVIOR: 'Instructor behaved inappropriately',
@@ -21,6 +25,7 @@ export class ReportComponent {
       'Instructor provided misleading information',
     INSTRUCTOR_OTHER: 'Other',
   };
+
   learnerReportMap: { [key: string]: string } = {
     LEARNER_NON_PAYMENT: 'Learner did not complete payment',
     LEARNER_NO_SHOW: 'Learner did not attend the session',
@@ -31,22 +36,26 @@ export class ReportComponent {
 
   filteredReportTypes: { key: string; label: string }[] = [];
 
-  constructor(public authService: AuthService) {}
+  constructor(
+    public authService: AuthService,
+    private reportService: ReportService,
+    private http: HttpClient, // Correctly injected HttpClient
+    private router: Router
+  ) {}
 
   ngOnInit() {
+    this.chatId = this.reportService.getChatId();
+
     this.authService.fetchUserData().subscribe({
       next: (user) => {
-        this.userRole = user?.role;
+        this.userRole = user?.role || 'LEARNER';
         const reportMap =
           this.userRole === 'LEARNER'
             ? this.instructorReportMap
             : this.learnerReportMap;
 
         this.filteredReportTypes = Object.entries(reportMap).map(
-          ([key, label]) => ({
-            key,
-            label,
-          })
+          ([key, label]) => ({ key, label })
         );
       },
       error: (err) => {
@@ -54,20 +63,35 @@ export class ReportComponent {
       },
     });
   }
+
   onSubmit(form: NgForm) {
-    if (form.valid) {
-      console.log('Submitted', {
+    if (form.valid && this.chatId) {
+      const body = {
         reportType: this.reportType,
         description: this.description,
-      });
-    }
+      };
 
-    // I will wait till I can get a clear way to access them maybe via back-end...
-    // now we will make an API call
-    // The configuration is clear
-    // withCredentials: true
-    // Path: http://localhost:8080/api/reports/create-report/{relatedSessionId}/{reportedUserId}
-    // method POST
-    // for now userId can be got via authService.
+      const confirmResult = confirm(`Do you want to report this User ?`);
+      if (!confirmResult) return;
+
+      this.http
+        .post(
+          `http://localhost:8080/api/reports/create-report/${this.chatId}`,
+          body,
+          { withCredentials: true }
+        )
+        .subscribe({
+          next: () => {
+            alert('Report submitted successfully.');
+            this.router.navigate([`${this.userRole.toLowerCase()}/home`]);
+          },
+          error: (err) => {
+            console.error('Failed to submit report:', err);
+            alert('Failed to submit report.');
+          },
+        });
+    } else {
+      console.warn('Form is invalid or chatId is missing');
+    }
   }
 }

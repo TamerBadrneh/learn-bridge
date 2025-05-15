@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../shared/services/auth.service';
 import { ChatFilterPipe } from './Chat Filter Pipe.component';
 import { Router } from '@angular/router';
+import { ReportService } from '../report/Report Service.component';
 
 @Component({
   selector: 'app-chat',
@@ -35,7 +36,8 @@ export class ChatComponent implements OnInit {
   constructor(
     private http: HttpClient,
     public authService: AuthService,
-    private router: Router
+    private router: Router,
+    private reportService: ReportService
   ) {}
 
   ngOnInit(): void {
@@ -234,6 +236,7 @@ export class ChatComponent implements OnInit {
   }
 
   navigateToReport() {
+    this.reportService.setChatId(this.selectedChatId!);
     const path =
       this.authService.userData.role.toLowerCase() === 'learner'
         ? '/learner/report-user'
