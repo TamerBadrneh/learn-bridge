@@ -90,6 +90,7 @@
         <button
           class="btn px-3 py-2"
           [disabled]="post.agreementSent"
+          [hidden]="authService.userData.role === 'ADMIN'"
           [ngClass]="{
             'btn-disabled': post.agreementSent,
             'btn-primary': !post.agreementSent

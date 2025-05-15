@@ -41,7 +41,7 @@ export class PostsComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router
   ) {}
 
@@ -57,10 +57,18 @@ export class PostsComponent implements OnInit {
   fetchPosts() {
     this.isLoading = true;
     this.errorMessage = '';
+
+    const role = this.authService.userData.role;
+
     this.http
-      .get<Post[]>('http://localhost:8080/api/posts/favourite-category', {
-        withCredentials: true,
-      })
+      .get<Post[]>(
+        `http://localhost:8080/api/posts/${
+          role === 'ADMIN' ? 'all-posts' : 'favourite-category'
+        }`,
+        {
+          withCredentials: true,
+        }
+      )
       .subscribe({
         next: (posts: Post[]) => {
           this.allPosts = posts;
