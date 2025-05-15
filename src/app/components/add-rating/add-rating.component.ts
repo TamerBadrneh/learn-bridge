@@ -1,18 +1,30 @@
-import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-rating',
   standalone: false,
   templateUrl: './add-rating.component.html',
-  styleUrl: './add-rating.component.scss',
+  styleUrls: ['./add-rating.component.scss'],
 })
-export class AddRatingComponent {
+export class AddRatingComponent implements OnInit {
   selectedRating = 0;
   reviewText = '';
   showError = false;
+  chatId: number | null = null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private http: HttpClient) {}
+
+  ngOnInit(): void {
+    const chatId = sessionStorage.getItem('rateChatId');
+    if (chatId) {
+      this.chatId = +chatId;
+    } else {
+      alert('Chat ID not found.');
+      this.router.navigate(['/learner/home']);
+    }
+  }
 
   selectRating(rating: number) {
     this.selectedRating = rating;
@@ -30,15 +42,26 @@ export class AddRatingComponent {
       return;
     }
 
-    this.sendReview(this.selectedRating, this.reviewText).then(() => {
-      this.router.navigate(['/learner/home']);
-    });
-  }
+    const payload = {
+      rating: this.selectedRating,
+      comment: this.reviewText,
+    };
 
-  async sendReview(rating: number, comment: string): Promise<void> {
-    return new Promise(() => {
-      console.log('Sending review:', { rating, comment });
-      alert('Operation done successfully.');
-    });
+    this.http
+      .post(
+        `http://localhost:8080/api/review/add-review/${this.chatId}`,
+        payload,
+        { withCredentials: true }
+      )
+      .subscribe({
+        next: () => {
+          alert('Rate Added Successfully.');
+          this.router.navigate(['/learner/home']);
+        },
+        error: (err) => {
+          console.error('Rate submission failed:', err);
+          alert('Failed to add Rating.');
+        },
+      });
   }
 }

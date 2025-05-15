@@ -125,9 +125,23 @@
                 </button>
               </li>
 
-              <li>
+              <li *ngIf="isSessionInactive()">
                 <button class="dropdown-item" (click)="navigateToReport()">
                   Report
+                </button>
+              </li>
+
+              <li
+                *ngIf="
+                  authService.userData?.role.toLowerCase() === 'learner' &&
+                  isSessionInactive()
+                "
+              >
+                <button
+                  class="dropdown-item"
+                  (click)="navigateToRateInstructor()"
+                >
+                  Rate Instructor
                 </button>
               </li>
             </ul>

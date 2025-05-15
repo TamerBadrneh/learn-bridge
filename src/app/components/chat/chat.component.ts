@@ -244,6 +244,12 @@ export class ChatComponent implements OnInit {
     this.router.navigate([path]);
   }
 
+  navigateToRateInstructor() {
+    if (this.selectedChatId === null) return;
+    sessionStorage.setItem('rateChatId', this.selectedChatId.toString());
+    this.router.navigate(['/learner/rate-instructor']);
+  }
+
   isSessionInactive(): boolean {
     const selectedChat = this.chats.find(
       (chat) => chat.chatId === this.selectedChatId
