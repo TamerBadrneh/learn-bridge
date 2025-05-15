@@ -11,6 +11,7 @@ import { AuthService } from '../../shared/services/auth.service';
 export class ReportComponent {
   reportType: string = '';
   description: string = '';
+  userRole: 'LEARNER' | 'INSTRUCTOR';
 
   instructorReportMap: { [key: string]: string } = {
     INSTRUCTOR_INAPPROPRIATE_BEHAVIOR: 'Instructor behaved inappropriately',
@@ -33,19 +34,26 @@ export class ReportComponent {
   constructor(public authService: AuthService) {}
 
   ngOnInit() {
-    const role = this.authService.userData.role;
+    this.authService.fetchUserData().subscribe({
+      next: (user) => {
+        this.userRole = user?.role;
+        const reportMap =
+          this.userRole === 'LEARNER'
+            ? this.instructorReportMap
+            : this.learnerReportMap;
 
-    const reportMap =
-      role === 'LEARNER' ? this.instructorReportMap : this.learnerReportMap;
-
-    this.filteredReportTypes = Object.entries(reportMap).map(
-      ([key, label]) => ({
-        key,
-        label,
-      })
-    );
+        this.filteredReportTypes = Object.entries(reportMap).map(
+          ([key, label]) => ({
+            key,
+            label,
+          })
+        );
+      },
+      error: (err) => {
+        console.error('Failed to load user data:', err);
+      },
+    });
   }
-
   onSubmit(form: NgForm) {
     if (form.valid) {
       console.log('Submitted', {
