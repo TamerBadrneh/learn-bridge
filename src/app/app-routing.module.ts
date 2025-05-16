@@ -54,7 +54,7 @@ const routes: Routes = [
       { path: 'posts', component: PostsComponent, title: 'Posts' },
       { path: 'pending-posts', component: PendingPostsComponent, title: 'Pending Posts' },
       { path: 'pending-reports', component: PendingReportsComponent, title: 'Pending Reports' },
-      { path: 'chat', component: ChatComponent, title: 'Chat' },
+      { path: 'chat/:chatId', component: ChatComponent, title: 'Chat' },
     ],
   },
 

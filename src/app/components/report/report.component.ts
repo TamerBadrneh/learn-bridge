@@ -39,7 +39,7 @@ export class ReportComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private reportService: ReportService,
-    private http: HttpClient, // Correctly injected HttpClient
+    private http: HttpClient,
     private router: Router
   ) {}
 

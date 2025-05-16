@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../shared/services/auth.service';
 import { ChatFilterPipe } from './Chat Filter Pipe.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReportService } from '../report/Report Service.component';
 
 @Component({
@@ -25,6 +25,10 @@ export class ChatComponent implements OnInit {
   selectedFile: File | null = null;
   chatSearchTerm: string = '';
   selectedFilter: 'ONGOING' | 'FINISHED' | 'CANCELLED' | 'ALL' = 'ALL';
+  chatId: number;
+
+  learnerName: string = '';
+  instructorName: string = '';
 
   loadingCancel = false;
   loadingFinish = false;
@@ -37,7 +41,8 @@ export class ChatComponent implements OnInit {
     private http: HttpClient,
     public authService: AuthService,
     private router: Router,
-    private reportService: ReportService
+    private reportService: ReportService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +53,7 @@ export class ChatComponent implements OnInit {
       },
       error: (err) => console.error('Error fetching user data:', err),
     });
+    this.chatId = Number(this.route.snapshot.paramMap.get('chatId'));
   }
 
   onFileSelected(event: any) {
@@ -90,17 +96,22 @@ export class ChatComponent implements OnInit {
   }
 
   fetchChats() {
-    this.http
-      .get<any[]>(`${this.baseUrlForChat}/my-chats`, {
-        withCredentials: true,
-      })
-      .subscribe({
-        next: (data) => {
-          this.chats = data;
-          this.applyFilter(); // Apply filter after loading
-        },
-        error: (err) => console.error('Failed to fetch chats:', err),
-      });
+    let url = '';
+    const role = this.authService.userData?.role?.toUpperCase();
+
+    if (role === 'ADMIN') {
+      url = `http://localhost:8080/api/chat/admin/review-chat/${this.chatId}`;
+    } else {
+      url = `${this.baseUrlForChat}/my-chats`;
+    }
+
+    this.http.get<any>(url, { withCredentials: true }).subscribe({
+      next: (data) => {
+        this.chats = Array.isArray(data) ? data : [data]; // wrap single object
+        this.applyFilter();
+      },
+      error: (err) => console.error('Failed to fetch chats:', err),
+    });
   }
 
   applyFilter() {
@@ -119,10 +130,11 @@ export class ChatComponent implements OnInit {
     this.selectedChatId = chat.chatId;
     this.selectedSessionId = chat.sessionId;
     this.selectedChatName = chat.participantName;
+    this.learnerName = chat.learnerName;
+    this.instructorName = chat.instructorName;
     this.fetchMessages(chat.chatId);
   }
 
-  // return back to it...
   fetchMessages(chatId: number) {
     const messages$ = this.http.get<any[]>(
       `${this.baseUrlForChat}/all-messages/${chatId}`,

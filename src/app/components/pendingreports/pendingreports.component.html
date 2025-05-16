@@ -12,7 +12,7 @@
       <p><strong>Payment Date:</strong> <span class="highlight">{{ report.paymentDate }}</span></p>
       <p><strong>Description:</strong></p>
       <p class="description">{{ report.description }}</p>
-      <button class="view-chat">View Chat</button>
+      <button class="view-chat" (click)="onViewChat(report.relatedSessionId)">View Chat</button>
     </div>
     <div class="report-actions">
       <button class="action" (click)="onRefund(report.reportId)">Refund</button>
