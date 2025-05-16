@@ -1,10 +1,16 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';    // <-- for *ngIf, *ngFor, ngClass :contentReference[oaicite:0]{index=0}
+import { FormsModule } from '@angular/forms';      // <-- for [(ngModel)] :contentReference[oaicite:1]{index=1}
 
 @Component({
   selector: 'app-add-rating',
-  standalone: false,
+  standalone: true,                               // <-- mark it standalone
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
   templateUrl: './add-rating.component.html',
   styleUrls: ['./add-rating.component.scss'],
 })
@@ -17,9 +23,9 @@ export class AddRatingComponent implements OnInit {
   constructor(private router: Router, private http: HttpClient) {}
 
   ngOnInit(): void {
-    const chatId = sessionStorage.getItem('rateChatId');
-    if (chatId) {
-      this.chatId = +chatId;
+    const stored = sessionStorage.getItem('rateChatId');
+    if (stored) {
+      this.chatId = +stored;
     } else {
       alert('Chat ID not found.');
       this.router.navigate(['/learner/home']);
@@ -43,8 +49,8 @@ export class AddRatingComponent implements OnInit {
     }
 
     const payload = {
-      rating: this.selectedRating,
-      comment: this.reviewText,
+      stars: this.selectedRating,
+      description: this.reviewText.trim(),
     };
 
     this.http
@@ -55,12 +61,12 @@ export class AddRatingComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          alert('Rate Added Successfully.');
+          alert('Rating added successfully.');
           this.router.navigate(['/learner/home']);
         },
         error: (err) => {
           console.error('Rate submission failed:', err);
-          alert('Failed to add Rating.');
+          alert('Failed to add rating.');
         },
       });
   }

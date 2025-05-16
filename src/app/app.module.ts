@@ -63,7 +63,7 @@ import { AddRatingComponent } from './components/add-rating/add-rating.component
     AdminLayoutComponent,
     AdminNavComponent,
     ReportComponent,
-    AddRatingComponent,
+    // AddRatingComponent,
     // ChatComponent
   ],
   imports: [
