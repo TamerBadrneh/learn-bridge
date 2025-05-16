@@ -15,7 +15,11 @@ interface Report {
   description: string;
   reportDate: string;
   reportType: string;
+  amount: number;
+  currency: string;
+  paymentDate: string;
 }
+
 
 @Component({
   selector: 'app-pending-reports',
@@ -60,9 +64,9 @@ export class PendingReportsComponent implements OnInit {
       });
   }
 
-  onRefund(sessionId: number): void {
-    this.http
-      .post(`${this.baseUrl}/payments/refund/${sessionId}`, {}, { withCredentials: true })
+  onRefund(reportId: number): void {
+   this.http
+   .post(`${this.baseUrl}/reports/refund/${reportId}`, {}, { withCredentials: true })
       .pipe(
         catchError(err => {
           console.error('Refund failed', err);
@@ -73,9 +77,9 @@ export class PendingReportsComponent implements OnInit {
       .subscribe(() => this.loadReports());
   }
 
-  onTransfer(sessionId: number): void {
+  onTransfer(reportId: number): void {
     this.http
-      .post(`${this.baseUrl}/payments/transfer/${sessionId}`, {}, { withCredentials: true })
+   .post(`${this.baseUrl}/reports/transfer/${reportId}`, {}, { withCredentials: true })
       .pipe(
         catchError(err => {
           console.error('Transfer failed', err);
@@ -88,7 +92,7 @@ export class PendingReportsComponent implements OnInit {
 
   onDelete(reportId: number): void {
     this.http
-      .delete(`${this.baseUrl}/reports/${reportId}`, { withCredentials: true })
+  .delete(`${this.baseUrl}/reports/delete/${reportId}`, { withCredentials: true })
       .pipe(
         catchError(err => {
           console.error('Delete failed', err);
@@ -99,9 +103,9 @@ export class PendingReportsComponent implements OnInit {
       .subscribe(() => this.loadReports());
   }
 
-  onBlock(userId: number): void {
-    this.http
-      .post(`${this.baseUrl}/admin/block-user/${userId}`, {}, { withCredentials: true })
+  onBlock(reportId: number): void {
+   this.http
+  .put(`${this.baseUrl}/reports/block/${reportId}`, {}, { withCredentials: true })
       .pipe(
         catchError(err => {
           console.error('Block failed', err);
