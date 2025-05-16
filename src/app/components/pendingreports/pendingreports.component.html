@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -57,15 +57,50 @@
           <button class="red">Delete report</button>
           <button class="block">Block reported user</button>
         </div>
-      </div>
-      <div class="pagination-container">
-        <ul class="pagination">
-          <li class="active">1</li>
-          <li>2</li>
-          <li>&rarr;</li>
-        </ul>
-      </div>
-    
+      </div> -->
+
+<div class="container">
+  <h1>Pending reports</h1>
+
+  <p *ngIf="isLoading">Loading reports...</p>
+  <p *ngIf="!isLoading && reports.length === 0">No pending reports found.</p>
+
+  <div class="report-card" *ngFor="let report of reports">
+    <div class="report-info">
+      <p>
+        <strong>Report ID:</strong>
+        <span class="highlight">{{ report.reportId }}</span>
+      </p>
+      
+      <p>
+        <strong>Report type :</strong>
+        <span class="highlight">{{ report.reportType }}</span>
+      </p>
+
+      <p><strong>Description:</strong></p>
+
+      <p class="description">{{ report.description }}</p>
+      
+      <button class="view-chat">View chat</button>
     </div>
-  </body>
-</html>
+
+    <div class="report-actions">
+      <button class="red"   (click)="onRefund(report.relatedSessionId)"  > refund money </button>
+
+      <button class="red"   (click)="onTransfer(report.relatedSessionId)"> transfer money </button>
+
+      <button class="red"   (click)="onDelete(report.reportId)"          > Delete report </button>
+
+      <button class="block" (click)="onBlock(report.reportedUserId)"     > Block reported user </button>
+    </div>
+
+  </div>
+
+  <div class="pagination-container">
+    <ul class="pagination">
+      <li class="active">1</li>
+      <li>2</li>
+      <li>&rarr;</li>
+    </ul>
+  </div>
+</div>
