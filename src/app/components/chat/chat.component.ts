@@ -122,6 +122,7 @@ export class ChatComponent implements OnInit {
     this.fetchMessages(chat.chatId);
   }
 
+  // return back to it...
   fetchMessages(chatId: number) {
     const messages$ = this.http.get<any[]>(
       `${this.baseUrlForChat}/all-messages/${chatId}`,
@@ -142,7 +143,7 @@ export class ChatComponent implements OnInit {
         const formattedMessages = (messages || []).map((msg) => ({
           type: 'message',
           text: msg.content,
-          timestamp: msg.sentAt,
+          timestamp: new Date(msg.sentAt),
           isSender: msg.senderId === this.currentUserId,
           senderName: msg.senderName,
         }));
@@ -152,11 +153,12 @@ export class ChatComponent implements OnInit {
           fileName: file.fileName,
           fileType: file.fileType,
           fileData: file.fileData,
-          timestamp: file.uploadedAt,
+          timestamp: new Date(file.uploadedAt),
           isSender: file.senderId === this.currentUserId,
         }));
 
         const merged = [...formattedMessages, ...formattedFiles];
+        console.log(merged);
         this.messages = merged.sort(
           (a, b) =>
             new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
