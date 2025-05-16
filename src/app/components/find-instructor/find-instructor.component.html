@@ -39,9 +39,9 @@
         (change)="filterInstructors()"
       >
         <option value="" disabled selected>Select Price</option>
-        <option>Less than 10 JD</option>
-        <option>10 JD</option>
-        <option>More than 10 JD</option>
+        <option>Less than 20 JD</option>
+        <option>20 JD</option>
+        <option>More than 20 JD</option>
       </select>
     </div>
 
@@ -61,8 +61,14 @@
 
   <section class="my-5" *ngIf="instructors.length > 0; else noInstructors">
     <div class="row g-4">
-      <div class="col-12" *ngFor="let instructor of instructors">
-        <div class="card shadow-sm rounded-4 overflow-hidden">
+      <div
+        class="col-12"
+        *ngFor="let instructor of paginatedInstructors"
+        (click)="viewInstructorProfile(instructor.id)"
+      >
+        <div
+          class="card shadow-sm rounded-4 overflow-hidden transition-scale hover-scale"
+        >
           <div class="row g-0">
             <div
               class="col-md-2 d-flex align-items-center justify-content-center"
@@ -112,11 +118,18 @@
     </div>
   </ng-template>
 
-  <div class="d-flex justify-content-center" *ngIf="instructors.length > 0">
+  <div
+    class="d-flex justify-content-center"
+    *ngIf="instructors.length > itemsPerPage"
+  >
     <ul class="pagination">
-      <li class="page-item active"><a class="page-link">1</a></li>
-      <li class="page-item"><a class="page-link">2</a></li>
-      <li class="page-item"><a class="page-link">&rarr;</a></li>
+      <li
+        class="page-item"
+        [class.active]="currentPage === page"
+        *ngFor="let page of totalPages"
+      >
+        <a class="page-link" (click)="changePage(page)">{{ page }}</a>
+      </li>
     </ul>
   </div>
 </main>

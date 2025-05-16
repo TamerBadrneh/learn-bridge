@@ -34,13 +34,27 @@
             </div>
           </div>
           <div class="col-md-9 col-lg-10">
-            <div class="d-md-flex justify-content-between align-items-start mb-2">
+            <div
+              class="d-md-flex justify-content-between align-items-start mb-2"
+            >
               <div>
-                <h1 class="profile-name mb-0">{{ profile?.firstName }} {{ profile?.lastName }}</h1>
-                <p class="profile-category text-muted">Category: {{ profile?.favouriteCategory }}</p>
+                <h1 class="profile-name mb-0">
+                  {{ profile?.firstName }} {{ profile?.lastName }}
+                </h1>
+                <p class="profile-category text-muted">
+                  Category: {{ profile?.favouriteCategory }}
+                </p>
               </div>
               <div class="rating-container mt-2 mt-md-0">
-                <div class="rating-value">  {{ profile && profile.ratingAvg != null && profile.ratingAvg > 0 ? profile.ratingAvg.toFixed(1) : 'NA' }}/5<span class="rating-star">★</span></div>
+                <div class="rating-value">
+                  {{
+                    profile &&
+                    profile.ratingAvg != null &&
+                    profile.ratingAvg > 0
+                      ? profile.ratingAvg.toFixed(1)
+                      : "NA"
+                  }}/5<span class="rating-star">★</span>
+                </div>
                 <div class="rating-label">Rating</div>
               </div>
             </div>
@@ -55,13 +69,16 @@
         <div class="row">
           <div class="col-md-8">
             <div class="details-card">
-              <h3 class="details-title"><i class="bi bi-info-circle me-2"></i>Instructor Information</h3>
+              <h3 class="details-title">
+                <i class="bi bi-info-circle me-2"></i>Instructor Information
+              </h3>
               <div class="row g-4 mt-2">
                 <div class="col-md-6">
                   <div class="info-item">
                     <div class="info-label">University</div>
                     <div class="info-value">
-                      <i class="bi bi-building me-2"></i>{{ profile?.universityInfo }}
+                      <i class="bi bi-building me-2"></i
+                      >{{ profile?.universityInfo }}
                     </div>
                   </div>
                 </div>
@@ -69,7 +86,8 @@
                   <div class="info-item">
                     <div class="info-label">Average Price</div>
                     <div class="info-value">
-                      <i class="bi bi-cash-coin me-2"></i>{{ profile?.avgPrice }} JD
+                      <i class="bi bi-cash-coin me-2"></i
+                      >{{ profile?.avgPrice }} JD
                     </div>
                   </div>
                 </div>
@@ -77,7 +95,8 @@
                   <div class="info-item">
                     <div class="info-label">Total Sessions</div>
                     <div class="info-value">
-                      <i class="bi bi-calendar-check me-2"></i>{{ profile?.numberOfSessions }}
+                      <i class="bi bi-calendar-check me-2"></i
+                      >{{ profile?.numberOfSessions }}
                     </div>
                   </div>
                 </div>
@@ -85,7 +104,8 @@
                   <div class="info-item">
                     <div class="info-label">Student Reviews</div>
                     <div class="info-value">
-                      <i class="bi bi-chat-left-quote me-2"></i>{{ profile?.numberOfReviews }}
+                      <i class="bi bi-chat-left-quote me-2"></i
+                      >{{ profile?.numberOfReviews }}
                     </div>
                   </div>
                 </div>
@@ -95,14 +115,25 @@
           <div class="col-md-4 mt-4 mt-md-0">
             <div class="actions-card text-center">
               <button
+                *ngIf="userRole === 'LEARNER'"
+                class="btn btn-success btn-lg mb-3 w-100"
+                (click)="makeOffer()"
+                [disabled]="sendingOffer"
+              >
+                <i class="bi bi-send-fill me-2"></i>Make Offer
+              </button>
+              <button
                 class="btn btn-primary btn-lg review-btn w-100"
                 (click)="toggleReviews()"
                 [disabled]="loadingReviews"
               >
-                <i class="bi" [class]="reviewsVisible ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
-                {{ reviewsVisible ? 'Hide Reviews' : 'Show Reviews' }}
+                <i
+                  class="bi"
+                  [class]="reviewsVisible ? 'bi-chevron-up' : 'bi-chevron-down'"
+                ></i>
+                {{ reviewsVisible ? "Hide Reviews" : "Show Reviews" }}
               </button>
-              
+
               <!-- Additional action buttons could go here -->
               <!-- <button class="btn btn-outline-primary btn-lg mt-3 w-100">
                 <i class="bi bi-calendar-plus me-2"></i>Book Session
@@ -119,7 +150,9 @@
     <!-- Reviews Section -->
     <section *ngIf="reviewsVisible" class="reviews-section" [@fadeInOut]>
       <div class="container-fluid px-md-5">
-        <h2 class="section-title"><i class="bi bi-chat-square-quote me-2"></i>Student Reviews</h2>
+        <h2 class="section-title">
+          <i class="bi bi-chat-square-quote me-2"></i>Student Reviews
+        </h2>
 
         <!-- Reviews Loading -->
         <ng-container *ngIf="loadingReviews; else reviewsList">
@@ -134,7 +167,8 @@
         <ng-template #reviewsList>
           <ng-container *ngIf="errorReviews; else reviewsContent">
             <div class="alert alert-danger text-center rounded-4">
-              <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorReviews }}
+              <i class="bi bi-exclamation-triangle-fill me-2"></i
+              >{{ errorReviews }}
             </div>
           </ng-container>
         </ng-template>
@@ -152,8 +186,12 @@
                     <div>
                       <h5 class="reviewer-name mb-0">{{ r.reviewerName }}</h5>
                       <div class="review-stars">
-                        <ng-container *ngFor="let star of [1,2,3,4,5]">
-                          <i class="bi" [class.bi-star-fill]="star <= r.stars" [class.bi-star]="star > r.stars"></i>
+                        <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+                          <i
+                            class="bi"
+                            [class.bi-star-fill]="star <= r.stars"
+                            [class.bi-star]="star > r.stars"
+                          ></i>
                         </ng-container>
                       </div>
                     </div>
@@ -164,7 +202,7 @@
                 </div>
               </div>
             </div>
-            
+
             <!-- Empty State -->
             <div *ngIf="reviews.length === 0" class="col-12">
               <div class="empty-reviews-state">

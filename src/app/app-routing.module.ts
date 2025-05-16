@@ -50,7 +50,6 @@ const routes: Routes = [
     component: AdminLayoutComponent,
     children: [
       { path: 'home', component: HomeComponent, title: 'Home' },
-      { path: 'find-instructor', component: FindInstructorComponent, title: 'Find Instructor' },
       { path: 'posts', component: PostsComponent, title: 'Posts' },
       { path: 'pending-posts', component: PendingPostsComponent, title: 'Pending Posts' },
       { path: 'pending-reports', component: PendingReportsComponent, title: 'Pending Reports' },
@@ -80,6 +79,7 @@ const routes: Routes = [
       { path: 'report-user', component: ReportComponent, title: 'Report' },
       { path: 'agreement', component: AgreementComponent, title: 'Agreement Confirmation' },
       { path: 'rate-instructor', component: AddRatingComponent, title: 'Rate Instructor' },
+      { path: ':id/view-profile', component: ViewProfileComponent, title: 'Instructor Profile' }
     ],
   },
 
