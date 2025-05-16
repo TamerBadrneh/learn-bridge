@@ -37,6 +37,7 @@ import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ReportComponent } from './components/report/report.component';
 import { AddRatingComponent } from './components/add-rating/add-rating.component';
+import { LearnerOfferComponent } from './components/learner-offer/learner-offer.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { AddRatingComponent } from './components/add-rating/add-rating.component
     AdminLayoutComponent,
     AdminNavComponent,
     ReportComponent,
+    LearnerOfferComponent,
     // AddRatingComponent,
     // ChatComponent
   ],
