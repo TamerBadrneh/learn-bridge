@@ -28,6 +28,7 @@ import { ChatComponent } from './components/chat/chat.component';
 import { ReportComponent } from './components/report/report.component';
 import { ViewProfileComponent } from './components/viewprofile/viewprofile.component';
 import { AddRatingComponent } from './components/add-rating/add-rating.component';
+import { LearnerOfferComponent } from './components/learner-offer/learner-offer.component';
 
 const routes: Routes = [
   // Guest Pages
@@ -98,6 +99,7 @@ const routes: Routes = [
       { path: 'chat', component: ChatComponent, title: 'Chat' },
       { path: 'report-user', component: ReportComponent, title: 'Report' },
       { path: 'instructor-profile', component: InstructorProfileComponent, title: 'Instructor Profile' },
+      { path: "learner-offer", component: LearnerOfferComponent, title: "Learner Offer" }
     ],
   },
 
