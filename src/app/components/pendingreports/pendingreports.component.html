@@ -60,47 +60,32 @@
       </div> -->
 
 <div class="container">
-  <h1>Pending reports</h1>
+  <h1>Pending Reports</h1>
 
-  <p *ngIf="isLoading">Loading reports...</p>
-  <p *ngIf="!isLoading && reports.length === 0">No pending reports found.</p>
+  <p *ngIf="isLoading" class="loading">Loading reports...</p>
+  <p *ngIf="!isLoading && reports.length === 0" class="empty">No pending reports found.</p>
 
   <div class="report-card" *ngFor="let report of reports">
     <div class="report-info">
-      <p>
-        <strong>Report ID:</strong>
-        <span class="highlight">{{ report.reportId }}</span>
-      </p>
-      
-      <p>
-        <strong>Report type :</strong>
-        <span class="highlight">{{ report.reportType }}</span>
-      </p>
-
+      <p><strong>Report ID:</strong> <span class="highlight">{{ report.reportId }}</span></p>
+      <p><strong>Type:</strong> <span class="highlight">{{ report.reportType }}</span></p>
       <p><strong>Description:</strong></p>
-
       <p class="description">{{ report.description }}</p>
-      
-      <button class="view-chat">View chat</button>
+      <button class="view-chat">View Chat</button>
     </div>
-
     <div class="report-actions">
-      <button class="red"   (click)="onRefund(report.relatedSessionId)"  > refund money </button>
-
-      <button class="red"   (click)="onTransfer(report.relatedSessionId)"> transfer money </button>
-
-      <button class="red"   (click)="onDelete(report.reportId)"          > Delete report </button>
-
-      <button class="block" (click)="onBlock(report.reportedUserId)"     > Block reported user </button>
+      <button class="action" (click)="onRefund(report.relatedSessionId)">Refund</button>
+      <button class="action" (click)="onTransfer(report.relatedSessionId)">Transfer</button>
+      <button class="action" (click)="onDelete(report.reportId)">Delete</button>
+      <button class="block" (click)="onBlock(report.reportedUserId)">Block User</button>
     </div>
-
   </div>
 
   <div class="pagination-container">
     <ul class="pagination">
       <li class="active">1</li>
       <li>2</li>
-      <li>&rarr;</li>
+      <li>→</li>
     </ul>
   </div>
 </div>
