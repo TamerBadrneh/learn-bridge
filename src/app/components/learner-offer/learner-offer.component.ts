@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { LearnerOfferService } from '../../shared/services/learner-offer.service';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   standalone: false,
@@ -13,11 +15,22 @@ export class LearnerOfferComponent {
 
   constructor(
     private learnerOfferService: LearnerOfferService,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.offerInfo = this.learnerOfferService.getOfferInfo();
+
+    this.authService.fetchUserData().subscribe({
+      next: (user) => {
+        console.log('User data loaded:', user);
+      },
+      error: (err) => {
+        console.error('Failed to load user data', err);
+      },
+    });
   }
 
   handleReject(): void {
@@ -30,7 +43,10 @@ export class LearnerOfferComponent {
           { withCredentials: true }
         )
         .subscribe({
-          next: () => alert('Request rejected successfully.'),
+          next: () => {
+            alert('Request rejected successfully.');
+            window.location.href = '/instructor/home';
+          },
           error: (err) => console.error('Reject error:', err),
         });
     }
@@ -46,7 +62,10 @@ export class LearnerOfferComponent {
           { withCredentials: true }
         )
         .subscribe({
-          next: () => alert('Request accepted successfully.'),
+          next: () => {
+            alert('Request accepted successfully.');
+            window.location.href = '/instructor/chat';
+          },
           error: (err) => console.error('Accept error:', err),
         });
     }

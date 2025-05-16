@@ -30,11 +30,7 @@ interface SessionDTO {
 @Component({
   selector: 'app-agreement',
   standalone: true,
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    RouterModule
-  ],
+  imports: [CommonModule, HttpClientModule, RouterModule],
   templateUrl: './agreement.component.html',
   styleUrls: ['./agreement.component.scss'],
 })
@@ -53,7 +49,7 @@ export class AgreementComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       const id = params['notificationId'];
       if (!id) {
         this.error = 'No notification specified.';
@@ -67,71 +63,71 @@ export class AgreementComponent implements OnInit {
   private fetchInfo(): void {
     this.loading = true;
     this.http
-      .get<AskForAgreementInfo>(
-        `${this.baseUrl}/${this.notificationId}/info`,
-        { withCredentials: true }
-      )
+      .get<AskForAgreementInfo>(`${this.baseUrl}/${this.notificationId}/info`, {
+        withCredentials: true,
+      })
       .subscribe({
-        next: data => {
+        next: (data) => {
           this.info = data;
           this.loading = false;
         },
-        error: err => {
+        error: (err) => {
           console.error('Error fetching agreement info', err);
           this.error = 'Failed to load agreement details.';
           this.loading = false;
-        }
+        },
       });
   }
 
-acceptAgreement(): void {
-  if (!this.info) return;
-  this.loading = true;
+  acceptAgreement(): void {
+    if (!this.info) return;
+    this.loading = true;
 
-  this.http
-    .post<SessionDTO>(
-      `${this.baseUrl}/notifications/${this.notificationId}/accept`,
-      {},
-      { withCredentials: true }
-    )
-    .subscribe({
-      next: (session: SessionDTO) => {
+    this.http
+      .post<SessionDTO>(
+        `${this.baseUrl}/notifications/${this.notificationId}/accept`,
+        {},
+        { withCredentials: true }
+      )
+      .subscribe({
+        next: (session: SessionDTO) => {
+          const url = this.router
+            .createUrlTree(['/learner/chat'], {
+              queryParams: { sessionId: session.sessionId },
+            })
+            .toString();
 
-        const url = this.router.createUrlTree(
-          ['/learner/chat'],
-          { queryParams: { sessionId: session.sessionId } }
-        ).toString();
+          window.location.href = url;
+        },
+        error: (err) => {
+          console.error('Error accepting agreement', err);
+          this.error =
+            'Could not accept the offer. You might have insufficient funds.';
+          this.loading = false;
+        },
+      });
+  }
 
-        window.location.href = url;
-      },
-      error: err => {
-        console.error('Error accepting agreement', err);
-        this.error = 'Could not accept the offer. You might have insufficient funds.';
-        this.loading = false;
-      }
-    });
-}
+  rejectAgreement(): void {
+    this.loading = true;
 
-rejectAgreement(): void {
-  this.loading = true;
-
-  this.http
-    .post<void>(
-      `${this.baseUrl}/notifications/${this.notificationId}/reject`,
-      {},
-      { withCredentials: true }
-    )
-    .subscribe({
-      next: () => {
-
-        window.location.href = this.router.createUrlTree(['/learner/home']).toString();
-      },
-      error: err => {
-        console.error('Error rejecting agreement', err);
-        this.error = 'Could not reject the offer.';
-        this.loading = false;
-      }
-    });
-}
-
+    this.http
+      .post<void>(
+        `${this.baseUrl}/notifications/${this.notificationId}/reject`,
+        {},
+        { withCredentials: true }
+      )
+      .subscribe({
+        next: () => {
+          window.location.href = this.router
+            .createUrlTree(['/learner/home'])
+            .toString();
+        },
+        error: (err) => {
+          console.error('Error rejecting agreement', err);
+          this.error = 'Could not reject the offer.';
+          this.loading = false;
+        },
+      });
+  }
 }
