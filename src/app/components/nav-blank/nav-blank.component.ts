@@ -18,7 +18,7 @@ export class NavBlankComponent implements OnInit {
     private _AuthService: AuthService,
     private http: HttpClient,
     private router: Router,
-    private modalService: NgbModal 
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -56,11 +56,23 @@ export class NavBlankComponent implements OnInit {
         });
     }
 
-    if (notification.notificationType === 'AGREEMENT_REQUEST') {
+    // Types Are
+    // TRANSACTION,
+    // POST,
+    // AGREEMENT,
+    // OTHER
+
+    if (notification.notificationType === 'AGREEMENT') {
       this.router.navigate(['/learner/agreement'], {
         queryParams: { notificationId: notification.notificationId },
       });
+    } else if (notification.notificationType === 'POST') {
+      this.router.navigate(['/learner/my-posts']);
+    } else if (notification.notificationType === 'TRANSACTION') {
+      this.router.navigate(['/learner/payment']);
     }
+
+    // else no need to navigate...
   }
 
   // Modal Code
