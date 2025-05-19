@@ -56,10 +56,7 @@ export class NavInstructorComponent {
         });
     }
 
-    const message: string = notification.message;
-    const isLearnerOffer = message.includes('requested your tutoring services');
-
-    if (isLearnerOffer) {
+    if (notification.notificationType === 'AGREEMENT') {
       const id = notification.notificationId;
       this.http
         .get(`http://localhost:8080/api/agreements/${id}/info`, {
@@ -67,7 +64,6 @@ export class NavInstructorComponent {
         })
         .subscribe({
           next: (res) => {
-            console.log('Learner offer info:', res);
             this.learnerOfferService.setOfferInfo(res, id);
             this.router.navigate(['/instructor/learner-offer']);
           },
@@ -75,7 +71,10 @@ export class NavInstructorComponent {
             console.error('Error fetching learner offer info', err);
           },
         });
-    }
+    } else if (notification.notificationType === 'POST')
+      this.router.navigate(['/instructor/posts']);
+    else if (notification.notificationType === 'TRANSACTION')
+      this.router.navigate(['/instructor/payment']);
   }
 
   openSignOutModal(content: any) {
