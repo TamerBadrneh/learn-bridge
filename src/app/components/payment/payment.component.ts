@@ -13,9 +13,11 @@ interface CardDTO {
 
 interface PaymentInfoDTO {
   id: number;
-  paymentDate: string;            // ISO timestamp
+  paymentDate: string;    // ISO timestamp
   paymentId: string;
   amount: number;
+  senderName: string;     // added
+  receiverName: string;   // added
 }
 
 @Component({
@@ -92,7 +94,7 @@ export class PaymentComponent implements OnInit {
         },
         error: err => {
           console.error(err);
-          // this.errorHistory = 'Could not load payment history.';
+          this.errorHistory = 'Could not load payment history.';
           this.loadingHistory = false;
         }
       });

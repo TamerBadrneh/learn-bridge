@@ -1,15 +1,45 @@
 <div id="details-container" class="container my-3">
-  <header class="my-4 text-center">
+  <header class="my-4">
     <h1 class="fw-bold">Personal Details</h1>
   </header>
 
   <form
     id="general-details"
-    class="w-75 px-4 py-4 rounded-4 mx-auto"
+    class="w-75 px-4 py-4 rounded-4 mx-auto shadow-sm bg-white"
     (ngSubmit)="submitForm(form)"
     #form="ngForm"
+    enctype="multipart/form-data"
   >
-    <h2 class="fw-bold fs-4 my-3">General Details</h2>
+    <!-- Image Preview & Upload -->
+    <div class="mb-4 text-center">
+      <img
+        [src]="imagePreview || 'assets/images/default-avatar.png'"
+        class="rounded-circle profile-img"
+        width="120"
+        height="120"
+        alt="Profile Image"
+      />
+      <div class="mt-3 d-flex justify-content-center gap-3">
+        <label for="learnerFile" class="btn btn-outline-secondary mb-0">
+          Select Photo
+        </label>
+        <input
+          type="file"
+          id="learnerFile"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          hidden
+        />
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="!selectedFile"
+          (click)="uploadImage()"
+        >
+          Upload Photo
+        </button>
+      </div>
+    </div>
 
     <!-- First Name -->
     <div class="mb-3">
@@ -72,7 +102,7 @@
         #password="ngModel"
       />
       <p class="form-text text-danger" *ngIf="password.invalid && password.touched">
-        Password (min 6 characters) is required
+        Password (min 6 characters)
       </p>
     </div>
 
@@ -86,8 +116,12 @@
         [(ngModel)]="formData.confirmPassword"
         #confirmPassword="ngModel"
       />
-      <p class="form-text text-danger"
-         *ngIf="confirmPassword.touched && formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword">
+      <p class="form-text text-danger" *ngIf="
+            confirmPassword.touched &&
+            formData.password &&
+            formData.confirmPassword &&
+            formData.password !== formData.confirmPassword
+          ">
         Passwords do not match
       </p>
     </div>
@@ -113,11 +147,13 @@
       </p>
     </div>
 
-    <input
+    <!-- Save Button -->
+    <button
       type="submit"
-      value="Save Changes"
-      class="btn btn-dark rounded-pill px-5 py-2 my-3 align-self-end"
+      class="btn btn-dark rounded-pill px-5 py-2 mt-4 align-self-center"
       [disabled]="form.invalid || hasPasswordMismatch()"
-    />
+    >
+      Save Changes
+    </button>
   </form>
 </div>

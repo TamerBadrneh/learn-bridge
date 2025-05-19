@@ -23,14 +23,31 @@ textarea:focus {
   outline: none;
 }
 
-textarea {
-  border: 1px solid #c3c3c367;
-  border-radius: 5px;
-  width: 100%;
-  height: 120px;
-  resize: none;
-}
+.profile-container {
+  .btn-outline-secondary {
+    position: relative;
+    overflow: hidden;
+    input[type='file'] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      height: 100%;
+      width: 100%;
+      cursor: pointer;
+    }
+  }
 
-textarea:focus {
-  outline: none;
+  .form-control,
+  .form-select {
+    border-radius: 0.5rem;
+  }
+
+  .btn {
+    border-radius: 0.5rem;
+  }
+
+  .gap-3 {
+    gap: 1rem;
+  }
 }

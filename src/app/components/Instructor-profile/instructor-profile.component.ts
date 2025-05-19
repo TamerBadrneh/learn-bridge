@@ -1,4 +1,3 @@
-// src/app/components/instructor-profile/instructor-profile.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -9,89 +8,104 @@ import {
 } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
-interface InstructorInfo {
-  userRole: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  favouriteCategory: string;
-  universityInfo: string;
-  bio: string;
-  avgPrice: number;
-}
-
 @Component({
-  standalone: true,
   selector: 'app-instructor-profile',
-  templateUrl: './instructor-profile.component.html',
-  styleUrls: ['./instructor-profile.component.scss'],
+  standalone: true,
   imports: [
-    CommonModule,        // for *ngIf, *ngFor, etc. :contentReference[oaicite:0]{index=0}
-    ReactiveFormsModule  // for formGroup, formControlName :contentReference[oaicite:1]{index=1}
-  ]
+    CommonModule,
+    ReactiveFormsModule
+  ],
+  templateUrl: './instructor-profile.component.html',
+  styleUrls: ['./instructor-profile.component.scss']
 })
 export class InstructorProfileComponent implements OnInit {
   form: FormGroup;
+  selectedFile: File | null = null;
+  imagePreview: string | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private http: HttpClient
-  ) {
-    // Initialize the form *after* fb is assigned to avoid TS2729 :contentReference[oaicite:2]{index=2}
+  private apiUrl = 'http://localhost:8080/api/personal-info';
+
+  constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({
-      firstName:        ['', Validators.required],
-      lastName:         ['', Validators.required],
-      email:            ['', [Validators.required, Validators.email]],
-      favouriteCategory:['', Validators.required],
-      universityInfo:   ['', Validators.required],
-      bio:              ['', Validators.required],
-      // Use a numeric default (0) so patchValue of a number works without type mismatch :contentReference[oaicite:3]{index=3}
-      avgPrice:         [0, [Validators.required, Validators.min(1)]],
-      password:         [''],
-      confirmPassword:  ['']
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      favouriteCategory: ['', Validators.required],
+      universityInfo: ['', Validators.required],
+      bio: ['', Validators.required],
+      avgPrice: [null, [Validators.required, Validators.min(1)]],
+      password: [''],
+      confirmPassword: ['']
     });
   }
 
   ngOnInit(): void {
     this.http
-      .get<InstructorInfo>(
-        'http://localhost:8080/api/personal-info/get-personal-info',
-        { withCredentials: true }
-      )
+      .get<any>(`${this.apiUrl}/get-personal-info`, { withCredentials: true })
       .subscribe({
-        next: info => {
-          // patchValue accepts numbers here because control was initialized with a number :contentReference[oaicite:4]{index=4}
+        next: dto => {
           this.form.patchValue({
-            firstName: info.firstName,
-            lastName:  info.lastName,
-            email:     info.email,
-            favouriteCategory: info.favouriteCategory,
-            universityInfo:    info.universityInfo,
-            bio:                info.bio,
-            avgPrice:           info.avgPrice
+            firstName: dto.firstName,
+            lastName: dto.lastName,
+            email: dto.email,
+            favouriteCategory: dto.favouriteCategory,
+            universityInfo: dto.universityInfo,
+            bio: dto.bio,
+            avgPrice: dto.avgPrice
           });
+          this.imagePreview = dto.personalImage || null;
         },
         error: err => console.error('Failed to load profile', err)
       });
   }
 
-  onSubmit(): void {
-    if (this.form.invalid) return;
+  get passwordsMismatch(): boolean {
+    const pw = this.form.get('password')?.value;
+    const cpw = this.form.get('confirmPassword')?.value;
+    return pw && cpw && pw !== cpw;
+  }
 
-    const { password, confirmPassword } = this.form.value;
-    if (password && password !== confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
+  onFileSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0] || null;
+    if (!file) return;
+    this.selectedFile = file;
+    const reader = new FileReader();
+    reader.onload = () => (this.imagePreview = reader.result as string);
+    reader.readAsDataURL(file);
+  }
+
+  uploadImage(): void {
+    if (!this.selectedFile) return;
+    const formData = new FormData();
+    formData.append('image', this.selectedFile);
+
+    this.http
+      .post<{ imageUrl: string }>(
+        `${this.apiUrl}/upload-image`,
+        formData,
+        { withCredentials: true }
+      )
+      .subscribe({
+        next: resp => {
+          this.imagePreview = resp.imageUrl;
+          this.selectedFile = null;
+          alert('Profile photo updated.');
+        },
+        error: err => {
+          console.error('Upload failed', err);
+          alert('Upload failed.');
+        }
+      });
+  }
+
+  onSubmit(): void {
+    if (this.form.invalid || this.passwordsMismatch) return;
 
     this.http
       .put(
-        'http://localhost:8080/api/personal-info/edit-info',
+        `${this.apiUrl}/edit-info`,
         this.form.value,
-        {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true
-        }
+        { withCredentials: true }
       )
       .subscribe({
         next: () => alert('Your information was successfully updated!'),
