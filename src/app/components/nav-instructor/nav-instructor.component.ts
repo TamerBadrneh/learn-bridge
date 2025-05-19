@@ -3,6 +3,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { LearnerOfferService } from '../../shared/services/learner-offer.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-nav-instructor',
@@ -18,7 +19,8 @@ export class NavInstructorComponent {
     private _AuthService: AuthService,
     private http: HttpClient,
     private router: Router,
-    private learnerOfferService: LearnerOfferService
+    private learnerOfferService: LearnerOfferService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -74,6 +76,10 @@ export class NavInstructorComponent {
           },
         });
     }
+  }
+
+  openSignOutModal(content: any) {
+    this.modalService.open(content, { centered: true });
   }
 
   logoutUser() {

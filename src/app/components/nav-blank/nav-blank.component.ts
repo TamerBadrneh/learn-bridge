@@ -18,7 +18,7 @@ export class NavBlankComponent implements OnInit {
     private _AuthService: AuthService,
     private http: HttpClient,
     private router: Router,
-    private modalService: NgbModal // Add NgbModal service
+    private modalService: NgbModal 
   ) {}
 
   ngOnInit(): void {
@@ -56,7 +56,6 @@ export class NavBlankComponent implements OnInit {
         });
     }
 
-    // Navigate to Agreement page when the notification is related to an agreement request
     if (notification.notificationType === 'AGREEMENT_REQUEST') {
       this.router.navigate(['/learner/agreement'], {
         queryParams: { notificationId: notification.notificationId },
@@ -64,12 +63,11 @@ export class NavBlankComponent implements OnInit {
     }
   }
 
-  // Open sign out confirmation modal
+  // Modal Code
   openSignOutModal(content: any) {
     this.modalService.open(content, { centered: true });
   }
 
-  // Sign out method
   logoutUser() {
     this._AuthService.logout();
   }

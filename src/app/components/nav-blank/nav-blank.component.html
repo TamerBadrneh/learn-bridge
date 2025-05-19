@@ -113,6 +113,7 @@
           </a>
         </li>
         <li class="nav-item">
+          <!-- Modal Trigger function -->
           <span
             class="nav-link cursor-pointer me-3"
             (click)="openSignOutModal(signOutModal)"
@@ -124,6 +125,7 @@
   </nav>
 </header>
 
+<!-- Modal Template -->
 <ng-template #signOutModal let-modal>
   <div class="modal-header">
     <h5 class="modal-title">Sign Out Confirmation</h5>

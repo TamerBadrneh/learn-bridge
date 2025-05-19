@@ -109,7 +109,10 @@
           </a>
         </li>
         <li class="nav-item">
-          <span class="nav-link cursor-pointer me-3" (click)="logoutUser()">
+          <span
+            class="nav-link cursor-pointer me-3"
+            (click)="openSignOutModal(signOutModal)"
+          >
             Sign Out
           </span>
         </li>
@@ -117,3 +120,30 @@
     </div>
   </nav>
 </header>
+
+<ng-template #signOutModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Sign Out Confirmation</h5>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to sign out?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="logoutUser(); modal.close()"
+    >
+      OK
+    </button>
+  </div>
+</ng-template>
