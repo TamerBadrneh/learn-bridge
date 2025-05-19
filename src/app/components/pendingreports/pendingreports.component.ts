@@ -33,6 +33,12 @@ export class PendingReportsComponent implements OnInit {
   isLoading = true;
   errorMessage: string | null = null;
 
+  // Pagination
+  currentPage = 1;
+  pageSize = 3;
+  totalPages = 1;
+  private allReports: Report[] = [];
+
   private readonly baseUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -58,7 +64,9 @@ export class PendingReportsComponent implements OnInit {
         })
       )
       .subscribe((data) => {
-        this.reports = data;
+        this.allReports = data;
+        this.totalPages = Math.ceil(data.length / this.pageSize);
+        this.updateCurrentPageReports();
         this.isLoading = false;
       });
   }
@@ -131,5 +139,19 @@ export class PendingReportsComponent implements OnInit {
 
   onViewChat(relatedSessionId: number): void {
     this.router.navigate([`/admin/chat/${relatedSessionId}`]);
+  }
+
+  // for Pagination
+  changePage(page: number): void {
+    if (page >= 1 && page <= this.totalPages && page !== this.currentPage) {
+      this.currentPage = page;
+      this.updateCurrentPageReports();
+    }
+  }
+
+  private updateCurrentPageReports(): void {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.reports = this.allReports.slice(startIndex, endIndex);
   }
 }

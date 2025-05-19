@@ -2,31 +2,58 @@
   <h1>Pending Reports</h1>
 
   <p *ngIf="isLoading" class="loading">Loading reports...</p>
-  <p *ngIf="!isLoading && reports.length === 0" class="empty">No pending reports found.</p>
+  <p *ngIf="!isLoading && reports.length === 0" class="empty">
+    No pending reports found.
+  </p>
 
   <div class="report-card" *ngFor="let report of reports">
     <div class="report-info">
-      <p><strong>Report ID:</strong> <span class="highlight">{{ report.reportId }}</span></p>
-      <p><strong>Type:</strong> <span class="highlight">{{ report.reportType }}</span></p>
-      <p><strong>Amount:</strong> <span class="highlight">{{ report.amount | currency:report.currency }}</span></p>
-      <p><strong>Payment Date:</strong> <span class="highlight">{{ report.paymentDate }}</span></p>
+      <p>
+        <strong>Report ID:</strong>
+        <span class="highlight">{{ report.reportId }}</span>
+      </p>
+      <p>
+        <strong>Type:</strong>
+        <span class="highlight">{{ report.reportType }}</span>
+      </p>
+      <p>
+        <strong>Amount:</strong>
+        <span class="highlight">{{
+          report.amount | currency : report.currency
+        }}</span>
+      </p>
+      <p>
+        <strong>Payment Date:</strong>
+        <span class="highlight">{{ report.paymentDate }}</span>
+      </p>
       <p><strong>Description:</strong></p>
       <p class="description">{{ report.description }}</p>
-      <button class="view-chat" (click)="onViewChat(report.relatedSessionId)">View Chat</button>
+      <button class="view-chat" (click)="onViewChat(report.relatedSessionId)">
+        View Chat
+      </button>
     </div>
     <div class="report-actions">
       <button class="action" (click)="onRefund(report.reportId)">Refund</button>
-      <button class="action" (click)="onTransfer(report.reportId)">Transfer</button>
+      <button class="action" (click)="onTransfer(report.reportId)">
+        Transfer
+      </button>
       <button class="action" (click)="onDelete(report.reportId)">Delete</button>
-      <button class="block" (click)="onBlock(report.reportId)">Block User</button>
+      <button class="block" (click)="onBlock(report.reportId)">
+        Block User
+      </button>
     </div>
   </div>
 
-  <div class="pagination-container">
+  <!-- Pagination -->
+  <div class="pagination-container" *ngIf="totalPages > 1">
     <ul class="pagination">
-      <li class="active">1</li>
-      <li>2</li>
-      <li>→</li>
+      <li
+        *ngFor="let page of [].constructor(totalPages); let i = index"
+        (click)="changePage(i + 1)"
+        [class.active]="currentPage === i + 1"
+      >
+        {{ i + 1 }}
+      </li>
     </ul>
   </div>
 </div>
