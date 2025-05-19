@@ -65,6 +65,7 @@ import { LearnerOfferComponent } from './components/learner-offer/learner-offer.
     AdminNavComponent,
     ReportComponent,
     LearnerOfferComponent,
+
     // AddRatingComponent,
     // ChatComponent
   ],

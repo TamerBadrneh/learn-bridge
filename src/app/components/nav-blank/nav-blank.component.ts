@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   standalone: false,
@@ -16,7 +17,8 @@ export class NavBlankComponent implements OnInit {
   constructor(
     private _AuthService: AuthService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private modalService: NgbModal // Add NgbModal service
   ) {}
 
   ngOnInit(): void {
@@ -34,7 +36,6 @@ export class NavBlankComponent implements OnInit {
           (n) => n.readStatus === 'UNREAD'
         );
       });
-
   }
 
   handleNotificationClick(notification: any) {
@@ -57,13 +58,18 @@ export class NavBlankComponent implements OnInit {
 
     // Navigate to Agreement page when the notification is related to an agreement request
     if (notification.notificationType === 'AGREEMENT_REQUEST') {
-      this.router.navigate(
-        ['/learner/agreement'],
-        { queryParams: { notificationId: notification.notificationId } }
-      );
+      this.router.navigate(['/learner/agreement'], {
+        queryParams: { notificationId: notification.notificationId },
+      });
     }
   }
 
+  // Open sign out confirmation modal
+  openSignOutModal(content: any) {
+    this.modalService.open(content, { centered: true });
+  }
+
+  // Sign out method
   logoutUser() {
     this._AuthService.logout();
   }

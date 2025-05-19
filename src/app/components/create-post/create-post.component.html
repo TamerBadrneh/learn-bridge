@@ -52,6 +52,7 @@
       [(ngModel)]="formData.content"
       #content="ngModel"
       required
+      placeholder="I've an issue on some subject and it talks about..."
     ></textarea>
     <p class="text-danger" *ngIf="content.invalid && content.touched">
       Description is required.
@@ -69,6 +70,7 @@
       #price="ngModel"
       required
       min="1"
+      placeholder="How much do you take per session in JOD ?"
     />
     <p class="text-danger" *ngIf="price.invalid && price.touched">
       Price must be a positive number.

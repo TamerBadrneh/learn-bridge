@@ -5,17 +5,12 @@
       <!-- Email Field -->
       <div class="input-box">
         <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          formControlName="email"
-          required
-        />
+        <input type="email" id="email" formControlName="email" required />
         <div *ngIf="isFieldInvalid('email')" class="validation-error">
-          {{ getErrorMessage('email') }}
+          {{ getErrorMessage("email") }}
         </div>
       </div>
-      
+
       <div class="input-box">
         <label for="password">Password</label>
         <input
@@ -25,28 +20,21 @@
           required
         />
         <div *ngIf="isFieldInvalid('password')" class="validation-error">
-          {{ getErrorMessage('password') }}
+          {{ getErrorMessage("password") }}
         </div>
       </div>
-      
-      <div class="forgot-password">
-        <a (click)="onForgotPassword()">Forgot password?</a>
-      </div>
-      
+
       <div *ngIf="errorMessage" class="alert alert-danger">
-        {{errorMessage}}
+        {{ errorMessage }}
       </div>
-      
+
       <div class="button-box">
-        <button 
-          type="submit" 
-          class="login-btn" 
-          [disabled]="isLoading">
+        <button type="submit" class="login-btn" [disabled]="isLoading">
           <span *ngIf="!isLoading">Login</span>
           <div *ngIf="isLoading" class="spinner"></div>
         </button>
       </div>
-      
+
       <div class="signup-text">
         Don't have an account? <a [routerLink]="['/register']">Sign Up</a>
       </div>
