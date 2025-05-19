@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-nav-admin',
@@ -8,7 +9,14 @@ import { AuthService } from '../../shared/services/auth.service';
   styleUrl: './admin-nav.component.scss',
 })
 export class AdminNavComponent {
-  constructor(private _AuthService: AuthService) {}
+  constructor(
+    private _AuthService: AuthService,
+    private modalService: NgbModal
+  ) {}
+  openSignOutModal(content: any) {
+    this.modalService.open(content, { centered: true });
+  }
+
   logoutUser() {
     this._AuthService.logout();
   }
