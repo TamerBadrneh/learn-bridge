@@ -169,7 +169,7 @@ export class ChatComponent implements OnInit {
         }));
 
         const merged = [...formattedMessages, ...formattedFiles];
-        console.log(merged);
+        console.log("Messages: " + merged);
         this.messages = merged.sort(
           (a, b) =>
             new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()

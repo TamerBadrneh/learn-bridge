@@ -16,7 +16,7 @@ interface InstructorProfile {
   numberOfSessions: number;
   numberOfReviews: number;
   ratingAvg: number;
-  personalImage?: string;        // ← add this
+  personalImage?: string; // ← add this
 }
 
 interface ReviewSummary {
@@ -28,27 +28,30 @@ interface ReviewSummary {
 @Component({
   selector: 'app-instructor-profile',
   standalone: true,
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    RouterModule
-  ],
+  imports: [CommonModule, HttpClientModule, RouterModule],
   templateUrl: './viewprofile.component.html',
   styleUrls: ['./viewprofile.component.scss'],
   animations: [
     trigger('fadeInOut', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(10px)' }),
-        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+        animate(
+          '300ms ease-out',
+          style({ opacity: 1, transform: 'translateY(0)' })
+        ),
       ]),
       transition(':leave', [
-        animate('200ms ease-in', style({ opacity: 0, transform: 'translateY(10px)' }))
-      ])
-    ])
+        animate(
+          '200ms ease-in',
+          style({ opacity: 0, transform: 'translateY(10px)' })
+        ),
+      ]),
+    ]),
   ],
 })
 export class ViewProfileComponent implements OnInit {
   instructorId!: number;
+  learnerId!: number;
 
   profile: InstructorProfile | null = null;
   loadingProfile = false;
@@ -61,6 +64,7 @@ export class ViewProfileComponent implements OnInit {
 
   userRole: string | null = null;
   sendingOffer = false;
+  userNotifications = [];
 
   // Fallback placeholder image
   defaultPlaceholder =
@@ -77,15 +81,19 @@ export class ViewProfileComponent implements OnInit {
   ngOnInit(): void {
     // get user role
     this.authService.fetchUserData().subscribe({
-      next: user => this.userRole = user.role,
-      error: err => {
+      next: (user) => {
+        this.userRole = user.role;
+        this.learnerId = user.userId;
+        console.log(this.learnerId);
+      },
+      error: (err) => {
         console.error('Failed to fetch user data', err);
         this.userRole = null;
-      }
+      },
     });
 
     // grab :id from route and fetch
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       const id = params.get('id');
       if (id) {
         this.instructorId = +id;
@@ -94,6 +102,17 @@ export class ViewProfileComponent implements OnInit {
         this.errorProfile = 'No instructor specified.';
       }
     });
+
+    // get notifications for make offer operation visibility {second way of the project flow}
+    fetch('http://localhost:8080/api/agreements/notifications', {
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((data: any) => {
+        this.userNotifications = data;
+        console.log(this.userNotifications);
+      })
+      .catch((err) => console.error(err));
   }
 
   makeOffer(): void {
@@ -104,11 +123,11 @@ export class ViewProfileComponent implements OnInit {
         alert('Offer sent successfully.');
         this.sendingOffer = false;
       },
-      error: err => {
+      error: (err) => {
         console.error('Error sending offer', err);
         alert('Failed to send offer.');
         this.sendingOffer = false;
-      }
+      },
     });
   }
 
@@ -118,18 +137,18 @@ export class ViewProfileComponent implements OnInit {
 
     this.http
       .get<InstructorProfile>(`${this.baseUrl}/profile/${this.instructorId}`, {
-        withCredentials: true
+        withCredentials: true,
       })
       .subscribe({
-        next: data => {
+        next: (data) => {
           this.profile = data;
           this.loadingProfile = false;
         },
-        error: err => {
+        error: (err) => {
           console.error('Error fetching profile', err);
           this.errorProfile = 'Failed to load instructor profile.';
           this.loadingProfile = false;
-        }
+        },
       });
   }
 
@@ -150,15 +169,21 @@ export class ViewProfileComponent implements OnInit {
         { withCredentials: true }
       )
       .subscribe({
-        next: data => {
+        next: (data) => {
           this.reviews = data;
           this.loadingReviews = false;
         },
-        error: err => {
+        error: (err) => {
           console.error('Error fetching reviews', err);
           this.errorReviews = 'Failed to load reviews.';
           this.loadingReviews = false;
-        }
+        },
       });
+  }
+
+  isHavingPreviousOffers() {
+    return this.userNotifications.find(
+      (not: any) => not.notificationType === 'AGREEMENT'
+    );
   }
 }
