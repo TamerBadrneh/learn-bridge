@@ -1,25 +1,36 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+
+
+import { CommonModule } from '@angular/common';    
+import { FormsModule } from '@angular/forms';      
 
 @Component({
   selector: 'app-find-instructor',
-  standalone: false,
+  standalone: true,              
+  imports: [
+    CommonModule,
+    FormsModule
+  ],
   templateUrl: './find-instructor.component.html',
-  styleUrl: './find-instructor.component.scss',
+  styleUrls: ['./find-instructor.component.scss'],
 })
 export class FindInstructorComponent implements OnInit {
-  searchKeyword: string = '';
+  searchKeyword = '';
   instructors: any[] = [];
   allInstructors: any[] = [];
 
-  selectedCategory: string = '';
-  selectedSortOrder: string = '';
-  selectedPrice: string = '';
+  selectedCategory = '';
+  selectedSortOrder = '';
+  selectedPrice = '';
 
-  currentPage: number = 1;
-  itemsPerPage: number = 3;
+  currentPage = 1;
+  itemsPerPage = 3;
   paginatedInstructors: any[] = [];
+
+  defaultPlaceholder = 
+    'https://staudt-gmbh.com/wp-content/uploads/2018/07/person-dummy.jpg';
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -28,11 +39,12 @@ export class FindInstructorComponent implements OnInit {
   }
 
   fetchInstructors() {
-    const url = 'http://localhost:8080/api/instructors/find-favourite';
-
-    this.http.get<any[]>(url, { withCredentials: true }).subscribe({
-      next: (response) => {
-        this.allInstructors = response.map((inst) => ({
+    this.http.get<any[]>(
+      'http://localhost:8080/api/instructors/find-favourite',
+      { withCredentials: true }
+    ).subscribe({
+      next: response => {
+        this.allInstructors = response.map(inst => ({
           id: inst.instructorId,
           fullName: `${inst.firstName} ${inst.lastName}`,
           university: inst.universityInfo,
@@ -41,36 +53,30 @@ export class FindInstructorComponent implements OnInit {
           rating: inst.ratingAvg,
           reviewsCount: inst.numberOfReviews,
           sessionsCount: inst.numberOfSessions,
-          image:
-            inst.image ||
-            'https://staudt-gmbh.com/wp-content/uploads/2018/07/person-dummy.jpg',
+          image: inst.personalImage || this.defaultPlaceholder
         }));
-        console.log(this.allInstructors);
         this.filterInstructors();
       },
-      error: (err) => {
+      error: err => {
         console.error('Error fetching favourite instructors:', err);
         this.allInstructors = [];
         this.filterInstructors();
-      },
+      }
     });
   }
 
   filterInstructors() {
     const keyword = this.searchKeyword.toLowerCase().trim();
-
-    let filtered = this.allInstructors.filter((instructor) => {
-      const matchesName = instructor.fullName.toLowerCase().includes(keyword);
-
+    let filtered = this.allInstructors.filter(i => {
+      const matchesName = i.fullName.toLowerCase().includes(keyword);
       let matchesPrice = true;
       if (this.selectedPrice === 'Less than 20 JD') {
-        matchesPrice = instructor.hourRate < 20;
+        matchesPrice = i.hourRate < 20;
       } else if (this.selectedPrice === '20 JD') {
-        matchesPrice = instructor.hourRate === 20;
+        matchesPrice = i.hourRate === 20;
       } else if (this.selectedPrice === 'More than 20 JD') {
-        matchesPrice = instructor.hourRate > 20;
+        matchesPrice = i.hourRate > 20;
       }
-
       return matchesName && matchesPrice;
     });
 
@@ -91,11 +97,13 @@ export class FindInstructorComponent implements OnInit {
       return;
     }
 
-    const url = `http://localhost:8080/api/instructors/${this.selectedCategory}`;
-
-    this.http.get<any[]>(url, { withCredentials: true }).subscribe({
-      next: (response) => {
-        this.allInstructors = response.map((inst) => ({
+    this.http.get<any[]>(
+      `http://localhost:8080/api/instructors/${this.selectedCategory}`,
+      { withCredentials: true }
+    ).subscribe({
+      next: response => {
+        this.allInstructors = response.map(inst => ({
+          id: inst.instructorId,
           fullName: `${inst.firstName} ${inst.lastName}`,
           university: inst.universityInfo,
           bio: inst.bio,
@@ -103,24 +111,22 @@ export class FindInstructorComponent implements OnInit {
           rating: inst.ratingAvg,
           reviewsCount: inst.numberOfReviews,
           sessionsCount: inst.numberOfSessions,
-          image:
-            inst.image ||
-            'https://staudt-gmbh.com/wp-content/uploads/2018/07/person-dummy.jpg',
+          image: inst.personalImage || this.defaultPlaceholder
         }));
         this.filterInstructors();
       },
-      error: (err) => {
+      error: err => {
         console.error('Error fetching instructors by category:', err);
         this.allInstructors = [];
         this.filterInstructors();
-      },
+      }
     });
   }
 
   paginate() {
     const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-    this.paginatedInstructors = this.instructors.slice(start, end);
+    this.paginatedInstructors = 
+      this.instructors.slice(start, start + this.itemsPerPage);
   }
 
   changePage(page: number) {
@@ -134,7 +140,7 @@ export class FindInstructorComponent implements OnInit {
       .map((_, i) => i + 1);
   }
 
-  viewInstructorProfile(id: number): void {
+  viewInstructorProfile(id: number) {
     this.router.navigate([`/learner/${id}/view-profile`]);
   }
 }

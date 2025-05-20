@@ -1,7 +1,7 @@
+<!-- src/app/components/find-instructor/find-instructor.component.html -->
 <main class="container py-5">
-  <section
-    class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-4 mb-5"
-  >
+  <section class="d-flex flex-column flex-md-row align-items-start 
+                   align-items-md-center justify-content-between gap-4 mb-5">
     <input
       type="text"
       placeholder="Search"
@@ -9,7 +9,6 @@
       [(ngModel)]="searchKeyword"
       (ngModelChange)="filterInstructors()"
     />
-
     <h1 class="fw-bold text-center text-md-start flex-grow-1">
       Private tutors that fit your schedule
     </h1>
@@ -66,18 +65,11 @@
         *ngFor="let instructor of paginatedInstructors"
         (click)="viewInstructorProfile(instructor.id)"
       >
-        <div
-          class="card shadow-sm rounded-4 overflow-hidden transition-scale hover-scale"
-        >
+        <div class="card shadow-sm rounded-4 overflow-hidden hover-scale">
           <div class="row g-0">
-            <div
-              class="col-md-2 d-flex align-items-center justify-content-center"
-            >
+            <div class="col-md-2 d-flex align-items-center justify-content-center">
               <img
-                [src]="
-                  instructor.image ||
-                  'https://staudt-gmbh.com/wp-content/uploads/2018/07/person-dummy.jpg'
-                "
+                [src]="instructor.image"
                 alt="Instructor Image"
                 class="img-fluid rounded-start"
                 style="max-height: 180px; object-fit: cover"
@@ -118,10 +110,8 @@
     </div>
   </ng-template>
 
-  <div
-    class="d-flex justify-content-center"
-    *ngIf="instructors.length > itemsPerPage"
-  >
+  <div class="d-flex justify-content-center" 
+       *ngIf="instructors.length > itemsPerPage">
     <ul class="pagination">
       <li
         class="page-item"

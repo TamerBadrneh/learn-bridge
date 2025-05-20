@@ -6,14 +6,12 @@
         placeholder="Search"
         class="form-control form-control-lg rounded"
         (input)="handleSearch($event)"
-        style="max-width: 400px; width: 100%"
+        style="max-width: 400px; width: 100%;"
       />
       <h1 class="fw-bold">Help Learner Unlock Their Potential</h1>
     </div>
 
-    <form
-      class="d-flex flex-wrap flex-lg-nowrap gap-3 justify-content-start align-items-start"
-    >
+    <form class="d-flex flex-wrap flex-lg-nowrap gap-3 justify-content-start align-items-start">
       <div class="flex-fill">
         <label class="form-label">Price</label>
         <select
@@ -55,13 +53,26 @@
     >
       <div class="d-flex justify-content-between align-items-center flex-wrap">
         <div class="d-flex gap-3 align-items-center">
-          <img
-            src="https://staudt-gmbh.com/wp-content/uploads/2018/07/person-dummy.jpg"
-            width="75"
-            height="75"
-            class="rounded-circle"
-            alt="dummy"
-          />
+          <!-- authors image or placeholder -->
+          <ng-container *ngIf="post.authorImage; else defaultImage">
+            <img
+              [src]="post.authorImage"
+              width="75"
+              height="75"
+              class="rounded-circle"
+              alt="author"
+            />
+          </ng-container>
+          <ng-template #defaultImage>
+            <img
+              src="https://staudt-gmbh.com/wp-content/uploads/2018/07/person-dummy.jpg"
+              width="75"
+              height="75"
+              class="rounded-circle"
+              alt="default"
+            />
+          </ng-template>
+
           <p class="fs-5 fw-semibold mb-0">{{ post.authorName }}</p>
         </div>
         <p class="mb-0">Category: {{ post.category }}</p>
@@ -72,19 +83,15 @@
         <p style="width: 90%">{{ post.content }}</p>
       </div>
 
-      <!-- NEW: display the deadline -->
       <div>
         <p class="mb-1">
           <strong>Deadline:</strong>
-          {{ post.sessionDeadline | date:'mediumDate' }}
+          {{ post.sessionDeadline | date: 'mediumDate' }}
         </p>
       </div>
 
       <div class="mt-auto d-flex justify-content-between align-items-center">
-        <p
-          class="px-4 py-2 rounded-3 m-0"
-          style="background-color: #6fc24e; color: white"
-        >
+        <p class="px-4 py-2 rounded-3 m-0" style="background-color: #6fc24e; color: white">
           Price: {{ post.price }} JD
         </p>
         <button
@@ -97,7 +104,7 @@
           }"
           (click)="confirmAgreement(post)"
         >
-          {{ post.agreementSent ? "Offer Sent" : "Make Offer" }}
+          {{ post.agreementSent ? 'Offer Sent' : 'Make Offer' }}
         </button>
       </div>
     </div>
@@ -106,12 +113,7 @@
   <div class="pagination-container">
     <ul class="pagination">
       <li
-        *ngFor="
-          let page of [].constructor(
-            Math.ceil(filteredPosts.length / pageSize)
-          );
-          let i = index
-        "
+        *ngFor="let page of [].constructor(Math.ceil(filteredPosts.length / pageSize)); let i = index"
         [class.active]="currentPage === i + 1"
         (click)="changePage(i + 1)"
       >

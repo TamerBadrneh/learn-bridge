@@ -7,19 +7,20 @@ interface Post {
   postId: number;
   authorId: number;
   authorName: string;
+  authorImage?: string;      // <-- Added
   approvalDate: string;
   price: number;
   subject: string;
   content: string;
   postStatus: string;
   category: string;
-  sessionDeadline: string; // <-- new
+  sessionDeadline: string;
   agreementSent?: boolean;
 }
 
 @Component({
-  standalone: false,
   selector: 'app-posts',
+  standalone: false,
   templateUrl: './posts.component.html',
   styleUrls: ['./posts.component.scss'],
 })
@@ -53,40 +54,34 @@ export class PostsComponent implements OnInit {
     this.fetchPosts();
   }
 
-  // Modify this
   fetchPosts() {
     this.isLoading = true;
     this.errorMessage = '';
 
     const role = this.authService.userData.role;
+    const url = `http://localhost:8080/api/posts/${
+      role === 'ADMIN' ? 'all-posts' : 'favourite-category'
+    }`;
 
-    this.http
-      .get<Post[]>(
-        `http://localhost:8080/api/posts/${
-          role === 'ADMIN' ? 'all-posts' : 'favourite-category'
-        }`,
-        {
-          withCredentials: true,
+    this.http.get<Post[]>(url, { withCredentials: true }).subscribe({
+      next: (posts: Post[]) => {
+        // backend now returns authorImage as a data-URL
+        this.allPosts = posts;
+        this.applyFilters();
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching posts:', error);
+        this.isLoading = false;
+        this.errorMessage = 'Failed to load posts.';
+        if (error.status === 401) {
+          this.errorMessage += ' Please login again.';
+          this.router.navigate(['/login']);
+        } else {
+          this.errorMessage += ' Please try again later.';
         }
-      )
-      .subscribe({
-        next: (posts: Post[]) => {
-          this.allPosts = posts;
-          this.applyFilters();
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error fetching posts:', error);
-          this.isLoading = false;
-          this.errorMessage = 'Failed to load posts.';
-          if (error.status === 401) {
-            this.errorMessage += ' Please login again.';
-            this.router.navigate(['/login']);
-          } else {
-            this.errorMessage += ' Please try again later.';
-          }
-        },
-      });
+      },
+    });
   }
 
   handleSearch(event: Event) {
@@ -134,21 +129,15 @@ export class PostsComponent implements OnInit {
 
   paginatePosts() {
     const start = (this.currentPage - 1) * this.pageSize;
-    this.paginatedPosts = this.filteredPosts.slice(
-      start,
-      start + this.pageSize
-    );
+    this.paginatedPosts = this.filteredPosts.slice(start, start + this.pageSize);
   }
 
   confirmAgreement(post: Post) {
-    const confirmed = window.confirm(
-      `Are you sure you wish to teach this learner?`
-    );
+    const confirmed = window.confirm(`Are you sure you wish to teach this learner?`);
     if (!confirmed) return;
 
     const learnerId = post.authorId;
     const postId = post.postId;
-
     if (!learnerId || !postId) return;
 
     this.http

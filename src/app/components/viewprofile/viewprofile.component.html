@@ -1,5 +1,3 @@
-<!-- src/app/components/instructor-profile/instructor-profile.component.html -->
-
 <main class="instructor-profile-container">
   <!-- Profile Loading Spinner -->
   <ng-container *ngIf="loadingProfile; else profileContent">
@@ -10,209 +8,196 @@
     </div>
   </ng-container>
 
-  <!-- Profile Content -->
+  <!-- Profile Content or Error -->
   <ng-template #profileContent>
     <ng-container *ngIf="errorProfile; else profileDisplay">
       <div class="alert alert-danger text-center rounded-4 shadow-sm p-3">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorProfile }}
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ errorProfile }}
       </div>
     </ng-container>
   </ng-template>
 
   <!-- Expanded Profile Display -->
   <ng-template #profileDisplay>
-    <section class="profile-header">
-      <div class="container-fluid px-md-5">
-        <div class="row align-items-center">
-          <div class="col-md-3 col-lg-2 text-center text-md-start mb-4 mb-md-0">
-            <div class="profile-image-container">
-              <img
-                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                alt="Instructor profile"
-                class="profile-image"
-              />
-            </div>
-          </div>
-          <div class="col-md-9 col-lg-10">
-            <div
-              class="d-md-flex justify-content-between align-items-start mb-2"
-            >
-              <div>
-                <h1 class="profile-name mb-0">
-                  {{ profile?.firstName }} {{ profile?.lastName }}
-                </h1>
-                <p class="profile-category text-muted">
-                  Category: {{ profile?.favouriteCategory }}
-                </p>
-              </div>
-              <div class="rating-container mt-2 mt-md-0">
-                <div class="rating-value">
-                  {{
-                    profile &&
-                    profile.ratingAvg != null &&
-                    profile.ratingAvg > 0
-                      ? profile.ratingAvg.toFixed(1)
-                      : "NA"
-                  }}/5<span class="rating-star">★</span>
-                </div>
-                <div class="rating-label">Rating</div>
+    <!-- Only render when profile is non-null, alias to 'p' -->
+    <ng-container *ngIf="profile as p">
+      <section class="profile-header">
+        <div class="container-fluid px-md-5">
+          <div class="row align-items-center">
+            <!-- Profile Image -->
+            <div class="col-md-3 col-lg-2 text-center text-md-start mb-4 mb-md-0">
+              <div class="profile-image-container">
+                <img
+                  [src]="p.personalImage || defaultPlaceholder"
+                  alt="Instructor profile"
+                  class="profile-image"
+                />
               </div>
             </div>
-            <p class="profile-bio">{{ profile?.bio }}</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="profile-details-section">
-      <div class="container-fluid px-md-5">
-        <div class="row">
-          <div class="col-md-8">
-            <div class="details-card">
-              <h3 class="details-title">
-                <i class="bi bi-info-circle me-2"></i>Instructor Information
-              </h3>
-              <div class="row g-4 mt-2">
-                <div class="col-md-6">
-                  <div class="info-item">
-                    <div class="info-label">University</div>
-                    <div class="info-value">
-                      <i class="bi bi-building me-2"></i
-                      >{{ profile?.universityInfo }}
-                    </div>
-                  </div>
+            <!-- Name & Rating -->
+            <div class="col-md-9 col-lg-10">
+              <div class="d-md-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <h1 class="profile-name mb-0">
+                    {{ p.firstName }} {{ p.lastName }}
+                  </h1>
+                  <p class="profile-category text-muted">
+                    Category: {{ p.favouriteCategory }}
+                  </p>
                 </div>
-                <div class="col-md-6">
-                  <div class="info-item">
-                    <div class="info-label">Average Price</div>
-                    <div class="info-value">
-                      <i class="bi bi-cash-coin me-2"></i
-                      >{{ profile?.avgPrice }} JD
-                    </div>
+                <div class="rating-container mt-2 mt-md-0">
+                  <div class="rating-value">
+                    {{
+                      (p.ratingAvg > 0 ? p.ratingAvg.toFixed(1) : 'NA')
+                    }}/5<span class="rating-star">★</span>
                   </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="info-item">
-                    <div class="info-label">Total Sessions</div>
-                    <div class="info-value">
-                      <i class="bi bi-calendar-check me-2"></i
-                      >{{ profile?.numberOfSessions }}
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="info-item">
-                    <div class="info-label">Student Reviews</div>
-                    <div class="info-value">
-                      <i class="bi bi-chat-left-quote me-2"></i
-                      >{{ profile?.numberOfReviews }}
-                    </div>
-                  </div>
+                  <div class="rating-label">Rating</div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="col-md-4 mt-4 mt-md-0">
-            <div class="actions-card text-center">
-              <button
-                *ngIf="userRole === 'LEARNER'"
-                class="btn btn-success btn-lg mb-3 w-100"
-                (click)="makeOffer()"
-                [disabled]="sendingOffer"
-              >
-                <i class="bi bi-send-fill me-2"></i>Make Offer
-              </button>
-              <button
-                class="btn btn-primary btn-lg review-btn w-100"
-                (click)="toggleReviews()"
-                [disabled]="loadingReviews"
-              >
-                <i
-                  class="bi"
-                  [class]="reviewsVisible ? 'bi-chevron-up' : 'bi-chevron-down'"
-                ></i>
-                {{ reviewsVisible ? "Hide Reviews" : "Show Reviews" }}
-              </button>
-
-              <!-- Additional action buttons could go here -->
-              <!-- <button class="btn btn-outline-primary btn-lg mt-3 w-100">
-                <i class="bi bi-calendar-plus me-2"></i>Book Session
-              </button>
-              <button class="btn btn-outline-secondary btn-lg mt-3 w-100">
-                <i class="bi bi-star me-2"></i>Add to Favorites
-              </button> -->
+              <p class="profile-bio">{{ p.bio }}</p>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Reviews Section -->
-    <section *ngIf="reviewsVisible" class="reviews-section" [@fadeInOut]>
-      <div class="container-fluid px-md-5">
-        <h2 class="section-title">
-          <i class="bi bi-chat-square-quote me-2"></i>Student Reviews
-        </h2>
-
-        <!-- Reviews Loading -->
-        <ng-container *ngIf="loadingReviews; else reviewsList">
-          <div class="loading-container">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Loading reviews...</span>
-            </div>
-          </div>
-        </ng-container>
-
-        <!-- Reviews Error -->
-        <ng-template #reviewsList>
-          <ng-container *ngIf="errorReviews; else reviewsContent">
-            <div class="alert alert-danger text-center rounded-4">
-              <i class="bi bi-exclamation-triangle-fill me-2"></i
-              >{{ errorReviews }}
-            </div>
-          </ng-container>
-        </ng-template>
-
-        <!-- Individual Reviews -->
-        <ng-template #reviewsContent>
-          <div class="row g-4">
-            <div *ngFor="let r of reviews" class="col-md-6 col-lg-4">
-              <div class="review-card">
-                <div class="review-header">
-                  <div class="reviewer-info">
-                    <div class="reviewer-avatar">
-                      <i class="bi bi-person-circle"></i>
+      <section class="profile-details-section">
+        <div class="container-fluid px-md-5">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="details-card">
+                <h3 class="details-title">
+                  <i class="bi bi-info-circle me-2"></i>Instructor Information
+                </h3>
+                <div class="row g-4 mt-2">
+                  <!-- University -->
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <div class="info-label">University</div>
+                      <div class="info-value">
+                        <i class="bi bi-building me-2"></i>{{ p.universityInfo }}
+                      </div>
                     </div>
-                    <div>
-                      <h5 class="reviewer-name mb-0">{{ r.reviewerName }}</h5>
-                      <div class="review-stars">
-                        <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
-                          <i
-                            class="bi"
-                            [class.bi-star-fill]="star <= r.stars"
-                            [class.bi-star]="star > r.stars"
-                          ></i>
-                        </ng-container>
+                  </div>
+                  <!-- Average Price -->
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <div class="info-label">Average Price</div>
+                      <div class="info-value">
+                        <i class="bi bi-cash-coin me-2"></i>{{ p.avgPrice }} JD
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Total Sessions -->
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <div class="info-label">Total Sessions</div>
+                      <div class="info-value">
+                        <i class="bi bi-calendar-check me-2"></i>{{ p.numberOfSessions }}
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Student Reviews -->
+                  <div class="col-md-6">
+                    <div class="info-item">
+                      <div class="info-label">Student Reviews</div>
+                      <div class="info-value">
+                        <i class="bi bi-chat-left-quote me-2"></i>{{ p.numberOfReviews }}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="review-body">
-                  <p class="review-text">{{ r.description }}</p>
-                </div>
               </div>
             </div>
-
-            <!-- Empty State -->
-            <div *ngIf="reviews.length === 0" class="col-12">
-              <div class="empty-reviews-state">
-                <i class="bi bi-chat-left-text"></i>
-                <p>No reviews available for this instructor yet.</p>
+            <div class="col-md-4 mt-4 mt-md-0">
+              <div class="actions-card text-center">
+                <button
+                  *ngIf="userRole === 'LEARNER'"
+                  class="btn btn-success btn-lg mb-3 w-100"
+                  (click)="makeOffer()"
+                  [disabled]="sendingOffer"
+                >
+                  <i class="bi bi-send-fill me-2"></i>Make Offer
+                </button>
+                <button
+                  class="btn btn-primary btn-lg review-btn w-100"
+                  (click)="toggleReviews()"
+                  [disabled]="loadingReviews"
+                >
+                  <i class="bi" [class]="reviewsVisible ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+                  {{ reviewsVisible ? 'Hide Reviews' : 'Show Reviews' }}
+                </button>
               </div>
             </div>
           </div>
-        </ng-template>
-      </div>
-    </section>
+        </div>
+      </section>
+
+      <!-- Reviews Section -->
+      <section *ngIf="reviewsVisible" class="reviews-section" [@fadeInOut]>
+        <div class="container-fluid px-md-5">
+          <h2 class="section-title">
+            <i class="bi bi-chat-square-quote me-2"></i>Student Reviews
+          </h2>
+
+          <!-- Loading Reviews -->
+          <ng-container *ngIf="loadingReviews; else reviewsList">
+            <div class="loading-container">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading reviews...</span>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Reviews Error or List -->
+          <ng-template #reviewsList>
+            <ng-container *ngIf="errorReviews; else reviewsContent">
+              <div class="alert alert-danger text-center rounded-4">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ errorReviews }}
+              </div>
+            </ng-container>
+          </ng-template>
+
+          <!-- Individual Reviews -->
+          <ng-template #reviewsContent>
+            <div class="row g-4">
+              <div *ngFor="let r of reviews" class="col-md-6 col-lg-4">
+                <div class="review-card">
+                  <div class="review-header">
+                    <div class="reviewer-info">
+                      <div class="reviewer-avatar">
+                        <i class="bi bi-person-circle"></i>
+                      </div>
+                      <div>
+                        <h5 class="reviewer-name mb-0">{{ r.reviewerName }}</h5>
+                        <div class="review-stars">
+                          <ng-container *ngFor="let star of [1,2,3,4,5]">
+                            <i
+                              class="bi"
+                              [class.bi-star-fill]="star <= r.stars"
+                              [class.bi-star]="star > r.stars"
+                            ></i>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="review-body">
+                    <p class="review-text">{{ r.description }}</p>
+                  </div>
+                </div>
+              </div>
+              <!-- Empty State -->
+              <div *ngIf="reviews.length === 0" class="col-12">
+                <div class="empty-reviews-state">
+                  <i class="bi bi-chat-left-text"></i>
+                  <p>No reviews available for this instructor yet.</p>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </section>
+    </ng-container>
   </ng-template>
 </main>
