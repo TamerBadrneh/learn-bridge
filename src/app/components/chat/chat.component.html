@@ -4,7 +4,10 @@
     <!-- Sidebar -->
     <div class="chat-sidebar d-flex flex-column">
       <!-- Search -->
-      <div class="search-container">
+      <div
+        class="search-container"
+        *ngIf="authService.userData?.role !== 'ADMIN'"
+      >
         <div class="input-group">
           <input
             type="text"
@@ -29,7 +32,8 @@
           />
           <div class="chat-info">
             <h5 *ngIf="authService.userData?.role === 'ADMIN'">
-              {{ chat.learnerName }} | {{ chat.instructorName }}
+              <span class="text-primary">{{ chat.learnerName }} </span>|
+              <span class="text-danger">{{ chat.instructorName }}</span>
             </h5>
             <h5 *ngIf="authService.userData?.role !== 'ADMIN'">
               {{ chat.participantName || "Unknown" }}
@@ -93,6 +97,7 @@
 
     <!-- Chat main area -->
     <div class="chat-main">
+      <!-- Chat Header -->
       <ng-container *ngIf="selectedChatId !== null; else placeholder">
         <div class="chat-header">
           <div class="user">
@@ -124,7 +129,7 @@
               Session Actions
             </button>
             <ul class="dropdown-menu">
-              <li>
+              <li *ngIf="!isSessionInactive()">
                 <button class="dropdown-item" (click)="onCancelSession()">
                   Cancel Session
                 </button>
@@ -132,7 +137,8 @@
 
               <li
                 *ngIf="
-                  authService.userData?.role.toLowerCase() === 'instructor'
+                  authService.userData?.role.toLowerCase() === 'instructor' &&
+                  !isSessionInactive()
                 "
               >
                 <button class="dropdown-item" (click)="onFinishSession()">
