@@ -98,7 +98,7 @@ export class ViewProfileComponent implements OnInit {
 
   makeOffer(): void {
     this.sendingOffer = true;
-    const url = `${this.baseUrl}/request-instructor/${this.instructorId}`;
+    const url = `http://localhost:8080/api/agreements/request-instructor/${this.instructorId}`;
     this.http.post(url, {}, { withCredentials: true }).subscribe({
       next: () => {
         alert('Offer sent successfully.');
