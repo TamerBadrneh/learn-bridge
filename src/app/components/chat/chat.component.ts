@@ -33,9 +33,9 @@ export class ChatComponent implements OnInit {
   loadingCancel = false;
   loadingFinish = false;
 
-  private baseUrlForSession = 'http://localhost:8080/api/session';
-  private baseUrlForChat = 'http://localhost:8080/api/chat';
-  private baseUrlForFiles = 'http://localhost:8080/api/file';
+  private readonly baseUrlForSession = 'http://localhost:8080/api/session';
+  private readonly baseUrlForChat = 'http://localhost:8080/api/chat';
+  private readonly baseUrlForFiles = 'http://localhost:8080/api/file';
 
   constructor(
     private http: HttpClient,
@@ -99,15 +99,14 @@ export class ChatComponent implements OnInit {
     let url = '';
     const role = this.authService.userData?.role?.toUpperCase();
 
-    if (role === 'ADMIN') {
+    if (role === 'ADMIN')
       url = `http://localhost:8080/api/chat/admin/review-chat/${this.chatId}`;
-    } else {
-      url = `${this.baseUrlForChat}/my-chats`;
-    }
+    else url = `${this.baseUrlForChat}/my-chats`;
 
     this.http.get<any>(url, { withCredentials: true }).subscribe({
       next: (data) => {
-        this.chats = Array.isArray(data) ? data : [data]; // wrap single object
+        this.chats = Array.isArray(data) ? data : [data];
+        console.log(this.chats);
         this.applyFilter();
       },
       error: (err) => console.error('Failed to fetch chats:', err),
@@ -170,7 +169,7 @@ export class ChatComponent implements OnInit {
         }));
 
         const merged = [...formattedMessages, ...formattedFiles];
-        console.log(merged);
+        console.log("Messages: " + merged);
         this.messages = merged.sort(
           (a, b) =>
             new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
