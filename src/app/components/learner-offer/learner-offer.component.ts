@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../../shared/services/auth.service';
 
+// Documented By Tamer
+
 @Component({
   standalone: false,
   selector: 'app-learner-offer',
@@ -11,8 +13,10 @@ import { AuthService } from '../../shared/services/auth.service';
   styleUrl: './learner-offer.component.scss',
 })
 export class LearnerOfferComponent {
+  // Members
   offerInfo: any;
 
+  // Constructor
   constructor(
     private learnerOfferService: LearnerOfferService,
     private http: HttpClient,
@@ -20,6 +24,12 @@ export class LearnerOfferComponent {
     private authService: AuthService
   ) {}
 
+  /**
+   * Lifecycle hook that is called after data-bound properties are initialized.
+   * Retrieves the offer information using the learner offer service and assigns
+   * it to the `offerInfo` property. Fetches user data from the authentication
+   * service and logs the data or an error message to the console.
+   */
   ngOnInit(): void {
     this.offerInfo = this.learnerOfferService.getOfferInfo();
 
@@ -33,6 +43,13 @@ export class LearnerOfferComponent {
     });
   }
 
+  /**
+   * Rejects the learner's request. If the user confirms, it sends an HTTP POST
+   * request to the server to reject the learner's request. If the request is
+   * successful, it shows an alert with a success message and navigates back to
+   * the instructor's homepage. If the request fails, it shows an error message
+   * in the console.
+   */
   handleReject(): void {
     if (confirm('Are you sure you want to reject this request?')) {
       const id = this.offerInfo.notificationId;
@@ -52,6 +69,13 @@ export class LearnerOfferComponent {
     }
   }
 
+  /**
+   * Accepts the learner's request. If the user confirms, it sends an HTTP POST
+   * request to the server to accept the learner's request. If the request is
+   * successful, it shows an alert with a success message and navigates to the
+   * instructor's chat page. If the request fails, it shows an error message in
+   * the console.
+   */
   handleAccept(): void {
     if (confirm('Do you want to accept this learning request?')) {
       const id = this.offerInfo.notificationId;

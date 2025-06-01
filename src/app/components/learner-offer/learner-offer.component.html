@@ -1,10 +1,14 @@
 <div class="container my-5">
+  <!-- Offer Message -->
   <h2 class="text-center fw-bold mb-4" *ngIf="offerInfo">
     Learner {{ offerInfo.learnerName }} wants to initiate a learning agreement
   </h2>
 
+  <!-- Buttons -->
   <div class="d-flex justify-content-center gap-3 mt-4">
     <button class="btn btn-danger px-4" (click)="handleReject()">Reject</button>
-    <button class="btn btn-info text-white px-4" (click)="handleAccept()">Accept</button>
+    <button class="btn btn-info text-white px-4" (click)="handleAccept()">
+      Accept
+    </button>
   </div>
 </div>

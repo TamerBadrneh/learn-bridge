@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
+// Documented By Tamer
+
+// Interface Type definition
 interface AskForAgreementInfo {
   agreementId: number;
   instructorId: number;
@@ -35,19 +38,25 @@ interface SessionDTO {
   styleUrls: ['./agreement.component.scss'],
 })
 export class AgreementComponent implements OnInit {
+  // Members
   info: AskForAgreementInfo | null = null;
   loading = false;
   error: string | null = null;
-
   private notificationId!: number;
   private baseUrl = 'http://localhost:8080/api/agreements';
 
+  // Constructor
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
     private router: Router
   ) {}
 
+  /**
+   * Initialize the component.
+   * Fetches the agreement info from the backend when the component is initialized.
+   * If no notificationId is specified in the route, an error is set.
+   */
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       const id = params['notificationId'];
@@ -59,6 +68,14 @@ export class AgreementComponent implements OnInit {
       this.fetchInfo();
     });
   }
+
+  /**
+   * Fetches agreement information from the backend using the current notification ID.
+   * Sets loading state to true while the request is in progress.
+   * On success, populates the `info` field with the retrieved data and sets loading to false.
+   * On error, logs the error to the console, sets an error message, and sets loading to false.
+   * The request is made with credentials for authentication.
+   */
 
   private fetchInfo(): void {
     this.loading = true;
@@ -79,6 +96,14 @@ export class AgreementComponent implements OnInit {
       });
   }
 
+  /**
+   * Accepts the agreement with the given notification ID.
+   * If the agreement ID is not set, does nothing.
+   * Sets loading state to true while the request is in progress.
+   * On success, redirects the user to the learner chat page with the session ID as a query parameter.
+   * On error, logs the error to the console, sets an error message, and sets loading to false.
+   * The request is made with credentials for authentication.
+   */
   acceptAgreement(): void {
     if (!this.info) return;
     this.loading = true;
@@ -108,6 +133,14 @@ export class AgreementComponent implements OnInit {
       });
   }
 
+  /**
+   * Rejects the agreement with the given notification ID.
+   * If the agreement ID is not set, does nothing.
+   * Sets loading state to true while the request is in progress.
+   * On success, redirects the user to the learner home page.
+   * On error, logs the error to the console, sets an error message, and sets loading to false.
+   * The request is made with credentials for authentication.
+   */
   rejectAgreement(): void {
     this.loading = true;
 
