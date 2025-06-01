@@ -4,6 +4,7 @@ import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
+// Documented By Tamer
 @Component({
   selector: 'app-create-post',
   standalone: true,
@@ -16,10 +17,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./create-post.component.scss'],
 })
 export class CreatePostComponent implements OnInit {
+  // Data Members
   categories: string[] = ['IT', 'SCIENCE', 'LANGUAGES', 'MEDICAL'];
   today: string = '';
   showError = false;
-
   formData: {
     subject: string;
     category: string;
@@ -34,13 +35,24 @@ export class CreatePostComponent implements OnInit {
     sessionDeadline: null,
   };
 
+  // Constructor with Injected Values for use...
   constructor(private http: HttpClient, private router: Router) {}
 
+  /**
+   * Initialize the component.
+   * Sets the min date for the date picker to today.
+   */
   ngOnInit(): void {
-    // Set min date for the date picker
     this.today = new Date().toISOString().split('T')[0];
   }
 
+  /**
+   * Called when the form is submitted.
+   * If the form is invalid or the deadline is before today, it shows an error.
+   * Otherwise, it creates a new post with the given details and navigates to the
+   * learner's post list.
+   * @param form The NgForm instance.
+   */
   onSubmit(form: NgForm): void {
     if (
       form.invalid ||

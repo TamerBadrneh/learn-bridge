@@ -19,6 +19,8 @@ import {
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../shared/services/auth.service';
 
+// Documented By Tamer
+
 @Component({
   standalone: true,
   selector: 'app-add-card',
@@ -29,9 +31,11 @@ import { AuthService } from '../../shared/services/auth.service';
 export class AddCardComponent implements OnInit {
   @ViewChild(StripeCardComponent) card: StripeCardComponent;
 
+  // Members
   cardForm: FormGroup;
   hasCard = false;
 
+  // Styling logic for some unique animations by JS
   cardOptions: StripeCardElementOptions = {
     style: {
       base: {
@@ -47,10 +51,21 @@ export class AddCardComponent implements OnInit {
     },
   };
 
+  // Stripe localization
   elementsOptions: StripeElementsOptions = {
     locale: 'en',
   };
 
+  /**
+   * Creates an instance of the AddCardComponent.
+   *
+   * @param fb A form builder for creating a reactive form.
+   * @param http An HTTP client for making requests to the server.
+   * @param router A router for navigating to other pages.
+   * @param stripeService A Stripe service for creating a Stripe payment
+   *                      intent.
+   * @param authService An authentication service for authenticating the user.
+   */
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -64,6 +79,15 @@ export class AddCardComponent implements OnInit {
     });
   }
 
+  /**
+   * Called when the component is initialized.
+   *
+   * Checks if the user already has a card in the server.
+   * Sets the hasCard property to true if the user already has a card,
+   * otherwise, sets it to false.
+   *
+   * Shows an error if the request fails.
+   */
   ngOnInit() {
     this.http
       .get<{ hasCard: boolean }>('http://localhost:8080/api/cards/has-card', {
@@ -80,6 +104,23 @@ export class AddCardComponent implements OnInit {
       });
   }
 
+  /**
+   * Submits the card form and adds a new card to the user's profile.
+   *
+   * Checks if the card form is invalid, and if so, does nothing.
+   *
+   * Otherwise, creates a Stripe payment method with the card details and
+   * billing details from the form.
+   *
+   * If the payment method is successfully created, makes a POST request to the
+   * server to add the card to the user's profile.
+   *
+   * If the request is successful, alerts the user that the card was added
+   * successfully, and navigates to the payment page if the user already has a
+   * card, or to the home page if the user does not have a card.
+   *
+   * If the request fails, alerts the user with an error message.
+   */
   onSubmit() {
     if (this.cardForm.invalid) return;
 
@@ -137,6 +178,12 @@ export class AddCardComponent implements OnInit {
         },
       });
   }
+
+  /**
+   * Navigates the user based on their role and card status.
+   * If the user has no card, they are redirected to the login page.
+   * Otherwise, they are redirected to the payment page based on their role.
+   */
 
   cancel() {
     const role = this.authService.userData.role.toLowerCase() || '';

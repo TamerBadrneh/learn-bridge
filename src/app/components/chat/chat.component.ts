@@ -7,6 +7,7 @@ import { ChatFilterPipe } from './Chat Filter Pipe.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReportService } from '../report/Report Service.component';
 
+// Documented By Tamer
 @Component({
   selector: 'app-chat',
   standalone: true,
@@ -15,6 +16,7 @@ import { ReportService } from '../report/Report Service.component';
   styleUrls: ['./chat.component.scss'],
 })
 export class ChatComponent implements OnInit {
+  // Data members
   chats: any[] = [];
   messages: any[] = [];
   selectedChatId: number | null = null;
@@ -26,17 +28,15 @@ export class ChatComponent implements OnInit {
   chatSearchTerm: string = '';
   selectedFilter: 'ONGOING' | 'FINISHED' | 'CANCELLED' | 'ALL' = 'ALL';
   chatId: number;
-
   learnerName: string = '';
   instructorName: string = '';
-
   loadingCancel = false;
   loadingFinish = false;
-
   private readonly baseUrlForSession = 'http://localhost:8080/api/session';
   private readonly baseUrlForChat = 'http://localhost:8080/api/chat';
   private readonly baseUrlForFiles = 'http://localhost:8080/api/file';
 
+  // Constructor with Injected Values for use...
   constructor(
     private http: HttpClient,
     public authService: AuthService,
@@ -45,6 +45,13 @@ export class ChatComponent implements OnInit {
     private route: ActivatedRoute
   ) {}
 
+  /**
+   * Initialize the component by fetching user data and chat history.
+   * After user data is fetched, we fetch the chat history.
+   * The chat history is fetched based on the chat id passed in the route.
+   * If the chat id is not present in the route, the chat history is not fetched.
+   * If the user data fetch fails, an error message is logged to the console.
+   */
   ngOnInit(): void {
     this.authService.fetchUserData().subscribe({
       next: () => {
@@ -56,6 +63,12 @@ export class ChatComponent implements OnInit {
     this.chatId = Number(this.route.snapshot.paramMap.get('chatId'));
   }
 
+  /**
+   * Handles the event of a user selecting a file to upload.
+   * If a file is selected, it is stored in the component's state and
+   * the `uploadFile` method is called to upload the file to the server.
+   * @param event The event object containing the selected file.
+   */
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -64,6 +77,18 @@ export class ChatComponent implements OnInit {
     }
   }
 
+  /**
+   * Uploads the selected file to the server for the currently selected chat.
+   * The file is uploaded using a POST request with the chat ID included in the URL.
+   * On successful upload, the file information is added to the messages list.
+   * If the upload fails, an error is logged to the console.
+   *
+   * Prerequisites:
+   * - `selectedFile` should be set with the file to be uploaded.
+   * - `selectedChatId` should be set with the ID of the chat to which the file is being uploaded.
+   *
+   * No operation is performed if `selectedFile` or `selectedChatId` is not set.
+   */
   uploadFile() {
     if (!this.selectedFile || this.selectedChatId === null) return;
 
@@ -95,6 +120,22 @@ export class ChatComponent implements OnInit {
       });
   }
 
+  /**
+   * Fetches the chats for the currently logged-in user.
+   *
+   * Depending on the user's role, either the my-chats or the review-chat
+   * endpoint is used to fetch the chats. The chats are stored in the `chats` array
+   * and the `applyFilter` method is called to filter the chats based on the current
+   * filter term.
+   *
+   * Prerequisites:
+   * - `authService.userData` should be set with the user's data.
+   * - `baseUrlForChat` should be set with the base URL for the chat API.
+   * - `chatId` should be set with the ID of the chat for which the messages are being fetched,
+   *   if the user is an admin.
+   *
+   * No operation is performed if any of the above prerequisites are not met.
+   */
   fetchChats() {
     let url = '';
     const role = this.authService.userData?.role?.toUpperCase();
@@ -113,18 +154,43 @@ export class ChatComponent implements OnInit {
     });
   }
 
+  /**
+   * Applies the current filter to the chats and returns the filtered chats.
+   *
+   * If the filter is set to 'ALL', all chats are returned.
+   * Otherwise, the chats are filtered by their session status, which should
+   * match the current filter.
+   *
+   * @returns {any[]} The filtered chats.
+   */
   applyFilter() {
-    console.log(this.chats);
     return this.selectedFilter === 'ALL'
       ? this.chats
       : this.chats.filter((chat) => chat.sessionStatus === this.selectedFilter);
   }
 
+  /**
+   * Sets the current filter and applies it to the chats.
+   *
+   * The filter is set to the given status, and the chats are filtered
+   * accordingly by calling the `applyFilter` method.
+   *
+   * @param status The status to filter the chats by.
+   */
   setFilter(status: 'ONGOING' | 'FINISHED' | 'CANCELLED' | 'ALL') {
     this.selectedFilter = status;
     this.applyFilter();
   }
 
+  /**
+   * Selects a chat and updates the component's state with the chat details.
+   *
+   * This method sets the selected chat ID, session ID, participant name,
+   * learner name, and instructor name based on the provided chat object.
+   * It also fetches the messages associated with the selected chat.
+   *
+   * @param chat The chat object containing details of the chat to be selected.
+   */
   selectChat(chat: any) {
     this.selectedChatId = chat.chatId;
     this.selectedSessionId = chat.sessionId;
@@ -134,6 +200,17 @@ export class ChatComponent implements OnInit {
     this.fetchMessages(chat.chatId);
   }
 
+  /**
+   * Fetches the messages and files associated with a chat.
+   *
+   * This method makes two API calls to fetch the messages and files associated
+   * with the given chat ID. The messages and files are then merged into a single
+   * array, sorted by timestamp, and stored in the `messages` array.
+   *
+   * If any of the API calls fail, an error is logged to the console.
+   *
+   * @param chatId The ID of the chat to fetch messages and files for.
+   */
   fetchMessages(chatId: number) {
     const messages$ = this.http.get<any[]>(
       `${this.baseUrlForChat}/all-messages/${chatId}`,
@@ -169,7 +246,6 @@ export class ChatComponent implements OnInit {
         }));
 
         const merged = [...formattedMessages, ...formattedFiles];
-        console.log("Messages: " + merged);
         this.messages = merged.sort(
           (a, b) =>
             new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
@@ -178,6 +254,13 @@ export class ChatComponent implements OnInit {
       .catch((err) => console.error('Failed to fetch chat content:', err));
   }
 
+  /**
+   * Sends a message to the selected chat.
+   *
+   * This method makes a POST request to the backend to send the message.
+   * If the message is successfully sent, it is added to the `messages` array.
+   * If the message fails to send, an error is logged to the console.
+   */
   sendMessage() {
     if (!this.newMessage.trim() || this.selectedChatId === null) return;
 
@@ -202,6 +285,15 @@ export class ChatComponent implements OnInit {
       });
   }
 
+  /**
+   * Cancels the selected session.
+   *
+   * This method makes a PUT request to the backend to cancel the session.
+   * If the session is successfully cancelled, a success alert is shown and
+   * the page is reloaded to reflect the change.
+   * If the session fails to cancel, an error alert is shown and the loading
+   * indicator is stopped.
+   */
   onCancelSession() {
     if (this.selectedSessionId === null) return;
 
@@ -225,6 +317,15 @@ export class ChatComponent implements OnInit {
       });
   }
 
+  /**
+   * Finishes the selected session.
+   *
+   * This method makes a PUT request to the backend to finish the session.
+   * If the session is successfully finished, a success alert is shown and
+   * the page is reloaded to reflect the change.
+   * If the session fails to finish, an error alert is shown and the loading
+   * indicator is stopped.
+   */
   onFinishSession() {
     if (this.selectedSessionId === null) return;
 
@@ -248,6 +349,14 @@ export class ChatComponent implements OnInit {
       });
   }
 
+  /**
+   * Navigates to the report user page based on the current user's role.
+   *
+   * This method sets the chat ID in the report service and navigates to the
+   * appropriate report-user page. The navigation path is determined by the
+   * user's role, directing learners to '/learner/report-user' and instructors
+   * to '/instructor/report-user'.
+   */
   navigateToReport() {
     this.reportService.setChatId(this.selectedChatId!);
     const path =
@@ -257,12 +366,29 @@ export class ChatComponent implements OnInit {
     this.router.navigate([path]);
   }
 
+  /**
+   * Navigates to the learner rate-instructor page.
+   *
+   * This method sets the chat ID in the session storage and navigates to the
+   * learner rate-instructor page. If the selected chat ID is null, the method
+   * does nothing.
+   */
   navigateToRateInstructor() {
     if (this.selectedChatId === null) return;
     sessionStorage.setItem('rateChatId', this.selectedChatId.toString());
     this.router.navigate(['/learner/rate-instructor']);
   }
 
+  /**
+   * Determines if the selected chat is inactive.
+   *
+   * This method checks if the selected chat's session status is either
+   * 'CANCELLED' or 'FINISHED'. If the selected chat ID is null, the method
+   * returns false. Otherwise, it returns true if the session is inactive
+   * and false if it is active.
+   *
+   * @returns {boolean} True if the selected chat is inactive, false otherwise.
+   */
   isSessionInactive(): boolean {
     const selectedChat = this.chats.find(
       (chat) => chat.chatId === this.selectedChatId

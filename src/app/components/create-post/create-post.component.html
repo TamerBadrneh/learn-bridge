@@ -6,7 +6,7 @@
 >
   <h1>What's on your mind?</h1>
 
-  <!-- Subject + Category -->
+  <!-- Subject + Category Selection -->
   <div class="d-flex flex-column flex-md-row gap-4">
     <div class="bigger-size">
       <label class="form-label">Subject</label>
@@ -43,7 +43,7 @@
     </div>
   </div>
 
-  <!-- Description -->
+  <!-- Description Entry   -->
   <div>
     <label class="form-label">Description</label>
     <textarea
@@ -59,7 +59,7 @@
     </p>
   </div>
 
-  <!-- Price -->
+  <!-- Price Entry -->
   <div>
     <label class="form-label">Price</label>
     <input
@@ -77,7 +77,7 @@
     </p>
   </div>
 
-  <!-- Session Deadline -->
+  <!-- Session Deadline Datepicker -->
   <div>
     <label class="form-label">Session Deadline</label>
     <input
@@ -94,12 +94,12 @@
     </p>
   </div>
 
-  <!-- Form Error -->
+  <!-- Form Error handler message -->
   <p class="alert alert-danger" *ngIf="showError">
     Please fill out all fields correctly.
   </p>
 
-  <!-- Submit -->
+  <!-- Submit Button -->
   <div class="d-flex justify-content-center">
     <button
       type="submit"

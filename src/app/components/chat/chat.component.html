@@ -1,7 +1,8 @@
 <div class="chat-wrapper">
   <h2>Chats</h2>
+  <!-- Big Boss -->
   <div class="chat-container">
-    <!-- Sidebar -->
+    <!-- Sidebar => All Chats and Filters and Searchbar -->
     <div class="chat-sidebar d-flex flex-column">
       <!-- Search -->
       <div
@@ -98,7 +99,7 @@
     <!-- Chat main area -->
     <div class="chat-main">
       <ng-container *ngIf="selectedChatId !== null; else placeholder">
-        <!-- Chat Header -->
+        <!-- Chat Header => With who I'm talking with -->
         <div class="chat-header">
           <div class="user">
             <img
@@ -169,13 +170,14 @@
           </div>
         </div>
 
+        <!-- Chat Content  -->
         <div class="chat-messages">
           <div
             class="message"
             *ngFor="let msg of messages"
             [ngClass]="msg.isSender ? 'right' : 'left'"
           >
-            <!-- File Message -->
+            <!-- File Message => The Structure of file message instance... -->
             <ng-container *ngIf="msg.fileName; else textMessage">
               <div class="card mb-2" style="max-width: 300px">
                 <div class="card-body p-2 text-center">
@@ -209,7 +211,7 @@
               </div>
             </ng-container>
 
-            <!-- Text Message -->
+            <!-- Text Message => The Structure of text-message instance... -->
             <ng-template #textMessage>
               <ng-container *ngIf="authService.userData?.role === 'ADMIN'">
                 <strong>{{ msg.senderName || "Unknown" }}</strong
@@ -223,7 +225,7 @@
           </div>
         </div>
 
-        <!-- Chat Input (hidden for admin) -->
+        <!-- Chat Input (hidden for admin) => The input for message and file is here and admin isn't authorized for use this service... -->
         <div class="chat-input">
           <ng-container
             *ngIf="
@@ -277,6 +279,7 @@
         </div>
       </ng-container>
 
+      <!-- View only if the user doesn't select a chat to be viewed... -->
       <ng-template #placeholder>
         <div
           class="d-flex h-100 justify-content-center align-items-center text-muted"
