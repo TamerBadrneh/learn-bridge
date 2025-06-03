@@ -192,7 +192,10 @@ export class RegisterComponent implements OnInit {
       };
 
       axios
-        .post('http://localhost:8080/api/register', formattedUserData)
+        .post(
+          'https://learn-bridge-back-end.onrender.com/api/register',
+          formattedUserData
+        )
         .then(() => {
           this.isLoading = false;
           this._Router.navigate(['/login']);

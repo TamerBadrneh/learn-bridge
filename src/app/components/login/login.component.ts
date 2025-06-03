@@ -122,7 +122,7 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    fetch('http://localhost:8080/api/cards/has-card', {
+    fetch('https://learn-bridge-back-end.onrender.com/api/cards/has-card', {
       method: 'GET',
       credentials: 'include',
     })

@@ -63,7 +63,10 @@ export class InstructorBioComponent implements OnInit {
     this.isLoading = true;
 
     axios
-      .post('http://localhost:8080/api/register', fullUserData)
+      .post(
+        'https://learn-bridge-back-end.onrender.com/api/register',
+        fullUserData
+      )
       .then(() => {
         this.isLoading = false;
         alert('Bio Successfully Updated !');

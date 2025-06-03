@@ -76,7 +76,7 @@ export class ReportComponent implements OnInit {
 
       this.http
         .post(
-          `http://localhost:8080/api/reports/create-report/${this.chatId}`,
+          `https://learn-bridge-back-end.onrender.com/api/reports/create-report/${this.chatId}`,
           body,
           { withCredentials: true }
         )

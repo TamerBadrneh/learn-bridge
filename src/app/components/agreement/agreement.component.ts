@@ -43,7 +43,7 @@ export class AgreementComponent implements OnInit {
   loading = false;
   error: string | null = null;
   private notificationId!: number;
-  private baseUrl = 'http://localhost:8080/api/agreements';
+  private baseUrl = 'https://learn-bridge-back-end.onrender.com/api/agreements';
 
   // Constructor
   constructor(

@@ -39,7 +39,7 @@ export class PendingReportsComponent implements OnInit {
   totalPages = 1;
   private allReports: Report[] = [];
 
-  private readonly baseUrl = 'http://localhost:8080/api';
+  private readonly baseUrl = 'https://learn-bridge-back-end.onrender.com/api';
 
   constructor(private http: HttpClient, private router: Router) {}
 

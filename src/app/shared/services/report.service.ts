@@ -17,7 +17,7 @@ export interface Report {
   providedIn: 'root'
 })
 export class ReportService {
-  private baseUrl = 'http://localhost:8080/api';
+  private baseUrl = 'https://learn-bridge-back-end.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 

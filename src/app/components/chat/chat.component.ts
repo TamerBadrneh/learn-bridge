@@ -32,9 +32,12 @@ export class ChatComponent implements OnInit {
   instructorName: string = '';
   loadingCancel = false;
   loadingFinish = false;
-  private readonly baseUrlForSession = 'http://localhost:8080/api/session';
-  private readonly baseUrlForChat = 'http://localhost:8080/api/chat';
-  private readonly baseUrlForFiles = 'http://localhost:8080/api/file';
+  private readonly baseUrlForSession =
+    'https://learn-bridge-back-end.onrender.com/api/session';
+  private readonly baseUrlForChat =
+    'https://learn-bridge-back-end.onrender.com/api/chat';
+  private readonly baseUrlForFiles =
+    'https://learn-bridge-back-end.onrender.com/api/file';
 
   // Constructor with Injected Values for use...
   constructor(
@@ -141,7 +144,7 @@ export class ChatComponent implements OnInit {
     const role = this.authService.userData?.role?.toUpperCase();
 
     if (role === 'ADMIN')
-      url = `http://localhost:8080/api/chat/admin/review-chat/${this.chatId}`;
+      url = `https://learn-bridge-back-end.onrender.com/api/chat/admin/review-chat/${this.chatId}`;
     else url = `${this.baseUrlForChat}/my-chats`;
 
     this.http.get<any>(url, { withCredentials: true }).subscribe({

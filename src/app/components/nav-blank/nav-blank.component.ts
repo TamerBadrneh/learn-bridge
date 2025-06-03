@@ -27,9 +27,12 @@ export class NavBlankComponent implements OnInit {
 
   fetchNotifications() {
     this.http
-      .get<any[]>('http://localhost:8080/api/agreements/notifications', {
-        withCredentials: true,
-      })
+      .get<any[]>(
+        'https://learn-bridge-back-end.onrender.com/api/agreements/notifications',
+        {
+          withCredentials: true,
+        }
+      )
       .subscribe((data) => {
         this.notifications = data || [];
         this.hasUnread = this.notifications.some(
@@ -42,7 +45,7 @@ export class NavBlankComponent implements OnInit {
     if (notification.readStatus === 'UNREAD') {
       this.http
         .put(
-          `http://localhost:8080/api/notifications/${notification.notificationId}/read`,
+          `https://learn-bridge-back-end.onrender.com/api/notifications/${notification.notificationId}/read`,
           {},
           {
             withCredentials: true,

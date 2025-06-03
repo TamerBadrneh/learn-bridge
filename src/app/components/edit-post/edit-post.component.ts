@@ -39,7 +39,7 @@ export class EditPostComponent implements OnInit {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private baseUrl = 'http://localhost:8080/api/posts';
+  private baseUrl = 'https://learn-bridge-back-end.onrender.com/api/posts';
   categories = ['IT', 'SCIENCE', 'LANGUAGES', 'MEDICAL'];
 
   /**

@@ -70,7 +70,8 @@ export class ViewProfileComponent implements OnInit {
   defaultPlaceholder =
     'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
 
-  private baseUrl = 'http://localhost:8080/api/instructors';
+  private baseUrl =
+    'https://learn-bridge-back-end.onrender.com/api/instructors';
 
   constructor(
     private route: ActivatedRoute,
@@ -104,9 +105,12 @@ export class ViewProfileComponent implements OnInit {
     });
 
     // get notifications for make offer operation visibility {second way of the project flow}
-    fetch('http://localhost:8080/api/agreements/notifications', {
-      credentials: 'include',
-    })
+    fetch(
+      'https://learn-bridge-back-end.onrender.com/api/agreements/notifications',
+      {
+        credentials: 'include',
+      }
+    )
       .then((res) => res.json())
       .then((data: any) => {
         this.userNotifications = data;
@@ -117,7 +121,7 @@ export class ViewProfileComponent implements OnInit {
 
   makeOffer(): void {
     this.sendingOffer = true;
-    const url = `http://localhost:8080/api/agreements/request-instructor/${this.instructorId}`;
+    const url = `https://learn-bridge-back-end.onrender.com/api/agreements/request-instructor/${this.instructorId}`;
     this.http.post(url, {}, { withCredentials: true }).subscribe({
       next: () => {
         alert('Offer sent successfully.');

@@ -74,10 +74,14 @@ export class CreatePostComponent implements OnInit {
     };
 
     this.http
-      .post('http://localhost:8080/api/posts/create-post', payload, {
-        headers: { 'Content-Type': 'application/json' },
-        withCredentials: true,
-      })
+      .post(
+        'https://learn-bridge-back-end.onrender.com/api/posts/create-post',
+        payload,
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        }
+      )
       .subscribe({
         next: () => {
           alert('Post created successfully!');

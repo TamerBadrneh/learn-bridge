@@ -2,17 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-
-import { CommonModule } from '@angular/common';    
-import { FormsModule } from '@angular/forms';      
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-find-instructor',
-  standalone: true,              
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './find-instructor.component.html',
   styleUrls: ['./find-instructor.component.scss'],
 })
@@ -29,7 +25,7 @@ export class FindInstructorComponent implements OnInit {
   itemsPerPage = 3;
   paginatedInstructors: any[] = [];
 
-  defaultPlaceholder = 
+  defaultPlaceholder =
     'https://staudt-gmbh.com/wp-content/uploads/2018/07/person-dummy.jpg';
 
   constructor(private http: HttpClient, private router: Router) {}
@@ -39,35 +35,37 @@ export class FindInstructorComponent implements OnInit {
   }
 
   fetchInstructors() {
-    this.http.get<any[]>(
-      'http://localhost:8080/api/instructors/find-favourite',
-      { withCredentials: true }
-    ).subscribe({
-      next: response => {
-        this.allInstructors = response.map(inst => ({
-          id: inst.instructorId,
-          fullName: `${inst.firstName} ${inst.lastName}`,
-          university: inst.universityInfo,
-          bio: inst.bio,
-          hourRate: inst.avgPrice,
-          rating: inst.ratingAvg,
-          reviewsCount: inst.numberOfReviews,
-          sessionsCount: inst.numberOfSessions,
-          image: inst.personalImage || this.defaultPlaceholder
-        }));
-        this.filterInstructors();
-      },
-      error: err => {
-        console.error('Error fetching favourite instructors:', err);
-        this.allInstructors = [];
-        this.filterInstructors();
-      }
-    });
+    this.http
+      .get<any[]>(
+        'https://learn-bridge-back-end.onrender.com/api/instructors/find-favourite',
+        { withCredentials: true }
+      )
+      .subscribe({
+        next: (response) => {
+          this.allInstructors = response.map((inst) => ({
+            id: inst.instructorId,
+            fullName: `${inst.firstName} ${inst.lastName}`,
+            university: inst.universityInfo,
+            bio: inst.bio,
+            hourRate: inst.avgPrice,
+            rating: inst.ratingAvg,
+            reviewsCount: inst.numberOfReviews,
+            sessionsCount: inst.numberOfSessions,
+            image: inst.personalImage || this.defaultPlaceholder,
+          }));
+          this.filterInstructors();
+        },
+        error: (err) => {
+          console.error('Error fetching favourite instructors:', err);
+          this.allInstructors = [];
+          this.filterInstructors();
+        },
+      });
   }
 
   filterInstructors() {
     const keyword = this.searchKeyword.toLowerCase().trim();
-    let filtered = this.allInstructors.filter(i => {
+    let filtered = this.allInstructors.filter((i) => {
       const matchesName = i.fullName.toLowerCase().includes(keyword);
       let matchesPrice = true;
       if (this.selectedPrice === 'Less than 20 JD') {
@@ -97,36 +95,40 @@ export class FindInstructorComponent implements OnInit {
       return;
     }
 
-    this.http.get<any[]>(
-      `http://localhost:8080/api/instructors/${this.selectedCategory}`,
-      { withCredentials: true }
-    ).subscribe({
-      next: response => {
-        this.allInstructors = response.map(inst => ({
-          id: inst.instructorId,
-          fullName: `${inst.firstName} ${inst.lastName}`,
-          university: inst.universityInfo,
-          bio: inst.bio,
-          hourRate: inst.avgPrice,
-          rating: inst.ratingAvg,
-          reviewsCount: inst.numberOfReviews,
-          sessionsCount: inst.numberOfSessions,
-          image: inst.personalImage || this.defaultPlaceholder
-        }));
-        this.filterInstructors();
-      },
-      error: err => {
-        console.error('Error fetching instructors by category:', err);
-        this.allInstructors = [];
-        this.filterInstructors();
-      }
-    });
+    this.http
+      .get<any[]>(
+        `https://learn-bridge-back-end.onrender.com/api/instructors/${this.selectedCategory}`,
+        { withCredentials: true }
+      )
+      .subscribe({
+        next: (response) => {
+          this.allInstructors = response.map((inst) => ({
+            id: inst.instructorId,
+            fullName: `${inst.firstName} ${inst.lastName}`,
+            university: inst.universityInfo,
+            bio: inst.bio,
+            hourRate: inst.avgPrice,
+            rating: inst.ratingAvg,
+            reviewsCount: inst.numberOfReviews,
+            sessionsCount: inst.numberOfSessions,
+            image: inst.personalImage || this.defaultPlaceholder,
+          }));
+          this.filterInstructors();
+        },
+        error: (err) => {
+          console.error('Error fetching instructors by category:', err);
+          this.allInstructors = [];
+          this.filterInstructors();
+        },
+      });
   }
 
   paginate() {
     const start = (this.currentPage - 1) * this.itemsPerPage;
-    this.paginatedInstructors = 
-      this.instructors.slice(start, start + this.itemsPerPage);
+    this.paginatedInstructors = this.instructors.slice(
+      start,
+      start + this.itemsPerPage
+    );
   }
 
   changePage(page: number) {

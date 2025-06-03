@@ -77,7 +77,7 @@ export class PostsComponent implements OnInit {
     this.errorMessage = '';
 
     const role = this.authService.userData.role;
-    const url = `http://localhost:8080/api/posts/${
+    const url = `https://learn-bridge-back-end.onrender.com/api/posts/${
       role === 'ADMIN' ? 'all-posts' : 'favourite-category'
     }`;
 
@@ -200,7 +200,7 @@ export class PostsComponent implements OnInit {
 
     this.http
       .post(
-        `http://localhost:8080/api/agreements/request/${learnerId}/${postId}`,
+        `https://learn-bridge-back-end.onrender.com/api/agreements/request/${learnerId}/${postId}`,
         {},
         { withCredentials: true }
       )

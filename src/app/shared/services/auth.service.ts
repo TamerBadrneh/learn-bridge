@@ -18,9 +18,7 @@
 // //   }
 // // }
 
-
 // // *********************************************************************************************
-
 
 // import { HttpClient } from '@angular/common/http';
 // import { Injectable } from '@angular/core';
@@ -40,7 +38,6 @@
 //   private isLoggedIn = false;
 
 //   constructor(private _HttpClient: HttpClient, private _Router: Router) { }
-
 
 //   // decodeUserData(){
 //   //   if(localStorage.getItem("eToken") != null){
@@ -108,9 +105,6 @@
 //   }
 // }
 
-
-
-
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -118,7 +112,7 @@ import { jwtDecode } from 'jwt-decode';
 import { Observable, tap } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   userData: any;
@@ -126,7 +120,10 @@ export class AuthService {
   constructor(private _HttpClient: HttpClient, private _Router: Router) {}
 
   setRegister(userData: any): Observable<any> {
-    return this._HttpClient.post('http://localhost:8080/api/register', userData);
+    return this._HttpClient.post(
+      'https://learn-bridge-back-end.onrender.com/api/register',
+      userData
+    );
   }
 
   setLogin(userData: any): Observable<any> {
@@ -134,10 +131,14 @@ export class AuthService {
       .set('username', userData.email)
       .set('password', userData.password);
 
-    return this._HttpClient.post('http://localhost:8080/api/login', body.toString(), {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded'},
-      withCredentials: true
-    });
+    return this._HttpClient.post(
+      'https://learn-bridge-back-end.onrender.com/api/login',
+      body.toString(),
+      {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        withCredentials: true,
+      }
+    );
   }
 
   // decodeUserData() {
@@ -150,23 +151,31 @@ export class AuthService {
 
   // Fetch user data after login
   fetchUserData(): Observable<any> {
-    return this._HttpClient.get('http://localhost:8080/api/user/current', {
-      withCredentials: true
-    }).pipe(
-      tap((user) => {
-        console.log('Raw user data:', user); // Add for debugging
-        this.userData = user;
+    return this._HttpClient
+      .get('https://learn-bridge-back-end.onrender.com/api/user/current', {
+        withCredentials: true,
       })
-    );
+      .pipe(
+        tap((user) => {
+          console.log('Raw user data:', user); // Add for debugging
+          this.userData = user;
+        })
+      );
   }
 
   // Logout: Call backend logout endpoint
   logout() {
-    this._HttpClient.post('http://localhost:8080/api/logout', {}, {
-      withCredentials: true
-    }).subscribe(() => {
-      this.userData = null;
-      this._Router.navigate(['/login']);
-    });
+    this._HttpClient
+      .post(
+        'https://learn-bridge-back-end.onrender.com/api/logout',
+        {},
+        {
+          withCredentials: true,
+        }
+      )
+      .subscribe(() => {
+        this.userData = null;
+        this._Router.navigate(['/login']);
+      });
   }
 }

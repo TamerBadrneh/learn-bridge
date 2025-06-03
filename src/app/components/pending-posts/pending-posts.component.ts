@@ -12,7 +12,7 @@ interface Post {
   content: string;
   postStatus: string;
   category: string;
-  sessionDeadline: string;   // ← new
+  sessionDeadline: string; // ← new
 }
 
 @Component({
@@ -35,9 +35,12 @@ export class PendingPostsComponent implements OnInit {
 
   fetchPendingPosts() {
     this.http
-      .get<Post[]>('http://localhost:8080/api/posts/pending-posts', {
-        withCredentials: true,
-      })
+      .get<Post[]>(
+        'https://learn-bridge-back-end.onrender.com/api/posts/pending-posts',
+        {
+          withCredentials: true,
+        }
+      )
       .subscribe((data) => (this.posts = data));
   }
 
@@ -57,7 +60,7 @@ export class PendingPostsComponent implements OnInit {
   acceptPost(authorId: number, postId: number) {
     this.http
       .put(
-        `http://localhost:8080/api/posts/accept/${authorId}/${postId}`,
+        `https://learn-bridge-back-end.onrender.com/api/posts/accept/${authorId}/${postId}`,
         null,
         { withCredentials: true }
       )
@@ -67,7 +70,7 @@ export class PendingPostsComponent implements OnInit {
   rejectPost(authorId: number, postId: number) {
     this.http
       .put(
-        `http://localhost:8080/api/posts/reject/${authorId}/${postId}`,
+        `https://learn-bridge-back-end.onrender.com/api/posts/reject/${authorId}/${postId}`,
         null,
         { withCredentials: true }
       )

@@ -6,18 +6,18 @@ import { Router, RouterModule } from '@angular/router';
 interface CardDTO {
   cardId: number;
   holderName: string;
-  cardNumber: string;      // e.g. "xxxxxxxxxxxx1234"
-  cardType: string;        // e.g. "VISA", "MASTERCARD"
-  expiryDate: string;      // now a simple "MM/yy" string
+  cardNumber: string; // e.g. "xxxxxxxxxxxx1234"
+  cardType: string; // e.g. "VISA", "MASTERCARD"
+  expiryDate: string; // now a simple "MM/yy" string
 }
 
 interface PaymentInfoDTO {
   id: number;
-  paymentDate: string;    // ISO timestamp
+  paymentDate: string; // ISO timestamp
   paymentId: string;
   amount: number;
-  senderName: string;     // added
-  receiverName: string;   // added
+  senderName: string; // added
+  receiverName: string; // added
 }
 
 @Component({
@@ -25,7 +25,7 @@ interface PaymentInfoDTO {
   standalone: true,
   imports: [CommonModule, HttpClientModule, RouterModule],
   templateUrl: './payment.component.html',
-  styleUrls: ['./payment.component.scss']
+  styleUrls: ['./payment.component.scss'],
 })
 export class PaymentComponent implements OnInit {
   cards: CardDTO[] = [];
@@ -35,8 +35,10 @@ export class PaymentComponent implements OnInit {
   errorCards: string | null = null;
   errorHistory: string | null = null;
 
-  private cardsUrl = 'http://localhost:8080/api/cards/my-cards';
-  private historyUrl = 'http://localhost:8080/api/payment/my-payments-info';
+  private cardsUrl =
+    'https://learn-bridge-back-end.onrender.com/api/cards/my-cards';
+  private historyUrl =
+    'https://learn-bridge-back-end.onrender.com/api/payment/my-payments-info';
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -53,50 +55,55 @@ export class PaymentComponent implements OnInit {
     this.loadingCards = true;
     this.errorCards = null;
 
-    this.http.get<CardDTO[]>(this.cardsUrl, { withCredentials: true })
+    this.http
+      .get<CardDTO[]>(this.cardsUrl, { withCredentials: true })
       .subscribe({
-        next: cards => {
+        next: (cards) => {
           this.cards = cards;
           this.loadingCards = false;
         },
-        error: err => {
+        error: (err) => {
           console.error(err);
           this.errorCards = 'Could not load saved cards.';
           this.loadingCards = false;
-        }
+        },
       });
   }
 
   deleteCard(cardId: number): void {
     if (!confirm('Are you sure you want to delete this card?')) return;
 
-    this.http.delete(
-      `http://localhost:8080/api/cards/${cardId}`,
-      { withCredentials: true, responseType: 'text' as 'text' }
-    ).subscribe({
-      next: () => this.cards = this.cards.filter(c => c.cardId !== cardId),
-      error: err => {
-        console.error(err);
-        alert('Could not delete the card.');
-      }
-    });
+    this.http
+      .delete(`https://learn-bridge-back-end.onrender.com/api/cards/${cardId}`, {
+        withCredentials: true,
+        responseType: 'text' as 'text',
+      })
+      .subscribe({
+        next: () =>
+          (this.cards = this.cards.filter((c) => c.cardId !== cardId)),
+        error: (err) => {
+          console.error(err);
+          alert('Could not delete the card.');
+        },
+      });
   }
 
   private loadHistory(): void {
     this.loadingHistory = true;
     this.errorHistory = null;
 
-    this.http.get<PaymentInfoDTO[]>(this.historyUrl, { withCredentials: true })
+    this.http
+      .get<PaymentInfoDTO[]>(this.historyUrl, { withCredentials: true })
       .subscribe({
-        next: history => {
+        next: (history) => {
           this.paymentHistory = history;
           this.loadingHistory = false;
         },
-        error: err => {
+        error: (err) => {
           console.error(err);
           this.errorHistory = 'Could not load payment history.';
           this.loadingHistory = false;
-        }
+        },
       });
   }
 

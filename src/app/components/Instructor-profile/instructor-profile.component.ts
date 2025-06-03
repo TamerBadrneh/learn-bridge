@@ -4,26 +4,24 @@ import {
   ReactiveFormsModule,
   FormBuilder,
   FormGroup,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-instructor-profile',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './instructor-profile.component.html',
-  styleUrls: ['./instructor-profile.component.scss']
+  styleUrls: ['./instructor-profile.component.scss'],
 })
 export class InstructorProfileComponent implements OnInit {
   form: FormGroup;
   selectedFile: File | null = null;
   imagePreview: string | null = null;
 
-  private apiUrl = 'http://localhost:8080/api/personal-info';
+  private apiUrl =
+    'https://learn-bridge-back-end.onrender.com/api/personal-info';
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({
@@ -35,7 +33,7 @@ export class InstructorProfileComponent implements OnInit {
       bio: ['', Validators.required],
       avgPrice: [null, [Validators.required, Validators.min(1)]],
       password: [''],
-      confirmPassword: ['']
+      confirmPassword: [''],
     });
   }
 
@@ -43,7 +41,7 @@ export class InstructorProfileComponent implements OnInit {
     this.http
       .get<any>(`${this.apiUrl}/get-personal-info`, { withCredentials: true })
       .subscribe({
-        next: dto => {
+        next: (dto) => {
           this.form.patchValue({
             firstName: dto.firstName,
             lastName: dto.lastName,
@@ -51,11 +49,11 @@ export class InstructorProfileComponent implements OnInit {
             favouriteCategory: dto.favouriteCategory,
             universityInfo: dto.universityInfo,
             bio: dto.bio,
-            avgPrice: dto.avgPrice
+            avgPrice: dto.avgPrice,
           });
           this.imagePreview = dto.personalImage || null;
         },
-        error: err => console.error('Failed to load profile', err)
+        error: (err) => console.error('Failed to load profile', err),
       });
   }
 
@@ -80,21 +78,19 @@ export class InstructorProfileComponent implements OnInit {
     formData.append('image', this.selectedFile);
 
     this.http
-      .post<{ imageUrl: string }>(
-        `${this.apiUrl}/upload-image`,
-        formData,
-        { withCredentials: true }
-      )
+      .post<{ imageUrl: string }>(`${this.apiUrl}/upload-image`, formData, {
+        withCredentials: true,
+      })
       .subscribe({
-        next: resp => {
+        next: (resp) => {
           this.imagePreview = resp.imageUrl;
           this.selectedFile = null;
           alert('Profile photo updated.');
         },
-        error: err => {
+        error: (err) => {
           console.error('Upload failed', err);
           alert('Upload failed.');
-        }
+        },
       });
   }
 
@@ -102,14 +98,12 @@ export class InstructorProfileComponent implements OnInit {
     if (this.form.invalid || this.passwordsMismatch) return;
 
     this.http
-      .put(
-        `${this.apiUrl}/edit-info`,
-        this.form.value,
-        { withCredentials: true }
-      )
+      .put(`${this.apiUrl}/edit-info`, this.form.value, {
+        withCredentials: true,
+      })
       .subscribe({
         next: () => alert('Your information was successfully updated!'),
-        error: err => console.error('Profile update failed', err)
+        error: (err) => console.error('Profile update failed', err),
       });
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';           
-import { FormsModule, NgForm } from '@angular/forms';    
+import { CommonModule } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 interface PersonalInfoDTO {
@@ -15,12 +15,9 @@ interface PersonalInfoDTO {
 @Component({
   selector: 'app-learner-profile',
   standalone: true,
-  imports: [
-    CommonModule,    
-    FormsModule      
-  ],
+  imports: [CommonModule, FormsModule],
   templateUrl: './learner-profile.component.html',
-  styleUrls: ['./learner-profile.component.scss']
+  styleUrls: ['./learner-profile.component.scss'],
 })
 export class LearnerProfileComponent implements OnInit {
   formData: PersonalInfoDTO & { password: string; confirmPassword: string } = {
@@ -30,25 +27,28 @@ export class LearnerProfileComponent implements OnInit {
     email: '',
     favouriteCategory: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   };
 
   selectedFile: File | null = null;
   imagePreview: string | null = null;
 
-  private apiUrl = 'http://localhost:8080/api/personal-info';
+  private apiUrl =
+    'https://learn-bridge-back-end.onrender.com/api/personal-info';
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.http
-      .get<PersonalInfoDTO>(`${this.apiUrl}/get-personal-info`, { withCredentials: true })
+      .get<PersonalInfoDTO>(`${this.apiUrl}/get-personal-info`, {
+        withCredentials: true,
+      })
       .subscribe({
-        next: dto => {
+        next: (dto) => {
           this.formData = { ...this.formData, ...dto };
           this.imagePreview = dto.personalImage || null;
         },
-        error: err => console.error('Failed to load profile', err)
+        error: (err) => console.error('Failed to load profile', err),
       });
   }
 
@@ -77,21 +77,19 @@ export class LearnerProfileComponent implements OnInit {
     form.append('image', this.selectedFile);
 
     this.http
-      .post<{ imageUrl: string }>(
-        `${this.apiUrl}/upload-image`,
-        form,
-        { withCredentials: true }
-      )
+      .post<{ imageUrl: string }>(`${this.apiUrl}/upload-image`, form, {
+        withCredentials: true,
+      })
       .subscribe({
-        next: resp => {
+        next: (resp) => {
           this.imagePreview = resp.imageUrl;
           this.selectedFile = null;
           alert('Profile photo updated.');
         },
-        error: err => {
+        error: (err) => {
           console.error('Upload failed', err);
           alert('Upload failed.');
-        }
+        },
       });
   }
 
@@ -103,19 +101,15 @@ export class LearnerProfileComponent implements OnInit {
       lastName: this.formData.lastName,
       email: this.formData.email,
       password: this.formData.password,
-      favouriteCategory: this.formData.favouriteCategory
+      favouriteCategory: this.formData.favouriteCategory,
       // image handled separately via uploadImage()
     };
 
     this.http
-      .put(
-        `${this.apiUrl}/edit-info`,
-        payload,
-        { withCredentials: true }
-      )
+      .put(`${this.apiUrl}/edit-info`, payload, { withCredentials: true })
       .subscribe({
         next: () => alert('Your information was successfully updated!'),
-        error: err => console.error('Profile update failed', err)
+        error: (err) => console.error('Profile update failed', err),
       });
   }
 }

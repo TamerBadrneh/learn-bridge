@@ -52,7 +52,7 @@ export class MyPostsComponent implements OnInit {
    */
   fetchPosts(): void {
     this.http
-      .get<Post[]>('http://localhost:8080/api/posts/my-posts', {
+      .get<Post[]>('https://learn-bridge-back-end.onrender.com/api/posts/my-posts', {
         withCredentials: true,
       })
       .subscribe(
@@ -173,7 +173,7 @@ export class MyPostsComponent implements OnInit {
    */
   deletePost(postId: number): void {
     this.http
-      .delete(`http://localhost:8080/api/posts/${postId}`, {
+      .delete(`https://learn-bridge-back-end.onrender.com/api/posts/${postId}`, {
         withCredentials: true,
         responseType: 'text',
       })

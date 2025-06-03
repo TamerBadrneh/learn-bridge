@@ -29,9 +29,12 @@ export class NavInstructorComponent {
 
   fetchNotifications() {
     this.http
-      .get<any[]>('http://localhost:8080/api/agreements/notifications', {
-        withCredentials: true,
-      })
+      .get<any[]>(
+        'https://learn-bridge-back-end.onrender.com/api/agreements/notifications',
+        {
+          withCredentials: true,
+        }
+      )
       .subscribe((data) => {
         this.notifications = data || [];
         this.hasUnread = this.notifications.some(
@@ -44,7 +47,7 @@ export class NavInstructorComponent {
     if (notification.readStatus === 'UNREAD') {
       this.http
         .put(
-          `http://localhost:8080/api/notifications/${notification.notificationId}/read`,
+          `https://learn-bridge-back-end.onrender.com/api/notifications/${notification.notificationId}/read`,
           {},
           { withCredentials: true }
         )
@@ -59,9 +62,12 @@ export class NavInstructorComponent {
     if (notification.notificationType === 'AGREEMENT') {
       const id = notification.notificationId;
       this.http
-        .get(`http://localhost:8080/api/agreements/${id}/info`, {
-          withCredentials: true,
-        })
+        .get(
+          `https://learn-bridge-back-end.onrender.com/api/agreements/${id}/info`,
+          {
+            withCredentials: true,
+          }
+        )
         .subscribe({
           next: (res) => {
             this.learnerOfferService.setOfferInfo(res, id);

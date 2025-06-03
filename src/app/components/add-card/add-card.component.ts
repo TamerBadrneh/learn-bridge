@@ -90,9 +90,12 @@ export class AddCardComponent implements OnInit {
    */
   ngOnInit() {
     this.http
-      .get<{ hasCard: boolean }>('http://localhost:8080/api/cards/has-card', {
-        withCredentials: true,
-      })
+      .get<{ hasCard: boolean }>(
+        'https://learn-bridge-back-end.onrender.comapi/cards/has-card',
+        {
+          withCredentials: true,
+        }
+      )
       .subscribe({
         next: (res) => {
           this.hasCard = res.hasCard;
@@ -145,12 +148,16 @@ export class AddCardComponent implements OnInit {
             };
 
             this.http
-              .post('http://localhost:8080/api/cards/add', payload, {
-                withCredentials: true,
-                headers: new HttpHeaders({
-                  'Content-Type': 'application/json',
-                }),
-              })
+              .post(
+                'https://learn-bridge-back-end.onrender.com/api/cards/add',
+                payload,
+                {
+                  withCredentials: true,
+                  headers: new HttpHeaders({
+                    'Content-Type': 'application/json',
+                  }),
+                }
+              )
               .subscribe({
                 next: () => {
                   alert('Card Added Successfully!');

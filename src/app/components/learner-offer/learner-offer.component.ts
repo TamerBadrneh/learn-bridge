@@ -55,7 +55,7 @@ export class LearnerOfferComponent {
       const id = this.offerInfo.notificationId;
       this.http
         .post(
-          `http://localhost:8080/api/agreements/notifications/${id}/reject-learner-request`,
+          `https://learn-bridge-back-end.onrender.com/api/agreements/notifications/${id}/reject-learner-request`,
           {},
           { withCredentials: true }
         )
@@ -81,7 +81,7 @@ export class LearnerOfferComponent {
       const id = this.offerInfo.notificationId;
       this.http
         .post(
-          `http://localhost:8080/api/agreements/notifications/${id}/accept-learner-request`,
+          `https://learn-bridge-back-end.onrender.com/api/agreements/notifications/${id}/accept-learner-request`,
           {},
           { withCredentials: true }
         )
