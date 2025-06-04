@@ -27,7 +27,7 @@ import { NavBlankComponent } from './components/nav-blank/nav-blank.component';
 import { NavAuthComponent } from './components/nav-auth/nav-auth.component';
 import { AuthLayoutComponent } from './components/auth-layout/auth-layout.component';
 import { BlankLayoutComponent } from './components/blank-layout/blank-layout.component';
-import { InstructorBioComponent } from './components/instructor-bio/instructor-bio.component';
+import { InstructorBioComponent } from './components/Instructor-bio/instructor-bio.component';
 import { InstructorLayoutComponent } from './components/instructor-layout/instructor-layout.component';
 import { NavInstructorComponent } from './components/nav-instructor/nav-instructor.component';
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
@@ -47,7 +47,6 @@ const firebaseModule = AngularFireModule.initializeApp(environments.firebase);
     FooterComponent,
     LoginComponent,
     RegisterComponent,
-    // FindInstructorComponent,
     PostsComponent,
     NotFoundComponent,
     NavBlankComponent,
@@ -60,7 +59,7 @@ const firebaseModule = AngularFireModule.initializeApp(environments.firebase);
     AdminLayoutComponent,
     AdminNavComponent,
     ReportComponent,
-    LearnerOfferComponent
+    LearnerOfferComponent,
   ],
   imports: [
     BrowserModule,
@@ -71,9 +70,9 @@ const firebaseModule = AngularFireModule.initializeApp(environments.firebase);
     stripeModule,
     firebaseModule,
     AngularFirestoreModule,
-    NgbModule
+    NgbModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule {};
+export class AppModule {}
