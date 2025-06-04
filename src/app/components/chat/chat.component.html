@@ -24,6 +24,7 @@
         <div
           class="chat-item"
           *ngFor="let chat of applyFilter() | chatFilter : chatSearchTerm"
+          [ngClass]="{ active: chat.chatId === selectedChatId }"
           (click)="selectChat(chat)"
         >
           <img
@@ -49,6 +50,14 @@
             >
               {{ chat.sessionStatus }}
             </span>
+          </div>
+          <!-- Live indicator for ongoing chats -->
+          <div
+            class="live-indicator"
+            *ngIf="chat.sessionStatus === 'ONGOING'"
+            title="Live chat"
+          >
+            <span class="live-dot"></span>
           </div>
         </div>
       </div>
@@ -107,13 +116,23 @@
               class="avatar"
               alt="Chat User"
             />
-            <h5>{{ selectedChatName }}</h5>
-            <h5
-              *ngIf="authService.userData?.role === 'ADMIN' && selectedChatId"
-            >
-              Learner: <span class="text-primary">{{ learnerName }}</span> |
-              Instructor: <span class="text-danger"> {{ instructorName }}</span>
-            </h5>
+            <div class="chat-header-info">
+              <h5>{{ selectedChatName }}</h5>
+              <h5
+                *ngIf="authService.userData?.role === 'ADMIN' && selectedChatId"
+              >
+                Learner: <span class="text-primary">{{ learnerName }}</span> |
+                Instructor:
+                <span class="text-danger"> {{ instructorName }}</span>
+              </h5>
+              <!-- Live status indicator -->
+              <div class="chat-status" *ngIf="!isSessionInactive()">
+                <span class="live-indicator-small">
+                  <span class="live-dot-small"></span>
+                  Live
+                </span>
+              </div>
+            </div>
           </div>
 
           <!-- Session Actions Dropdown (hidden for admin) -->
@@ -126,12 +145,31 @@
               type="button"
               data-bs-toggle="dropdown"
               aria-expanded="false"
+              [disabled]="loadingCancel || loadingFinish"
             >
+              <span *ngIf="loadingCancel || loadingFinish" class="me-2">
+                <span
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              </span>
               Session Actions
             </button>
             <ul class="dropdown-menu">
               <li *ngIf="!isSessionInactive()">
-                <button class="dropdown-item" (click)="onCancelSession()">
+                <button
+                  class="dropdown-item"
+                  (click)="onCancelSession()"
+                  [disabled]="loadingCancel"
+                >
+                  <span *ngIf="loadingCancel" class="me-2">
+                    <span
+                      class="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                  </span>
                   Cancel Session
                 </button>
               </li>
@@ -142,7 +180,18 @@
                   !isSessionInactive()
                 "
               >
-                <button class="dropdown-item" (click)="onFinishSession()">
+                <button
+                  class="dropdown-item"
+                  (click)="onFinishSession()"
+                  [disabled]="loadingFinish"
+                >
+                  <span *ngIf="loadingFinish" class="me-2">
+                    <span
+                      class="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                  </span>
                   Finish Session
                 </button>
               </li>
@@ -171,10 +220,10 @@
         </div>
 
         <!-- Chat Content  -->
-        <div class="chat-messages">
+        <div class="chat-messages" #chatMessages>
           <div
             class="message"
-            *ngFor="let msg of messages"
+            *ngFor="let msg of messages; trackBy: trackByMessage"
             [ngClass]="msg.isSender ? 'right' : 'left'"
           >
             <!-- File Message => The Structure of file message instance... -->
@@ -182,11 +231,12 @@
               <div class="card mb-2" style="max-width: 300px">
                 <div class="card-body p-2 text-center">
                   <ng-container
-                    *ngIf="msg.fileType.startsWith('image/'); else fileBlock"
+                    *ngIf="msg.fileType?.startsWith('image/'); else fileBlock"
                   >
                     <img
                       [src]="'data:' + msg.fileType + ';base64,' + msg.fileData"
                       class="img-fluid rounded mb-2"
+                      alt="Shared image"
                     />
                   </ng-container>
 
@@ -213,15 +263,26 @@
 
             <!-- Text Message => The Structure of text-message instance... -->
             <ng-template #textMessage>
-              <ng-container *ngIf="authService.userData?.role === 'ADMIN'">
-                <strong>{{ msg.senderName || "Unknown" }}</strong
-                ><br />
-              </ng-container>
-              {{ msg.text }}
-              <span class="msg-time">
-                {{ msg.timestamp | date : "shortTime" }}
-              </span>
+              <div class="message-content">
+                <ng-container *ngIf="authService.userData?.role === 'ADMIN'">
+                  <strong>{{ msg.senderName || "Unknown" }}</strong
+                  ><br />
+                </ng-container>
+                <div class="message-text">{{ msg.text }}</div>
+                <span class="msg-time">
+                  {{ msg.timestamp | date : "shortTime" }}
+                </span>
+              </div>
             </ng-template>
+          </div>
+
+          <!-- Typing indicator (placeholder for future implementation) -->
+          <div class="typing-indicator" style="display: none">
+            <div class="typing-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
           </div>
         </div>
 
@@ -240,12 +301,14 @@
                 placeholder="Type your message and press enter..."
                 [(ngModel)]="newMessage"
                 (keydown.enter)="sendMessage()"
+                #messageInput
               />
 
               <button
                 class="btn btn-secondary"
                 (click)="fileInput.click()"
                 type="button"
+                title="Attach file"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -259,6 +322,30 @@
                   />
                 </svg>
               </button>
+
+              <button
+                class="btn btn-primary"
+                (click)="sendMessage()"
+                type="button"
+                [disabled]="!newMessage.trim()"
+                title="Send message"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M15.854.146a.5.5 0 0 1 0 .708L11.707 5H14.5a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 1 0v2.793L15.146.146a.5.5 0 0 1 .708 0z"
+                  />
+                  <path
+                    d="m11.354 5.354-.707.707L8.5 3.914V13.5a.5.5 0 0 1-1 0V3.914L5.354 6.061l-.707-.707a.5.5 0 0 1 0-.708L8.793.5a.5.5 0 0 1 .414 0l4.147 4.146a.5.5 0 0 1 0 .708z"
+                  />
+                </svg>
+              </button>
+
               <input
                 type="file"
                 hidden
@@ -284,7 +371,12 @@
         <div
           class="d-flex h-100 justify-content-center align-items-center text-muted"
         >
-          <h4>Select a chat to view messages</h4>
+          <div class="text-center">
+            <h4>Select a chat to view messages</h4>
+            <p class="text-muted">
+              Choose a conversation from the sidebar to start chatting
+            </p>
+          </div>
         </div>
       </ng-template>
     </div>

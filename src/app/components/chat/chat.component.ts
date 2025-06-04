@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -6,6 +6,8 @@ import { AuthService } from '../../shared/services/auth.service';
 import { ChatFilterPipe } from './Chat Filter Pipe.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReportService } from '../report/Report Service.component';
+import { interval, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 // Documented By Tamer
 @Component({
@@ -15,7 +17,7 @@ import { ReportService } from '../report/Report Service.component';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
   // Data members
   chats: any[] = [];
   messages: any[] = [];
@@ -32,6 +34,13 @@ export class ChatComponent implements OnInit {
   instructorName: string = '';
   loadingCancel = false;
   loadingFinish = false;
+
+  // Live chat functionality
+  private messagePollingSubscription?: Subscription;
+  private chatListPollingSubscription?: Subscription;
+  private lastMessageTimestamp: Date | null = null;
+  private readonly POLLING_INTERVAL = 2000; // 2 seconds
+
   private readonly baseUrlForSession =
     'https://learn-bridge-back-end.onrender.com/api/session';
   private readonly baseUrlForChat =
@@ -48,30 +57,194 @@ export class ChatComponent implements OnInit {
     private route: ActivatedRoute
   ) {}
 
-  /**
-   * Initialize the component by fetching user data and chat history.
-   * After user data is fetched, we fetch the chat history.
-   * The chat history is fetched based on the chat id passed in the route.
-   * If the chat id is not present in the route, the chat history is not fetched.
-   * If the user data fetch fails, an error message is logged to the console.
-   */
   ngOnInit(): void {
     this.authService.fetchUserData().subscribe({
       next: () => {
         this.currentUserId = this.authService.userData.userId;
         this.fetchChats();
+        this.startChatListPolling();
       },
       error: (err) => console.error('Error fetching user data:', err),
     });
     this.chatId = Number(this.route.snapshot.paramMap.get('chatId'));
   }
 
-  /**
-   * Handles the event of a user selecting a file to upload.
-   * If a file is selected, it is stored in the component's state and
-   * the `uploadFile` method is called to upload the file to the server.
-   * @param event The event object containing the selected file.
-   */
+  ngOnDestroy(): void {
+    this.stopMessagePolling();
+    this.stopChatListPolling();
+  }
+
+  private startMessagePolling(): void {
+    if (this.messagePollingSubscription) {
+      this.messagePollingSubscription.unsubscribe();
+    }
+
+    this.messagePollingSubscription = interval(this.POLLING_INTERVAL)
+      .pipe(switchMap(() => this.fetchNewMessages()))
+      .subscribe({
+        next: (newData) => {
+          if (
+            newData &&
+            (newData.messages.length > 0 || newData.files.length > 0)
+          ) {
+            this.updateMessagesWithNewData(newData);
+          }
+        },
+        error: (err) => console.error('Error polling messages:', err),
+      });
+  }
+
+  private stopMessagePolling(): void {
+    if (this.messagePollingSubscription) {
+      this.messagePollingSubscription.unsubscribe();
+      this.messagePollingSubscription = undefined;
+    }
+  }
+
+  private startChatListPolling(): void {
+    if (this.chatListPollingSubscription) {
+      this.chatListPollingSubscription.unsubscribe();
+    }
+
+    this.chatListPollingSubscription = interval(this.POLLING_INTERVAL * 2) // Poll chat list less frequently
+      .pipe(switchMap(() => this.fetchChatsData()))
+      .subscribe({
+        next: (data) => {
+          if (data) {
+            const newChats = Array.isArray(data) ? data : [data];
+            this.updateChatList(newChats);
+          }
+        },
+        error: (err) => console.error('Error polling chat list:', err),
+      });
+  }
+
+  private stopChatListPolling(): void {
+    if (this.chatListPollingSubscription) {
+      this.chatListPollingSubscription.unsubscribe();
+      this.chatListPollingSubscription = undefined;
+    }
+  }
+
+  private fetchNewMessages() {
+    if (!this.selectedChatId) return Promise.resolve(null);
+
+    const timestamp = this.lastMessageTimestamp
+      ? this.lastMessageTimestamp.toISOString()
+      : '';
+
+    const messages$ = this.http.get<any[]>(
+      `${this.baseUrlForChat}/all-messages/${this.selectedChatId}${
+        timestamp ? `?after=${timestamp}` : ''
+      }`,
+      { withCredentials: true }
+    );
+
+    const files$ = this.http.get<any[]>(
+      `${this.baseUrlForFiles}/chat-files/${this.selectedChatId}${
+        timestamp ? `?after=${timestamp}` : ''
+      }`,
+      { withCredentials: true }
+    );
+
+    return Promise.all([messages$.toPromise(), files$.toPromise()])
+      .then(([messages = [], files = []]) => ({
+        messages: messages || [],
+        files: files || [],
+      }))
+      .catch((err) => {
+        console.error('Failed to fetch new messages:', err);
+        return null;
+      });
+  }
+
+  private fetchChatsData() {
+    let url = '';
+    const role = this.authService.userData?.role?.toUpperCase();
+
+    if (role === 'ADMIN')
+      url = `https://learn-bridge-back-end.onrender.com/api/chat/admin/review-chat/${this.chatId}`;
+    else url = `${this.baseUrlForChat}/my-chats`;
+
+    return this.http
+      .get<any>(url, { withCredentials: true })
+      .toPromise()
+      .catch((err) => {
+        console.error('Failed to fetch chats:', err);
+        return null;
+      });
+  }
+
+  private updateMessagesWithNewData(newData: {
+    messages: any[];
+    files: any[];
+  }): void {
+    const formattedMessages = (newData.messages || []).map((msg) => ({
+      type: 'message',
+      text: msg.content,
+      timestamp: new Date(msg.sentAt),
+      isSender: msg.senderId === this.currentUserId,
+      senderName: msg.senderName,
+    }));
+
+    const formattedFiles = (newData.files || []).map((file) => ({
+      type: 'file',
+      fileName: file.fileName,
+      fileType: file.fileType,
+      fileData: file.fileData,
+      timestamp: new Date(file.uploadedAt),
+      isSender: file.senderId === this.currentUserId,
+    }));
+
+    const newMessages = [...formattedMessages, ...formattedFiles];
+
+    // Filter out messages that already exist
+    const existingTimestamps = new Set(
+      this.messages.map((msg) => msg.timestamp.getTime())
+    );
+    const uniqueNewMessages = newMessages.filter(
+      (msg) => !existingTimestamps.has(msg.timestamp.getTime())
+    );
+
+    if (uniqueNewMessages.length > 0) {
+      this.messages = [...this.messages, ...uniqueNewMessages].sort(
+        (a, b) =>
+          new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+      );
+
+      // Update last message timestamp
+      const lastMessage = this.messages[this.messages.length - 1];
+      if (lastMessage) {
+        this.lastMessageTimestamp = new Date(lastMessage.timestamp);
+      }
+
+      // Auto-scroll to bottom on new messages
+      setTimeout(() => this.scrollToBottom(), 100);
+    }
+  }
+
+  private updateChatList(newChats: any[]): void {
+    // Update chat list without losing current selection
+    const oldLength = this.chats.length;
+    this.chats = newChats;
+
+    // If new chats were added, apply filter
+    if (newChats.length !== oldLength) {
+      this.applyFilter();
+    }
+  }
+
+  private scrollToBottom(): void {
+    try {
+      const chatMessages = document.querySelector('.chat-messages');
+      if (chatMessages) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    } catch (err) {
+      console.error('Error scrolling to bottom:', err);
+    }
+  }
+
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -80,18 +253,6 @@ export class ChatComponent implements OnInit {
     }
   }
 
-  /**
-   * Uploads the selected file to the server for the currently selected chat.
-   * The file is uploaded using a POST request with the chat ID included in the URL.
-   * On successful upload, the file information is added to the messages list.
-   * If the upload fails, an error is logged to the console.
-   *
-   * Prerequisites:
-   * - `selectedFile` should be set with the file to be uploaded.
-   * - `selectedChatId` should be set with the ID of the chat to which the file is being uploaded.
-   *
-   * No operation is performed if `selectedFile` or `selectedChatId` is not set.
-   */
   uploadFile() {
     if (!this.selectedFile || this.selectedChatId === null) return;
 
@@ -109,13 +270,18 @@ export class ChatComponent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log('Upload success:', res);
-          this.messages.push({
+          const newFileMessage = {
+            type: 'file',
             fileName: res.fileName,
             fileType: res.fileType,
             fileData: res.fileData,
-            timestamp: res.uploadedAt,
+            timestamp: new Date(res.uploadedAt),
             isSender: true,
-          });
+          };
+
+          this.messages.push(newFileMessage);
+          this.lastMessageTimestamp = new Date(res.uploadedAt);
+          setTimeout(() => this.scrollToBottom(), 100);
         },
         error: (err) => {
           console.error('Upload failed:', err);
@@ -123,22 +289,6 @@ export class ChatComponent implements OnInit {
       });
   }
 
-  /**
-   * Fetches the chats for the currently logged-in user.
-   *
-   * Depending on the user's role, either the my-chats or the review-chat
-   * endpoint is used to fetch the chats. The chats are stored in the `chats` array
-   * and the `applyFilter` method is called to filter the chats based on the current
-   * filter term.
-   *
-   * Prerequisites:
-   * - `authService.userData` should be set with the user's data.
-   * - `baseUrlForChat` should be set with the base URL for the chat API.
-   * - `chatId` should be set with the ID of the chat for which the messages are being fetched,
-   *   if the user is an admin.
-   *
-   * No operation is performed if any of the above prerequisites are not met.
-   */
   fetchChats() {
     let url = '';
     const role = this.authService.userData?.role?.toUpperCase();
@@ -157,64 +307,35 @@ export class ChatComponent implements OnInit {
     });
   }
 
-  /**
-   * Applies the current filter to the chats and returns the filtered chats.
-   *
-   * If the filter is set to 'ALL', all chats are returned.
-   * Otherwise, the chats are filtered by their session status, which should
-   * match the current filter.
-   *
-   * @returns {any[]} The filtered chats.
-   */
   applyFilter() {
     return this.selectedFilter === 'ALL'
       ? this.chats
       : this.chats.filter((chat) => chat.sessionStatus === this.selectedFilter);
   }
 
-  /**
-   * Sets the current filter and applies it to the chats.
-   *
-   * The filter is set to the given status, and the chats are filtered
-   * accordingly by calling the `applyFilter` method.
-   *
-   * @param status The status to filter the chats by.
-   */
   setFilter(status: 'ONGOING' | 'FINISHED' | 'CANCELLED' | 'ALL') {
     this.selectedFilter = status;
     this.applyFilter();
   }
 
-  /**
-   * Selects a chat and updates the component's state with the chat details.
-   *
-   * This method sets the selected chat ID, session ID, participant name,
-   * learner name, and instructor name based on the provided chat object.
-   * It also fetches the messages associated with the selected chat.
-   *
-   * @param chat The chat object containing details of the chat to be selected.
-   */
   selectChat(chat: any) {
+    // Stop polling for previous chat
+    this.stopMessagePolling();
+
     this.selectedChatId = chat.chatId;
     this.selectedSessionId = chat.sessionId;
     this.selectedChatName = chat.participantName;
     this.learnerName = chat.learnerName;
     this.instructorName = chat.instructorName;
-    this.fetchMessages(chat.chatId);
+    this.lastMessageTimestamp = null;
+
+    this.fetchMessages(chat.chatId).then(() => {
+      // Start polling for new messages after initial load
+      this.startMessagePolling();
+    });
   }
 
-  /**
-   * Fetches the messages and files associated with a chat.
-   *
-   * This method makes two API calls to fetch the messages and files associated
-   * with the given chat ID. The messages and files are then merged into a single
-   * array, sorted by timestamp, and stored in the `messages` array.
-   *
-   * If any of the API calls fail, an error is logged to the console.
-   *
-   * @param chatId The ID of the chat to fetch messages and files for.
-   */
-  fetchMessages(chatId: number) {
+  fetchMessages(chatId: number): Promise<void> {
     const messages$ = this.http.get<any[]>(
       `${this.baseUrlForChat}/all-messages/${chatId}`,
       {
@@ -229,7 +350,7 @@ export class ChatComponent implements OnInit {
       }
     );
 
-    Promise.all([messages$.toPromise(), files$.toPromise()])
+    return Promise.all([messages$.toPromise(), files$.toPromise()])
       .then(([messages = [], files = []]) => {
         const formattedMessages = (messages || []).map((msg) => ({
           type: 'message',
@@ -253,21 +374,29 @@ export class ChatComponent implements OnInit {
           (a, b) =>
             new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
         );
+
+        // Set last message timestamp
+        if (this.messages.length > 0) {
+          const lastMessage = this.messages[this.messages.length - 1];
+          this.lastMessageTimestamp = new Date(lastMessage.timestamp);
+        }
+
+        // Scroll to bottom after loading messages
+        setTimeout(() => this.scrollToBottom(), 100);
       })
-      .catch((err) => console.error('Failed to fetch chat content:', err));
+      .catch((err) => {
+        console.error('Failed to fetch chat content:', err);
+        throw err;
+      });
   }
 
-  /**
-   * Sends a message to the selected chat.
-   *
-   * This method makes a POST request to the backend to send the message.
-   * If the message is successfully sent, it is added to the `messages` array.
-   * If the message fails to send, an error is logged to the console.
-   */
   sendMessage() {
     if (!this.newMessage.trim() || this.selectedChatId === null) return;
 
     const body = { content: this.newMessage };
+    const messageToSend = this.newMessage;
+    this.newMessage = ''; // Clear input immediately for better UX
+
     this.http
       .post<any>(
         `${this.baseUrlForChat}/send-message/${this.selectedChatId}`,
@@ -276,27 +405,30 @@ export class ChatComponent implements OnInit {
       )
       .subscribe({
         next: (sentMsg) => {
-          this.messages.push({
-            text: sentMsg.content,
-            timestamp: sentMsg.sentAt,
-            senderName: sentMsg.senderName,
-            isSender: true,
+          // DON'T add the message immediately to avoid duplicates
+          // Instead, let the polling mechanism handle it or wait for server confirmation
+
+          // Update the last message timestamp to ensure polling picks up the new message
+          this.lastMessageTimestamp = new Date(sentMsg.sentAt);
+
+          // Force a single fetch to get the latest messages including the one just sent
+          this.fetchNewMessages().then((newData) => {
+            if (
+              newData &&
+              (newData.messages.length > 0 || newData.files.length > 0)
+            ) {
+              this.updateMessagesWithNewData(newData);
+            }
           });
-          this.newMessage = '';
         },
-        error: (err) => console.error('Failed to send message:', err),
+        error: (err) => {
+          console.error('Failed to send message:', err);
+          // Restore message on error
+          this.newMessage = messageToSend;
+        },
       });
   }
 
-  /**
-   * Cancels the selected session.
-   *
-   * This method makes a PUT request to the backend to cancel the session.
-   * If the session is successfully cancelled, a success alert is shown and
-   * the page is reloaded to reflect the change.
-   * If the session fails to cancel, an error alert is shown and the loading
-   * indicator is stopped.
-   */
   onCancelSession() {
     if (this.selectedSessionId === null) return;
 
@@ -310,7 +442,9 @@ export class ChatComponent implements OnInit {
       .subscribe({
         next: () => {
           alert('Session cancelled successfully.');
-          window.location.reload();
+          // Refresh chat list instead of full page reload
+          this.fetchChats();
+          this.loadingCancel = false;
         },
         error: (err) => {
           console.error('Error cancelling session', err);
@@ -320,15 +454,6 @@ export class ChatComponent implements OnInit {
       });
   }
 
-  /**
-   * Finishes the selected session.
-   *
-   * This method makes a PUT request to the backend to finish the session.
-   * If the session is successfully finished, a success alert is shown and
-   * the page is reloaded to reflect the change.
-   * If the session fails to finish, an error alert is shown and the loading
-   * indicator is stopped.
-   */
   onFinishSession() {
     if (this.selectedSessionId === null) return;
 
@@ -342,7 +467,9 @@ export class ChatComponent implements OnInit {
       .subscribe({
         next: () => {
           alert('Session finished successfully.');
-          window.location.reload();
+          // Refresh chat list instead of full page reload
+          this.fetchChats();
+          this.loadingFinish = false;
         },
         error: (err) => {
           console.error('Error finishing session', err);
@@ -352,14 +479,6 @@ export class ChatComponent implements OnInit {
       });
   }
 
-  /**
-   * Navigates to the report user page based on the current user's role.
-   *
-   * This method sets the chat ID in the report service and navigates to the
-   * appropriate report-user page. The navigation path is determined by the
-   * user's role, directing learners to '/learner/report-user' and instructors
-   * to '/instructor/report-user'.
-   */
   navigateToReport() {
     this.reportService.setChatId(this.selectedChatId!);
     const path =
@@ -369,29 +488,12 @@ export class ChatComponent implements OnInit {
     this.router.navigate([path]);
   }
 
-  /**
-   * Navigates to the learner rate-instructor page.
-   *
-   * This method sets the chat ID in the session storage and navigates to the
-   * learner rate-instructor page. If the selected chat ID is null, the method
-   * does nothing.
-   */
   navigateToRateInstructor() {
     if (this.selectedChatId === null) return;
     sessionStorage.setItem('rateChatId', this.selectedChatId.toString());
     this.router.navigate(['/learner/rate-instructor']);
   }
 
-  /**
-   * Determines if the selected chat is inactive.
-   *
-   * This method checks if the selected chat's session status is either
-   * 'CANCELLED' or 'FINISHED'. If the selected chat ID is null, the method
-   * returns false. Otherwise, it returns true if the session is inactive
-   * and false if it is active.
-   *
-   * @returns {boolean} True if the selected chat is inactive, false otherwise.
-   */
   isSessionInactive(): boolean {
     const selectedChat = this.chats.find(
       (chat) => chat.chatId === this.selectedChatId
@@ -399,5 +501,10 @@ export class ChatComponent implements OnInit {
     const status = selectedChat?.sessionStatus;
     console.log('Session status:', status);
     return status === 'CANCELLED' || status === 'FINISHED';
+  }
+
+  // Track by function for better performance with ngFor
+  trackByMessage(index: number, message: any): any {
+    return message.timestamp ? message.timestamp.getTime() : index;
   }
 }
