@@ -91,7 +91,7 @@ export class AddCardComponent implements OnInit {
   ngOnInit() {
     this.http
       .get<{ hasCard: boolean }>(
-        'https://learn-bridge-back-end.onrender.comapi/cards/has-card',
+        'https://learn-bridge-back-end.onrender.com/api/cards/has-card',
         {
           withCredentials: true,
         }
